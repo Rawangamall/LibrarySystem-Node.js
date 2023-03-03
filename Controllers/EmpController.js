@@ -10,7 +10,7 @@ exports.getAllEmps=(request,response,next)=>{
             })
         .catch(error=>{
             next(error);
-                })
+    })
 }
 
 //Post(Add) a new Employee

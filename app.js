@@ -8,7 +8,7 @@ const EmpRoute=require("./Routes/EmpRoute");
 const server = express();
 let port = process.env.port||8080;
 mongoose.set('strictQuery', true);
-mongoose.connect("mongodb://127.0.0.1:27017/Libraryy")
+mongoose.connect("mongodb://127.0.0.1:27017/Library")
         .then(()=>{
             console.log("DB is connected");
             server.listen(port,()=>{
