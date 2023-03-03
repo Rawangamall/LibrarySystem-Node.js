@@ -2,7 +2,7 @@ const cors = require("cors");
 const mongoose=require("mongoose");
 const express = require("express");
 const morgan = require('morgan');
-const EmpRoute=require("./EmpRoute");
+//const EmpRoute=require("./EmpRoute");
 //Server
 const server = express();
 let port = process.env.port||8080;
@@ -26,7 +26,7 @@ server.use(morgan('combined'))
 server.use(express.json());
 server.use(express.urlencoded({extended:false}));
 //Routes  
-server.use(EmpRoute);
+//server.use(EmpRoute);
   
 //404 error not found Middleware
 server.use((request,response,next)=>{
