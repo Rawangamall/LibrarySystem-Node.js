@@ -14,15 +14,19 @@ const EmpSchema=mongoose.model("Employee");
 }*/
 //Post (Add) a new Member
 
-exports.addTeacher=async(request,response,next)=>{
+exports.addEmp=async(request,response,next)=>{
     try
     {
-        let data=await new TeacherSchema({
-                _id:mongoose.Types.ObjectId(),
-                fullname:request.body.fullname,
-                password:request.body.password,
+        let data=await new EmpSchema({
+                _id:request.body.id,
+                firstName:request.body.firstName,
+                lastName:request.body.lastName,
                 email:request.body.email,
-                image:request.body.image
+                password:request.body.password,
+                birthdate:request.body.birthdate,
+                hireDate:request.body.hireDate,
+                image:request.body.image,
+                salary:request.body.salary
                }).save(); 
         response.status(201).json({data});
     }catch(error)

@@ -3,7 +3,7 @@ const {body,param,query}=require("express-validator");
 //Post validation
 exports.validatePost=[
     body("id").isNumeric().withMessage("Employee's id must be number"),
-    body("fullName").isAlpha().withMessage("Employee's firstName must be string"),
+    body("firstName").isAlpha().withMessage("Employee's firstName must be string"),
     body("lastName").isAlpha().withMessage("Employee's lastName must be string"),
     body("email").isEmail().withMessage("Employee's email must be in email format"),
     body("password").isAlphanumeric().withMessage("Employee's password must be string or integer or both"),
@@ -16,7 +16,7 @@ exports.validatePost=[
 //Put validation
 exports.validatePut=[
     body("id").isNumeric().optional().withMessage("Employee's id must be number"),
-    body("fullName").isAlpha().optional().withMessage("Employee's firstName must be string"),
+    body("firstName").isAlpha().optional().withMessage("Employee's firstName must be string"),
     body("lastName").isAlpha().optional().withMessage("Employee's lastName must be string"),
    // body("email").isEmail().withMessage("Employee's email must be in email format"),
     body("password").isAlphanumeric().optional().withMessage("Employee's password must be string or integer or both"),

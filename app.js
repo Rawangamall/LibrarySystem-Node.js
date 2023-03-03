@@ -27,7 +27,7 @@ server.use(cors());
  server.use(express.json());
  server.use(express.urlencoded({extended:false}));
  //Routes  
-// server.use(EmpRoute);
+ server.use(EmpRoute);
   
 //404 error not found Middleware
 server.use((request,response,next)=>{
