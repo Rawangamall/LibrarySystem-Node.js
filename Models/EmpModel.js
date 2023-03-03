@@ -3,7 +3,7 @@ const schema=new mongoose.Schema({
     _id: Number,
     firstName:String,
     lastName:String,
-    email:{type:String,
+    email:{type:String, unique:true,
         validate: {
 			validator: function(mail_add) {
 				return /^[a-z]+[a-z0-9]+@[a-z]+\.[a-z]{2,3}/i.test(mail_add);
