@@ -57,21 +57,21 @@ exports.updateEmp=(request,response,next)=>{
     })
     .catch(error=>next(error));
 }
-/*
-//Delete a Teacher
-exports.deleteTeacher=(request,response,next)=>{
-    TeacherSchema.deleteOne({
+
+//Delete an Employee
+exports.deleteEmp=(request,response,next)=>{
+    EmpSchema.deleteOne({
 		_id: request.body.id,
 	}).then(data=> {
         if(data.deletedCount==0){
-            next(new Error("Teacher is not found!"));
+            next(new Error("Thsi Employee is not found!"));
         }
         else{
-            response.status(200).json({data:"deleted"});}
+            response.status(200).json({data:"Deleted!"});}
         }).catch(error=>next(error));
 }
-*/
-//Get a Specific Teacher
+
+//Get a Specific Employee
 exports.getOneEmp=(request,response,next)=>{
    EmpSchema.findOne({ _id: request.params.id})
         .then((data)=>{
