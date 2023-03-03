@@ -11,7 +11,7 @@ const validateOnDeleteEmp=require("../Core/Validation/EmpValidation").validateOn
 //const { checkAdmin, checkTeacherAndAdmin }=require("./../Core/auth/authenticationMW");
 
 router.route("/Employees")
-  //  .get(controller.getAllEmp)
+    .get(controller.getAllEmps)
     .post(multer({
         fileFilter: function (req, file, cb) {
             if (file.mimetype != "image/png" && file.mimetype != "image/jpg" && file.mimetype != "image/jpeg") {
@@ -32,6 +32,6 @@ router.route("/Employees")
     .put(validatePutEmp,validateMW,controller.updateEmp)
     .delete(validateOnDeleteEmp,validateMW)
 
-router.get("/Employees/:id",validateOnGetEmp,validateMW)
+router.get("/Employees/:id",validateOnGetEmp,validateMW,controller.getOneEmp)
 
 module.exports=router;
