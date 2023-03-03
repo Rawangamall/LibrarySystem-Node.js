@@ -11,8 +11,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+<<<<<<< HEAD
     "express": "^4.18.2",
     "express-validator": "^6.15.0"
+=======
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "mongoose": "^7.0.0"
+>>>>>>> bed49ef75a768f4f0c4db5ec3389662d56a92a40
   },
   "devDependencies": {
     "morgan": "^1.10.0"
