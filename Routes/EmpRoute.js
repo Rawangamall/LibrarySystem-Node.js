@@ -1,13 +1,13 @@
 const express=require("express");
 const multer=require("multer");
 const path=require("path");
-const validateMW=require("./validateMW");
-const controller=require("./EmpController");
+const validateMW=require("../Core/Validation/validateMW");
+const controller=require("../Controllers/EmpController");
 const router=express.Router();
-const validatePostEmp=require("./EmpValidation").validatePost;
-const validatePutEmp=require("./EmpValidation").validatePut;
-const validateOnGetEmp=require("./EmpValidation").validateOnGet;
-const validateOnDeleteEmp=require("./EmpValidation").validateOnDelete;
+const validatePostEmp=require("../Core/Validation/EmpValidation").validatePost;
+const validatePutEmp=require("../Core/Validation/EmpValidation").validatePut;
+const validateOnGetEmp=require("../Core/Validation/EmpValidation").validateOnGet;
+const validateOnDeleteEmp=require("../Core/Validation/EmpValidation").validateOnDelete;
 //const { checkAdmin, checkTeacherAndAdmin }=require("./../Core/auth/authenticationMW");
 
 router.route("/Employees")

@@ -2,7 +2,7 @@ const cors = require("cors");
 const mongoose=require("mongoose");
 const express = require("express");
 const morgan = require('morgan');
-const EmpRoute=require("./EmpRoute");
+const EmpRoute=require("./Routes/EmpRoute");
 
 //Server
 const server = express();

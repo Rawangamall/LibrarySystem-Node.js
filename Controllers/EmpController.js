@@ -1,5 +1,5 @@
 const mongoose=require("mongoose");
-require("./EmpModel");
+require("../Models/EmpModel");
 const EmpSchema=mongoose.model("Employee");
 /////////////////
 //Get All Members
@@ -13,7 +13,7 @@ const EmpSchema=mongoose.model("Employee");
                 })
 }*/
 //Post (Add) a new Member
-/*
+
 exports.addTeacher=async(request,response,next)=>{
     try
     {
@@ -30,7 +30,7 @@ exports.addTeacher=async(request,response,next)=>{
         next(error);
     }
 }
-*/
+
 //Update (Put) a Teacher
 exports.updateEmp=(request,response,next)=>{
     TeacherSchema.updateOne({
