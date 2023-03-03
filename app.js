@@ -28,7 +28,7 @@ server.use(express.json());
 server.use(express.urlencoded({extended:false}));
 //Routes  
 server.use(EmpRoute);
-  
+
 //404 error not found Middleware
 server.use((request,response,next)=>{
     response.status(404).json({message:"Not Found"});

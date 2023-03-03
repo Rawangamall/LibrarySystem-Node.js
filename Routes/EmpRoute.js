@@ -10,7 +10,8 @@ const validateOnDeleteEmp=require("../Core/Validation/EmpValidation").validateOn
 //const { checkAdmin, checkTeacherAndAdmin }=require("./../Core/auth/authenticationMW");
 
 router.route("/Employees")
-    .get(controller.getAllEmps)
+    //.get(controller.SearchForEmp)
+    .get(controller.getEmps)
     .post(imageValidate,validatePostEmp,validateMW,controller.addEmp)              //make it validatePostMember  controller.addMember
     .put(imageValidate,validatePutEmp,validateMW,controller.updateEmp)
     .delete(validateOnDeleteEmp,validateMW,controller.deleteEmp)
