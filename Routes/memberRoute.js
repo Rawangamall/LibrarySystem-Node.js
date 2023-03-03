@@ -5,10 +5,12 @@ const memberController=require("./../Controllers/memberController");
       
 
 router.route("/member")
-     // .get()
-      .post(validateData.memberArrayPOST)
+       .get(memberController.getAll)
+      .post(memberController.addMember)
       
 router.route("/member/:_id")
-        .patch(validateData.memberArrayPatch)
-        .delete(validateData.memberArrayDel)
+        .patch(validateData.memberArrayPatch,memberController.updateMember)
+        .delete(validateData.memberArrayDel,memberController.deleteMember)
+        .get(memberController.getMember)
 
+module.exports=router;
