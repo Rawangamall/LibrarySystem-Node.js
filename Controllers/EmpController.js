@@ -1,6 +1,6 @@
 const mongoose=require("mongoose");
 require("../Models/EmpModel");
-const EmpSchema=mongoose.model("Employee");
+const EmpSchema=mongoose.model("Employees");
 /////////////////
 //Get All Employees
 exports.getAllEmps=(request,response,next)=>{
@@ -12,8 +12,8 @@ exports.getAllEmps=(request,response,next)=>{
             next(error);
                 })
 }
-//Post (Add) a new Member
 
+//Post (Add) a new Employee
 exports.addEmp=async(request,response,next)=>{
     try
     {
@@ -34,9 +34,9 @@ exports.addEmp=async(request,response,next)=>{
         next(error);
     }
 }
-//Update (Put) a Teacher
+//Update (Put) an Employee
 exports.updateEmp=(request,response,next)=>{
-    TeacherSchema.updateOne({
+    EmpSchema.updateOne({
         _id:request.body.id
     },{
         $set:{
@@ -59,21 +59,21 @@ exports.updateEmp=(request,response,next)=>{
     })
     .catch(error=>next(error));
 }
-/*
-//Delete a Teacher
-exports.deleteTeacher=(request,response,next)=>{
-    TeacherSchema.deleteOne({
+
+//Delete an Employee
+exports.deleteEmp=(request,response,next)=>{
+    EmpSchema.deleteOne({
 		_id: request.body.id,
 	}).then(data=> {
         if(data.deletedCount==0){
-            next(new Error("Teacher is not found!"));
+            next(new Error("Thsi Employee is not found!"));
         }
         else{
-            response.status(200).json({data:"deleted"});}
+            response.status(200).json({data:"Deleted!"});}
         }).catch(error=>next(error));
 }
-*/
-//Get a Specific Teacher
+
+//Get a Specific Employee
 exports.getOneEmp=(request,response,next)=>{
    EmpSchema.findOne({ _id: request.params.id})
         .then((data)=>{

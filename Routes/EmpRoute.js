@@ -30,7 +30,7 @@ router.route("/Employees")
         })
     }).single("image"),validatePostEmp,validateMW,controller.addEmp)              //make it validatePostMember  controller.addMember
     .put(validatePutEmp,validateMW,controller.updateEmp)
-    .delete(validateOnDeleteEmp,validateMW)
+    .delete(validateOnDeleteEmp,validateMW,controller.deleteEmp)
 
 router.get("/Employees/:id",validateOnGetEmp,validateMW,controller.getOneEmp)
 

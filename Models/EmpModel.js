@@ -20,4 +20,4 @@ const schema=new mongoose.Schema({
     salary:Number    
 });
 //mapping
-mongoose.model("Employee",schema);
+mongoose.model("Employees",schema);
