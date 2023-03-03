@@ -10,7 +10,7 @@ exports.validatePost=[
     body("birthdate").isDate().withMessage("Employee's birthdate must be date"),
     body("hireDate").isDate().withMessage("Employee's hireDate must be date"),
     body("image").isString().withMessage("Employee's image must be string"),
-    body("salary").isNumeric().withMessage("Employee's salary must be string and integer"),
+    body("salary").isNumeric().withMessage("Employee's salary must be number"),
 ]
 
 //Put validation
@@ -23,7 +23,7 @@ exports.validatePut=[
     body("birthdate").isDate().optional().withMessage("Employee's birthdate must be date"),
    // body("hireDate").isDate().withMessage("Employee's hireDate must be date"),
     body("image").isString().optional().withMessage("Employee's image must be string"),
-   // body("salary").isNumeric().withMessage("Employee's salary must be string and integer"),
+    body("salary").isEmpty().withMessage("You Can't update salary!"),
 ]
 
 //Delete validation

@@ -1,6 +1,6 @@
 const mongoose=require("mongoose");
 require("../Models/EmpModel");
-const EmpSchema=mongoose.model("Employee");
+const EmpSchema=mongoose.model("Employees");
 /////////////////
 //Get All Employees
 exports.getAllEmps=(request,response,next)=>{
@@ -36,7 +36,7 @@ exports.addEmp=async(request,response,next)=>{
 }
 //Update (Put) a Teacher
 exports.updateEmp=(request,response,next)=>{
-    TeacherSchema.updateOne({
+    EmpSchema.updateOne({
         _id:request.body.id
     },{
         $set:{
