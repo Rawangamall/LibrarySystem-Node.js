@@ -1,17 +1,17 @@
 const mongoose=require("mongoose");
-require("./EmpModel");
-const TeacherSchema=mongoose.model("Employee");
+require("../Models/EmpModel");
+const EmpSchema=mongoose.model("Employee");
 /////////////////
-//Get All Members
-/*exports.getTeacher=(request,response,next)=>{
-    TeacherSchema.find({})
+//Get All Employees
+exports.getAllEmps=(request,response,next)=>{
+    EmpSchema.find({})
         .then((data)=>{
                 response.status(200).json({data});
             })
         .catch(error=>{
             next(error);
                 })
-}*/
+}
 //Post (Add) a new Member
 /*
 exports.addTeacher=async(request,response,next)=>{
@@ -69,13 +69,13 @@ exports.deleteTeacher=(request,response,next)=>{
             response.status(200).json({data:"deleted"});}
         }).catch(error=>next(error));
 }
+*/
 //Get a Specific Teacher
-exports.get_teacher=(request,response,next)=>{
-   TeacherSchema.findOne({ _id: request.params.id})
+exports.getOneEmp=(request,response,next)=>{
+   EmpSchema.findOne({ _id: request.params.id})
         .then((data)=>{
                 response.status(200).json({data});
             })
         .catch(error=>{next(error);
         })
 }
-*/
