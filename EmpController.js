@@ -1,6 +1,6 @@
 const mongoose=require("mongoose");
 require("./EmpModel");
-const TeacherSchema=mongoose.model("teacher");
+const EmpSchema=mongoose.model("Employee");
 /////////////////
 //Get All Members
 /*exports.getTeacher=(request,response,next)=>{
