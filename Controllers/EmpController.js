@@ -1,7 +1,7 @@
 const mongoose=require("mongoose");
 require("../Models/EmpModel");
 const EmpSchema=mongoose.model("Employees");
-/////////////////
+
 //Get All Employees
 exports.getAllEmps=(request,response,next)=>{
     EmpSchema.find({})
@@ -12,8 +12,8 @@ exports.getAllEmps=(request,response,next)=>{
             next(error);
                 })
 }
-//Post (Add) a new Member
 
+//Post(Add) a new Employee
 exports.addEmp=async(request,response,next)=>{
     try
     {
@@ -34,7 +34,8 @@ exports.addEmp=async(request,response,next)=>{
         next(error);
     }
 }
-//Update (Put) a Teacher
+
+//Update(Put) an Employee
 exports.updateEmp=(request,response,next)=>{
     EmpSchema.updateOne({
         _id:request.body.id
@@ -42,12 +43,9 @@ exports.updateEmp=(request,response,next)=>{
         $set:{
             firstName:request.body.firstName,
             lastName:request.body.lastName,
-            //email:request.body.email,
             password:request.body.password,
             birthdate:request.body.birthdate,
-            //hireDate:request.body.hireDate,
             image:request.body.image,
-            //salary:request.body.salary
         }
     }).then(data=>{
         if(data.matchedCount==0)
