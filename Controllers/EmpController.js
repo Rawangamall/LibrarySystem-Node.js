@@ -64,10 +64,12 @@ exports.deleteEmp=(request,response,next)=>{
 		_id: request.body.id,
 	}).then(data=> {
         if(data.deletedCount==0){
-            next(new Error("Thsi Employee is not found!"));
+            next(new Error("This Employee is not found!"));
         }
         else{
-            response.status(200).json({data:"Deleted!"});}
+            response.status(200).json({data:"Deleted!"}),
+            next();
+        }
         }).catch(error=>next(error));
 }
 

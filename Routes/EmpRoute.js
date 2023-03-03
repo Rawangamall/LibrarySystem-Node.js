@@ -1,7 +1,9 @@
 const express=require("express");
 const validateMW=require("../Core/Validation/validateMW");
 const controller=require("../Controllers/EmpController");
-const imageValidate=require("../Core/Validation/imageValidate");
+const { empImage } = require("../Core/Validation/imageValidate");
+const imageValidate=require("../Core/Validation/imageValidate").empImage;
+const removeEmpIMG=require("../Core/Validation/imageValidate").removeEmpIMG;
 const router=express.Router();
 const validatePostEmp=require("../Core/Validation/EmpValidation").validatePost;
 const validatePutEmp=require("../Core/Validation/EmpValidation").validatePut;
@@ -13,7 +15,7 @@ router.route("/Employees")
     .get(controller.getAllEmps)
     .post(imageValidate,validatePostEmp,validateMW,controller.addEmp)              //make it validatePostMember  controller.addMember
     .put(imageValidate,validatePutEmp,validateMW,controller.updateEmp)
-    .delete(validateOnDeleteEmp,validateMW,controller.deleteEmp)
+    .delete(validateOnDeleteEmp,validateMW,controller.deleteEmp,removeEmpIMG)
 
 router.get("/Employees/:id",validateOnGetEmp,validateMW,controller.getOneEmp)
 
