@@ -1,6 +1,7 @@
 const mongoose=require("mongoose");
 require("../Models/BookModel");
 const BookSchema=mongoose.model("Book");
+var available=false;
 
 //Get
 exports.getBooks=(request,response,next)=>{
@@ -50,7 +51,6 @@ exports.getOneBook=(request,response,next)=>{
          })
  }
  
-
 //Post(Add) a new Book
 exports.addBook=async(request,response,next)=>{
     try
@@ -66,7 +66,8 @@ exports.addBook=async(request,response,next)=>{
                 pages:request.body.pages,
                 noOfCopies:request.body.noOfCopies,
                 //available:true,
-                shelfNo:request.body.shelfNo
+                shelfNo:request.body.shelfNo,
+                available:true
                }).save(); 
         response.status(201).json({data});
     }catch(error)
