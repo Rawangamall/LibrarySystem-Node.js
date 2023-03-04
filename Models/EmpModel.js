@@ -1,4 +1,6 @@
 const mongoose=require("mongoose");
+const AutoIncrement = require('mongoose-sequence')(mongoose);
+
 const schema=new mongoose.Schema({
     _id: Number,
     firstName:String,
@@ -19,5 +21,6 @@ const schema=new mongoose.Schema({
     image:String,
     salary:Number  
 });
+schema.plugin(AutoIncrement,{id:'Emp_id',inc_field:"_id"});
 //mapping
 mongoose.model("Employees",schema);

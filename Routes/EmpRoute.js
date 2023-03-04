@@ -18,6 +18,6 @@ router.route("/Employees")
     .put(imageValidate,validatePutEmp,validateMW,controller.updateEmp)
     .delete(validateOnDeleteEmp,validateMW,controller.deleteEmp,removeEmpIMG)
 
-router.get("/Employees/:id",validateOnGetEmp,validateMW,controller.getOneEmp)
+router.get("/Employees/:_id",validateOnGetEmp,validateMW,controller.getOneEmp)
 
 module.exports=router;
