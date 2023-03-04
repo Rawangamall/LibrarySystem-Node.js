@@ -5,8 +5,6 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const salt = bcrypt.genSaltSync(saltRounds)
 
-
-
 exports.getAll=(request,response)=>{
     MemberSchema.find({})
                     .then((data)=>{
@@ -17,23 +15,24 @@ exports.getAll=(request,response)=>{
                     })
 }
 
+
 exports.addMember=(request,response,next)=>{
     if(request.body.password != null){
         var hash = bcrypt.hashSync(request.body.password,salt);
       }
-      console.log("hii");
  new MemberSchema({
-    _id:request.body.id,
+    _id:request.body._id,
     fullName:request.body.fullName,
     email:request.body.email,
     password:hash,
     image:request.body.image,
     phoneNumber:request.body.phoneNumber,
     birthdate:request.body.birthdate,
-    fullAddress:request.body.fullAddress
+    fullAddress:request.body.fullAddress,
+    borrowOper:request.body.borrowOper
+   
    }).save()
     .then((data)=>{
-        console.log("hii");
         response.status(201).json({data});
     })
     .catch(error=>{
@@ -55,13 +54,14 @@ exports.updateMember=(request,response,next)=>{
             image:request.body.image,
             phoneNumber:request.body.phoneNumber,
             birthdate:request.body.birthdate,
-            fullAddress:request.body.fullAddress
+            fullAddress:request.body.fullAddress,
+            borrowOper:request.body.borrowOper
         }
     }).then(data=>{
         if(data.acknowledged==false)
         {
             console.log(request.body._id);
-            next(new Error("child not found"));
+            next(new Error("member not found"));
         }
         else
         response.status(200).json(data);
@@ -73,7 +73,7 @@ exports.deleteMember=(request,response)=>{
     .deleteOne({_id:request.params._id})
     .then((result)=>{
         if(result.deletedCount !=0 ){
-            response.status(200).json({data:"delete"});
+            response.status(200).json({data:"deleted"});
         }
         else
         {   response.status(404).json({data:"delete Not Found"});}
@@ -81,11 +81,40 @@ exports.deleteMember=(request,response)=>{
     .catch(error=>next(error));
 }
 
-exports.getMember=(request,response)=>{
+exports.getMember=(request,response,next)=>{
     MemberSchema.findOne({_id:request.params._id})
     .then((result)=>{
         if(result != null)
         {
+            console.log(result.borrowOper)
+            response.status(200).json({result});
+        }
+        else{
+            response.status(404).json({data:"Not Found"});
+        }
+    })
+    .catch(error=>{
+        next(error);
+    })
+}
+
+exports.addBorrowbook=(request,response,next)=>{
+    MemberSchema.findOne({_id:request.params._id})
+    .then((result)=>{
+        if(result != null)
+        {
+         
+                MemberSchema.updateOne(
+              { _id: request.params._id },
+              { $push: { borrowOper: request.body } },
+              (err, result) => {
+                if (err) {
+                  console.error(err);
+                } else {
+                  console.log(result);
+                }
+              }
+            );
             response.status(200).json({result});
         }
         else{
