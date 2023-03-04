@@ -17,7 +17,7 @@ exports.validatePost=[
 
 //Put validation
 exports.validatePut=[
-    body("id").isNumeric().optional().withMessage("Book's id must be number"),
+    body("id").isNumeric().withMessage("Book's id must be number"),
     body("title").isAlpha().optional().withMessage("Book's title must be string"),
     body("auther").isAlpha().optional().withMessage("Book's auther must be string"),
     body("publisher").isAlpha().optional().withMessage("Book's publisher must be string"),
