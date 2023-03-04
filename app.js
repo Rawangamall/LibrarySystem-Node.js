@@ -3,6 +3,7 @@ const mongoose=require("mongoose");
 const express = require("express");
 const morgan = require('morgan');
 const BookRoute=require("./Routes/BookRoute");
+const EmpRoute=require("./Routes/EmpRoute");
 
 //Server
 const server = express();
@@ -28,6 +29,7 @@ server.use(express.json());
 server.use(express.urlencoded({extended:false}));
 //Routes  
 server.use(BookRoute);
+server.use(EmpRoute);
 
 //404 error not found Middleware
 server.use((request,response,next)=>{
