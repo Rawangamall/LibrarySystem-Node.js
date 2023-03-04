@@ -1,7 +1,6 @@
 const mongoose=require("mongoose");
 require("../Models/BookModel");
 const BookSchema=mongoose.model("Book");
-var available=false;
 
 //Get
 exports.getBooks=(request,response,next)=>{
@@ -69,8 +68,7 @@ exports.addBook=async(request,response,next)=>{
                 pages:request.body.pages,
                 noOfCopies:request.body.noOfCopies,
                 //available:true,
-                shelfNo:request.body.shelfNo,
-                available:true
+                shelfNo:request.body.shelfNo
                }).save(); 
         response.status(201).json({data});
     }catch(error)
@@ -116,6 +114,7 @@ exports.deleteBook=(request,response,next)=>{
             next(new Error("This Book is not found!"));
         }
         else{
-            response.status(200).json({data:"Deleted!"});}
+            response.status(200).json({data:"Deleted!"})
+        }
         }).catch(error=>next(error));
 }
