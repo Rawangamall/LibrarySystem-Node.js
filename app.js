@@ -1,42 +1,52 @@
+const express= require("express");
 const cors = require("cors");
+const morgan = require("morgan");
 const mongoose=require("mongoose");
-const express = require("express");
-const morgan = require('morgan');
+const memberRoute=require("./Routes/memberRoute");
 const BookRoute=require("./Routes/BookRoute");
 const EmpRoute=require("./Routes/EmpRoute");
 
-//Server
+//server
 const server = express();
-let port = process.env.port||8080;
-mongoose.set('strictQuery', true);
+let port=process.env.PORT||8080;
+
+
+//db connection
+mongoose.set('strictQuery', true);  //warning
+
 mongoose.connect("mongodb://127.0.0.1:27017/Library")
         .then(()=>{
-            console.log("DB is connected");
+            console.log("DB connected");
             server.listen(port,()=>{
-                console.log("Server is listenng..",port);
+                console.log("server is listenng.....",port);
             });
         })
         .catch(error=>{
             console.log("Db Problem "+error);
         })
-//////////////////
+
 
 server.use(cors());
 
-//First Middleware
-server.use(morgan('combined'))
+//auth
+
+
+//body parse
 server.use(express.json());
 server.use(express.urlencoded({extended:false}));
-//Routes  
+
+//Routes 
+server.use(memberRoute);
 server.use(BookRoute);
 server.use(EmpRoute);
 
-//404 error not found Middleware
-server.use((request,response,next)=>{
-    response.status(404).json({message:"Not Found"});
-});
 
-//Error Middleware
+//Not Found Middleware
+server.use((request,response,next)=>{
+    response.status(404).json({message:"Not Found"})
+})
+
+//EROR handeling Middleware
 server.use((error,request,response,next)=>{
-    response.status(500).json({message:error+""})
-});
+    response.status(500).json({message:error+""});
+})
