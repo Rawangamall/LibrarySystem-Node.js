@@ -17,17 +17,17 @@ exports.validatePost=[
 
 //Put validation
 exports.validatePut=[
-    body("id").isNumeric().optional.withMessage("Book's id must be number"),
-    body("title").isAlpha().optional.withMessage("Book's title must be string"),
-    body("auther").isAlpha().optional.withMessage("Book's auther must be string"),
-    body("publisher").isAlpha().optional.withMessage("Book's publisher must be string"),
-    body("publishingDate").isDate().optional.withMessage("Publishing date must be date"),
-    body("category").isString().optional.withMessage("Book's category must be string"),
-    body("edition").isString().optional.withMessage("Book's edition must be string"),
-    body("pages").isNumeric().optional.withMessage("Book's pages must be number"),
-    body("noOfCopies").isNumeric().optional.withMessage("Number of copies must be number"),
-    body("available").isBoolean().optional.withMessage("Book's Availablility must be true or false"),
-    body("shelfNo").isNumeric().optional.withMessage("Shelf Number must be number")
+    body("id").isNumeric().optional().withMessage("Book's id must be number"),
+    body("title").isAlpha().optional().withMessage("Book's title must be string"),
+    body("auther").isAlpha().optional().withMessage("Book's auther must be string"),
+    body("publisher").isAlpha().optional().withMessage("Book's publisher must be string"),
+    body("publishingDate").isDate().optional().withMessage("Publishing date must be date"),
+    body("category").isString().optional().withMessage("Book's category must be string"),
+    body("edition").isString().optional().withMessage("Book's edition must be string"),
+    body("pages").isNumeric().optional().withMessage("Book's pages must be number"),
+    body("noOfCopies").isNumeric().optional().withMessage("Number of copies must be number"),
+    body("available").isBoolean().optional().withMessage("Book's Availablility must be true or false"),
+    body("shelfNo").isNumeric().optional().withMessage("Shelf Number must be number")
 ]
 
 //Delete validation
