@@ -16,15 +16,18 @@ exports.getBooks=(request,response,next)=>{
     }
     else{
         //Search for Books
-            const searchName = request.body.searchName;
-            const firstName = request.body.firstName;
-            const lastName = request.body.lastName;
+            const searchKey = request.body.searchKey;
+            const publisher = request.body.publisher;
+            const author = request.body.author;
+            const title = request.body.title;
             BookSchema.find({
                 $or: [
-                  { firstName: searchName },
-                  { lastName: searchName },
-                  { firstName: firstName },
-                  { lastName: lastName }
+                  { publisher: searchKey },
+                  { author: searchKey },
+                  { title: searchKey },
+                  { publisher: publisher },
+                  { author: author },
+                  { title: title }
                 ],
               }
               )
@@ -58,7 +61,7 @@ exports.addBook=async(request,response,next)=>{
         let data=await new BookSchema({
                 _id:request.body.id,
                 title:request.body.title,
-                auther:request.body.auther,
+                author:request.body.author,
                 publisher:request.body.publisher,
                 publishingDate:request.body.publishingDate,
                 category:request.body.category,
@@ -82,7 +85,7 @@ exports.updateBook=(request,response,next)=>{
     },{
         $set:{
             title:request.body.title,
-                auther:request.body.auther,
+                author:request.body.author,
                 publisher:request.body.publisher,
                 publishingDate:request.body.publishingDate,
                 category:request.body.category,

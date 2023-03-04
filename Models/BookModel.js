@@ -2,7 +2,7 @@ const mongoose=require("mongoose");
 const schema=new mongoose.Schema({
     _id: Number,
     title:String,
-    auther:String,
+    author:String,
     publisher:String,
     publishingDate:Date,
     category:String,
