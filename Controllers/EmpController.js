@@ -65,7 +65,7 @@ exports.addEmp=async(request,response,next)=>{
                 hireDate:request.body.hireDate,
                 image:request.body.image,
                 salary:request.body.salary
-               }).save(); 
+        }).save();
         response.status(201).json({data});
     }catch(error)
     {
@@ -91,7 +91,7 @@ exports.updateEmp=(request,response,next)=>{
             next(new Error("This employee is not found"));
         }
         else
-        response.status(200).json({data:"Updated!"});
+            response.status(200).json({data:"Updated!"});
     })
     .catch(error=>next(error));
 }

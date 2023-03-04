@@ -1,7 +1,6 @@
 const multer=require("multer");
 const path=require("path");
 const fs = require('fs');
-
 const mongoose=require("mongoose");
 require("../../Models/EmpModel");
 const EmpSchema=mongoose.model("Employees");
