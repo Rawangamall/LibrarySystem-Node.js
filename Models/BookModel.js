@@ -1,4 +1,6 @@
 const mongoose=require("mongoose");
+const AutoIncrement = require('mongoose-sequence')(mongoose);
+
 const schema=new mongoose.Schema({
     _id: Number,
     title:String,
@@ -12,5 +14,6 @@ const schema=new mongoose.Schema({
     available:Boolean,
     shelfNo:Number
 });
+schema.plugin(AutoIncrement,{id:'Book_id',inc_field:"_id"});
 //mapping
 mongoose.model("Book",schema);

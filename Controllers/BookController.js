@@ -1,7 +1,7 @@
 const mongoose=require("mongoose");
 require("../Models/BookModel");
 const BookSchema=mongoose.model("Book");
-
+available=false;
 //Get
 exports.getBooks=(request,response,next)=>{
     if (Object.keys(request.body).length==""){
@@ -68,10 +68,20 @@ exports.addBook=async(request,response,next)=>{
                 pages:request.body.pages,
                 noOfCopies:request.body.noOfCopies,
                 //available:true,
-                shelfNo:request.body.shelfNo
-               }).save(); 
-        response.status(201).json({data});
-    }catch(error)
+                shelfNo:request.body.shelfNo,
+               }).save();
+               /////////////////////////////////////    
+              /* if(noOfCopies>1){
+                available=true;
+                console.log("++++++++++++++",available);
+             }  */ 
+        response.status(201).json({data})
+        if(BookSchema.noOfCopies>1){
+            available=true;
+            console.log("++++++++++++++",available);
+         }
+    }
+    catch(error)
     {
         next(error);
     }
@@ -117,4 +127,13 @@ exports.deleteBook=(request,response,next)=>{
             response.status(200).json({data:"Deleted!"})
         }
         }).catch(error=>next(error));
+}
+
+//available books
+exports.getAvailableBooks=(request,resonse,next)=>{
+    BookSchema.find({
+        available:true
+    }).then(data=>{
+        response.status(200).json({data})
+    }).catch(error=>next(error));
 }

@@ -2,7 +2,6 @@ const {body,param,query}=require("express-validator");
 
 //Post validation
 exports.validatePost=[
-    body("id").isNumeric().withMessage("Book's id must be number"),
     body("title").isString().withMessage("Book's title must be string"),
     body("author").isString().withMessage("Book's author must be string"),
     body("publisher").isString().withMessage("Book's publisher must be string"),
@@ -17,7 +16,7 @@ exports.validatePost=[
 
 //Put validation
 exports.validatePut=[
-    body("id").isNumeric().withMessage("Book's id must be number"),
+    body("_id").isNumeric().withMessage("Book's id must be number"),
     body("title").isString().optional().withMessage("Book's title must be string"),
     body("author").isString().optional().withMessage("Book's author must be string"),
     body("publisher").isString().optional().withMessage("Book's publisher must be string"),
