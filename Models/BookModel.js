@@ -10,7 +10,9 @@ const schema=new mongoose.Schema({
     pages:Number,
     noOfCopies:Number,
     available:Boolean,
-    shelfNo:Number
-});
+    shelfNo:Number,
+    noBorrowed:Number
+},
+{ timestamps: true }  );
 //mapping
 mongoose.model("Book",schema);

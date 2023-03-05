@@ -17,3 +17,9 @@ router.route("/member/getborrowed/:_id")
 //        .get(memberController.getborrowedMonth)
        .post(memberController.addBorrowbook)
 module.exports=router;
+
+router.route("/member/arrivedBooks/get")
+       .get(memberController.getNewArrivedBooks)
+
+//  router.route("/member/borrowedBooks/:_id")
+//        .get(memberController.currentBorrowedBooks)

@@ -1,5 +1,7 @@
 const mongoose=require("mongoose");
 require("./../Models/member");
+require("../Models/BookModel");
+const BookSchema=mongoose.model("Book");
 const MemberSchema=mongoose.model("member");
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -99,29 +101,36 @@ exports.getMember=(request,response,next)=>{
 }
 
 exports.addBorrowbook=(request,response,next)=>{
-    MemberSchema.findOne({_id:request.params._id})
-    .then((result)=>{
-        if(result != null)
-        {
-         
+ 
                 MemberSchema.updateOne(
               { _id: request.params._id },
               { $push: { borrowOper: request.body } },
               (err, result) => {
                 if (err) {
-                  console.error(err);
+                    response.status(404).json({data:"Not Found"});
                 } else {
-                  console.log(result);
+                    response.status(200).json({result});
                 }
               }
-            );
-            response.status(200).json({result});
-        }
-        else{
-            response.status(404).json({data:"Not Found"});
-        }
-    })
-    .catch(error=>{
-        next(error);
-    })
+            );       
 }
+
+
+exports.getNewArrivedBooks=(request,response,next)=>{
+    const endDate = new Date(); // current date and time
+    const startDate = new Date(endDate.getTime() - (14 * 24 * 60 * 60 * 1000)); // 14 days (two weeks) ago
+    
+
+  
+BookSchema.find({ createdAt: { $gte: startDate, $lte: endDate } }, (err, result) => {
+
+  if (err) {
+    response.status(404).json({data:"Not Found"});
+  }
+  else{
+    response.status(200).json({result});
+  }
+  
+});
+}
+

@@ -67,8 +67,9 @@ exports.addBook=async(request,response,next)=>{
                 edition:request.body.edition,
                 pages:request.body.pages,
                 noOfCopies:request.body.noOfCopies,
+                noOfCopies:request.body.noOfCopies,
                 //available:true,
-                shelfNo:request.body.shelfNo
+                noBorrowed:request.body.noBorrowed
                }).save(); 
         response.status(201).json({data});
     }catch(error)
