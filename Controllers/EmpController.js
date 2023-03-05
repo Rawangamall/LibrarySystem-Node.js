@@ -42,7 +42,7 @@ exports.getEmps=(request,response,next)=>{
     }
 //Get a Specific Employee
 exports.getOneEmp=(request,response,next)=>{
-    EmpSchema.findOne({ _id: request.params.id})
+    EmpSchema.findOne({ _id: request.params._id})
          .then((data)=>{
                  response.status(200).json({data});
              })
@@ -56,7 +56,7 @@ exports.addEmp=async(request,response,next)=>{
     try
     {
         let data=await new EmpSchema({
-                _id:request.body.id,
+                _id:request.body._id,
                 firstName:request.body.firstName,
                 lastName:request.body.lastName,
                 email:request.body.email,
@@ -76,7 +76,7 @@ exports.addEmp=async(request,response,next)=>{
 //Update(Put) an Employee
 exports.updateEmp=(request,response,next)=>{
     EmpSchema.updateOne({
-        _id:request.body.id
+        _id:request.body._id
     },{
         $set:{
             firstName:request.body.firstName,
@@ -99,7 +99,7 @@ exports.updateEmp=(request,response,next)=>{
 //Delete an Employee
 exports.deleteEmp=(request,response,next)=>{
     EmpSchema.deleteOne({
-		_id: request.body.id,
+		_id: request.body._id,
 	}).then(data=> {
         if(data.deletedCount==0){
             next(new Error("This Employee is not found!"));

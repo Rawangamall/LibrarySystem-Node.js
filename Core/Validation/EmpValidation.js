@@ -2,7 +2,7 @@ const {body,param,query}=require("express-validator");
 
 //Post validation
 exports.validatePost=[
-    body("id").isNumeric().withMessage("Employee's id must be number"),
+    body("_id").isNumeric().withMessage("Employee's id must be number"),
     body("firstName").isAlpha().withMessage("Employee's firstName must be string")
         .isLength({min:2,max:12}).withMessage("Employee's first name can't be > 12 or < 2 Letters"),
     body("lastName").isAlpha().withMessage("Employee's lastName must be string")
@@ -18,7 +18,7 @@ exports.validatePost=[
 
 //Put validation
 exports.validatePut=[
-    body("id").isNumeric().optional().withMessage("Employee's id must be number"),
+    body("_id").isNumeric().optional().withMessage("Employee's id must be number"),
     body("firstName").isAlpha().optional().withMessage("Employee's firstName must be string")
         .isLength({min:2,max:12}).withMessage("Employee's first name can't be > 12 or < 2 Letters"),
     body("lastName").isAlpha().optional().withMessage("Employee's lastName must be string")
@@ -34,10 +34,10 @@ exports.validatePut=[
 
 //Delete validation
 exports.validateOnDelete=[
-    body("id").isNumeric().withMessage("ID must be integer")
+    body("_id").isNumeric().withMessage("ID must be integer")
 ] 
 
 //Get validation
 exports.validateOnGet=[
-    param("id").isNumeric().withMessage("ID must be integer")
+    param("_id").isNumeric().withMessage("ID must be integer")
 ]
