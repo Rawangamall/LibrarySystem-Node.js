@@ -12,8 +12,10 @@ const schema=new mongoose.Schema({
     pages:Number,
     noOfCopies:Number,
     available:Boolean,
-    shelfNo:Number
-});
+    shelfNo:Number,
+    noBorrowed:Number
+},
+{ timestamps: true }  );
 schema.plugin(AutoIncrement,{id:'Book_id',inc_field:"_id"});
 //mapping
 mongoose.model("Book",schema);
