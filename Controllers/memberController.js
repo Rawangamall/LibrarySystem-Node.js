@@ -1,6 +1,9 @@
 const mongoose=require("mongoose");
 require("./../Models/member");
+require("../Models/BookModel");
 const MemberSchema=mongoose.model("member");
+const BookSchema=mongoose.model("Book");
+
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const salt = bcrypt.genSaltSync(saltRounds)
@@ -86,18 +89,51 @@ exports.getMember=(request,response,next)=>{
     .then((result)=>{
         if(result != null)
         {
-            console.log(result.borrowOper)
             response.status(200).json({result});
         }
         else{
-            response.status(404).json({data:"Not Found"});
+            response.status(404).json({result:"Not Found"});
         }
     })
     .catch(error=>{
         next(error);
     })
 }
-
+exports.getborrowedBooks=(request,response,next)=>{
+    currentMonth = new Date().getMonth() + 1,
+    currentYear = new Date().getFullYear()
+    var out = [];
+    const searchbyMonth = request.body.searchbyMonth
+    const searchbyYear= request.body.searchbyYear
+    const current = request.body.currentmonth
+    MemberSchema.findOne({_id:request.params._id})
+    .then((result)=>{
+        if(result != null)
+        {
+        result.borrowOper.forEach(function(data){
+            bookid = data.book_id
+            month = data.borrow_Date.getMonth()+1
+            year = data.borrow_Date.getFullYear()
+            if(searchbyMonth == month || searchbyYear == year){
+                out.push(bookid)                  
+            }else if (current != null && currentMonth == month){
+                out.push(bookid)                  
+            }
+          })
+              JSON.parse(JSON.stringify(out))
+                console.log(typeof(out[0]))  //array of book id
+                console.log(out)
+                BookSchema.find({_id:out}).then((book)=>{
+                    if(book != null){
+                        response.status(200).json({book});
+                     }
+                })                  
+        }
+    })
+    .catch(error=>{
+        next(error);
+    })
+}
 exports.addBorrowbook=(request,response,next)=>{
     MemberSchema.findOne({_id:request.params._id})
     .then((result)=>{
