@@ -2,6 +2,7 @@ const mongoose=require("mongoose");
 require("../Models/BookModel");
 const BookSchema=mongoose.model("Book");
 available=false;
+
 //Get
 exports.getBooks=(request,response,next)=>{
     if (Object.keys(request.body).length==""){
@@ -131,3 +132,12 @@ exports.getAvailableBooks=(request,response,next)=>{
                     response.status(200).json({data})
                 }).catch(error=>next(error));
 }
+
+//most borrowed book
+exports.mostBorrowedBook=(request,response,next)=>{
+    BookSchema.find().sort({noBorrowed:-1}).limit(1)
+                .then(data=>{
+                    response.status(200).json({data})
+                })
+}
+

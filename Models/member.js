@@ -25,13 +25,12 @@ const schema=new mongoose.Schema({
            borrow_Date: {type: Date , default: new Date() },
             expire_Date: {
           type: Date,
-          
         },
         employee_id:{ 
           type:Number,
           require:true,
           ref:"Emp"},
-          returned:Boolean
+          returned:{type:Boolean,default:false}
       }
     ] ,
     readingOper:[

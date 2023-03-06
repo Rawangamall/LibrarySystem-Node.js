@@ -15,7 +15,8 @@ router.route("/Book")
     .delete(validateOnDeleteBook,validateMW,controller.deleteBook)
 
 router.get("/Book/available",controller.getAvailableBooks)
-
+router.get("/Book/mostBorrowedBook",controller.mostBorrowedBook)
 router.get("/Book/:id",validateOnGetBook,validateMW,controller.getOneBook)
+
 
 module.exports=router;
