@@ -68,7 +68,8 @@ exports.addBook=async(request,response,next)=>{
                 pages:request.body.pages,
                 noOfCopies:request.body.noOfCopies,
                 //available:true,
-                shelfNo:request.body.shelfNo
+                shelfNo:request.body.shelfNo,
+                dateOfArrival:Date.now()
                }).save(); 
         response.status(201).json({data});
     }catch(error)
@@ -118,3 +119,9 @@ exports.deleteBook=(request,response,next)=>{
         }
         }).catch(error=>next(error));
 }
+
+//Get New Arrived Books
+exports.getNewArrivedBooks=(request,response,next)=>{
+    console.log(BookSchema.find({},{noOfCopies:1}));
+    
+    }

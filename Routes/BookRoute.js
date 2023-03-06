@@ -14,6 +14,9 @@ router.route("/Book")
     .put(validatePutBook,validateMW,controller.updateBook)
     .delete(validateOnDeleteBook,validateMW,controller.deleteBook)
 
+router.route("/Book/new_arrived").get(controller.getNewArrivedBooks)
+
 router.get("/Book/:id",validateOnGetBook,validateMW,controller.getOneBook)
+
 
 module.exports=router;
