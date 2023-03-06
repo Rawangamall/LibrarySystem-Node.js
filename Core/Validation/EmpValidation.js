@@ -2,7 +2,6 @@ const {body,param,query}=require("express-validator");
 
 //Post validation
 exports.validatePost=[
-    body("_id").isNumeric().withMessage("Employee's id must be number"),
     body("firstName").isAlpha().withMessage("Employee's firstName must be string")
         .isLength({min:2,max:12}).withMessage("Employee's first name can't be > 12 or < 2 Letters"),
     body("lastName").isAlpha().withMessage("Employee's lastName must be string")

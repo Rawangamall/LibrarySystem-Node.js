@@ -10,11 +10,11 @@ const validateOnDeleteBook=require("../Core/Validation/BookValidation").validate
 
 router.route("/Book")
     .get(controller.getBooks)
-    .post(validatePostBook,validateMW,controller.addBook)              //make it validatePostMember  controller.addMember
+    .post(validateMW,controller.addBook)              //make it validatePostMember  controller.addMember
     .put(validatePutBook,validateMW,controller.updateBook)
     .delete(validateOnDeleteBook,validateMW,controller.deleteBook)
 
-router.route("/Book/new_arrived").get(controller.getNewArrivedBooks)
+router.get("/Book/available",controller.getAvailableBooks)
 
 router.get("/Book/:id",validateOnGetBook,validateMW,controller.getOneBook)
 

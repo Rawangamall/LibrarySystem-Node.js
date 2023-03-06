@@ -17,20 +17,29 @@ const schema=new mongoose.Schema({
     fullAddress:String,
     borrowOper:[
      {
+      _id:Number,
         book_id:{ 
            type:Number,
            require:true,
            ref:"book"},
            borrow_Date: {type: Date , default: new Date() },
-        expire_Date: {
+            expire_Date: {
           type: Date,
-          required:true
+          
         },
         employee_id:{ 
           type:Number,
           require:true,
-          ref:"Emp"}
+          ref:"Emp"},
+          returned:Boolean
       }
+    ] ,
+    readingOper:[
+        {   
+        _id:Number,
+        book_id:{type:Number,require:true,ref:"book"},
+        read_date:{type:Date , default: new Date()}
+        }
     ]
 },
 { timestamps: true }   // createAT updateAT
