@@ -139,7 +139,6 @@ exports.addBorrowbook=(request,response,next)=>{
     .then((result)=>{
         if(result != null)
         {
-         
                 MemberSchema.updateOne(
               { _id: request.params._id },
               { $push: { borrowOper: request.body } },
@@ -155,6 +154,67 @@ exports.addBorrowbook=(request,response,next)=>{
         }
         else{
             response.status(404).json({data:"Not Found"});
+        }
+    })
+    .catch(error=>{
+        next(error);
+    })
+}
+
+exports.addReadbook=(request,response,next)=>{
+    MemberSchema.findOne({_id:request.params._id})
+    .then((result)=>{
+        if(result != null)
+        {   
+                MemberSchema.updateOne(
+              { _id: request.params._id },
+              { $push: { readingOper: request.body } },
+              (err, result) => {
+                if (err) {
+                  console.error(err);
+                } else {
+                  console.log(result);
+                }
+              }
+            );
+            response.status(200).json({result});
+        }
+        else{
+            response.status(404).json({data:"Not Found"});
+        }
+    })
+    .catch(error=>{
+        next(error);
+    })
+}
+
+exports.getReadBooks=(request,response,next)=>{
+    currentMonth = new Date().getMonth() + 1,
+    currentYear = new Date().getFullYear()
+    var out = [];
+    const searchbyMonth = request.body.searchbyMonth
+    const searchbyYear= request.body.searchbyYear
+    const current = request.body.currentmonth
+    MemberSchema.findOne({_id:request.params._id})
+    .then((result)=>{
+        if(result != null)
+        {
+         result.readingOper.forEach(function(data){
+            bookid = data.book_id
+            month = data.read_date.getMonth()+1
+            year = data.read_date.getFullYear()
+            if(searchbyMonth == month || searchbyYear == year){
+                out.push(bookid)                  
+            }else if (current != null && currentMonth == month){
+                out.push(bookid)                  
+            }
+          })
+                JSON.parse(JSON.stringify(out))
+                BookSchema.find({_id:out}).then((book)=>{
+                    if(book != null){
+                        response.status(200).json({book});
+                     }
+                })                  
         }
     })
     .catch(error=>{
