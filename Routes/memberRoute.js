@@ -13,11 +13,17 @@ router.route("/member/:_id")
         .get(memberController.getMember)
 
 router.route("/member/getborrowed/:_id")
-        .get(memberController.getborrowedBooks)
-        .post(memberController.addBorrowbook)
+       .post(memberController.addBorrowbook)
+       .get(memberController.getborrowedBooks)
 
 router.route("/member/getread/:_id")
         .get(memberController.getReadBooks)
         .post(memberController.addReadbook)
+
+module.exports=router;
+router.route("/member/arrivedBooks/get")
+       .get(memberController.getNewArrivedBooks)
+
+    
 
 module.exports=router;

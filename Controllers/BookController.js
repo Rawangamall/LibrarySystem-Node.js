@@ -1,7 +1,7 @@
 const mongoose=require("mongoose");
 require("../Models/BookModel");
 const BookSchema=mongoose.model("Book");
-
+available=false;
 //Get
 exports.getBooks=(request,response,next)=>{
     if (Object.keys(request.body).length==""){
@@ -29,6 +29,7 @@ exports.getBooks=(request,response,next)=>{
                   { author: author },
                   { title: title }
                 ],
+                'noOfCopies': { $gt: 1 }                    ////////////////////
               }
               )
               .then(data=>{
@@ -36,8 +37,11 @@ exports.getBooks=(request,response,next)=>{
                     {
                         next(new Error("This Book is not found, Invalid Input"));
                     }
-                    else
-                        response.status(200).json({data});
+                    else{
+                        let bookdata = {availability:"This book is available",data};
+                        JSON.stringify(bookdata);
+                        response.status(200).json({data:bookdata})
+                    }
                 })
                 .catch(error=>{next(error);
                 })
@@ -67,8 +71,9 @@ exports.addBook=async(request,response,next)=>{
                 edition:request.body.edition,
                 pages:request.body.pages,
                 noOfCopies:request.body.noOfCopies,
+                noOfCopies:request.body.noOfCopies,
                 //available:true,
-                shelfNo:request.body.shelfNo
+                noBorrowed:request.body.noBorrowed
                }).save(); 
         response.status(201).json({data});
     }catch(error)
@@ -117,4 +122,12 @@ exports.deleteBook=(request,response,next)=>{
             response.status(200).json({data:"Deleted!"})
         }
         }).catch(error=>next(error));
+}
+
+//available books
+exports.getAvailableBooks=(request,response,next)=>{
+     BookSchema.find({ 'noOfCopies': { $gt: 1 } },{title:1,noOfCopies:1,_id:0})
+                .then(data=>{
+                    response.status(200).json({data})
+                }).catch(error=>next(error));
 }
