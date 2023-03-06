@@ -1,6 +1,8 @@
 const mongoose=require("mongoose");
 require("../Models/EmpModel");
 const EmpSchema=mongoose.model("Employees");
+const MemberSchema=mongoose.model("member");
+const BookSchema=mongoose.model("Book");
 
 //Get
 exports.getEmps=(request,response,next)=>{
@@ -109,4 +111,78 @@ exports.deleteEmp=(request,response,next)=>{
             next();
         }
         }).catch(error=>next(error));
+}
+
+exports.addBorrowbook=(request,response,next)=>{
+    MemberSchema.findOne({_id:request.params._id})
+    .then((result)=>{
+        if(result != null )
+        {
+        BookSchema.findOne({_id:request.body.book_id}).then((res)=>{
+            if(res!=null){
+            MemberSchema.updateOne({ _id: request.params._id },{ $push: { borrowOper: request.body}},
+          (err, result) => {
+            if (err) {
+              console.error(err);
+            } else {
+              console.log(result);
+            }
+          }
+        );
+        response.status(200).json({result});
+        }   else{response.status(404).json({data:"This Book is not Found"});}      
+    })
+    }
+    else{
+    response.status(404).json({data:"This member is not Found"});
+    }
+    })
+    .catch(error=>{
+    next(error);
+    })
+    }
+
+    exports.addReadbook=(request,response,next)=>{
+    MemberSchema.findOne({_id:request.params._id})
+    .then((result)=>{
+    if(result != null )
+    {   
+    BookSchema.findOne({_id:request.body.book_id}).then((res)=>{
+        if(res!=null){
+        MemberSchema.updateOne(
+      { _id: request.params._id },
+      { $push: { readingOper: request.body } },
+      (err, result) => {
+        if (err) {
+          console.error(err);
+        } else {
+          console.log(result);
+        }
+      }
+    );
+    response.status(200).json({result});
+    }   else{response.status(404).json({data:"This Book is not Found"});}      
+})
+}
+else{
+response.status(404).json({data:"This member is not Found"});
+}
+})
+.catch(error=>{
+next(error);
+})
+}
+
+exports.returnBook=(request,response,next)=>{
+    MemberSchema.updateOne({_id :request.params._id},{
+        $set:{returned:request.body.returned}
+    }).then(data=>{
+        if(data.matchedCount==0)
+        {
+            next(new Error("This member is not found"));
+        }
+        else
+            response.status(200).json({data:"Updated!"});
+    })
+    .catch(error=>next(error));
 }
