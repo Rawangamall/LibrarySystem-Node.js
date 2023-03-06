@@ -182,9 +182,8 @@ exports.getReadBooks=(request,response,next)=>{
     currentMonth = new Date().getMonth() + 1,
     currentYear = new Date().getFullYear()
     var out = [];
-    const searchbyMonth = request.body.searchbyMonth
-    const searchbyYear= request.body.searchbyYear
-    const current = request.body.currentmonth
+     searchbyMonth = request.body.searchbyMonth
+     searchbyYear= request.body.searchbyYear
     MemberSchema.findOne({_id:request.params._id})
     .then((result)=>{
         if(result != null)
@@ -193,10 +192,10 @@ exports.getReadBooks=(request,response,next)=>{
             bookid = data.book_id
             month = data.read_date.getMonth()+1
             year = data.read_date.getFullYear()
-            if(searchbyMonth == month || searchbyYear == year){
-                out.push(bookid)                  
-            }else if (current != null && currentMonth == month){
-                out.push(bookid)                  
+            if(searchbyMonth == month && searchbyYear == year){
+                        out.push(bookid)                  
+            }else if (currentMonth == month){
+                   out.push(bookid)                  
             }
           })
                 JSON.parse(JSON.stringify(out))
@@ -230,3 +229,35 @@ BookSchema.find({ createdAt: { $gte: startDate, $lte: endDate } }, (err, result)
 });
 }
 
+exports.getbooks=(request,response,next)=>{
+    var out = [];
+if(request.body != null){
+const searchBYyear = request.body.publishingDate
+
+        BookSchema.find({
+            $and:[
+                { publisher: request.body.publisher },
+                { author: request.body.author },
+                { category: request.body.category },
+                { availability: request.body.availability },
+            ]
+            }).then(data=>{
+            if(data != null)
+            {
+                data.forEach(function(result){
+                    year = result.publishingDate.getFullYear()
+                    if(year == searchBYyear){
+                        out.push(result)                        
+                    }
+                   // console.log(out)
+                })
+
+                response.status(200).json({out})
+
+                }
+                else{                     
+                    response.status(404).json({data:"Not found"})
+                }
+            }).catch(error=>{next(error);})
+        }
+    }

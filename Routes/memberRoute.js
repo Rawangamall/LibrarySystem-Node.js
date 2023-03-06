@@ -20,10 +20,10 @@ router.route("/member/getread/:_id")
         .get(memberController.getReadBooks)
         .post(memberController.addReadbook)
 
-module.exports=router;
 router.route("/member/arrivedBooks/get")
        .get(memberController.getNewArrivedBooks)
 
-    
+router.route("/member/getbooks/get")
+       .get(memberController.getbooks)
 
 module.exports=router;
