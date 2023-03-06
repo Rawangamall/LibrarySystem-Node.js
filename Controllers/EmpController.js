@@ -1,5 +1,7 @@
 const mongoose=require("mongoose");
 require("../Models/EmpModel");
+require("../Models/BookModel");
+require("../Models/member");
 const EmpSchema=mongoose.model("Employees");
 const MemberSchema=mongoose.model("member");
 const BookSchema=mongoose.model("Book");
@@ -118,8 +120,9 @@ exports.addBorrowbook=(request,response,next)=>{
     .then((result)=>{
         if(result != null )
         {
-        BookSchema.findOne({_id:request.body.book_id}).then((res)=>{
+        BookSchema.findOneAndUpdate({_id:request.body.book_id}, {$inc : {'noBorrowed' : 1}}).then((res)=>{
             if(res!=null){
+                console.log(res.noBorrowed);
             MemberSchema.updateOne({ _id: request.params._id },{ $push: { borrowOper: request.body}},
           (err, result) => {
             if (err) {
@@ -174,15 +177,17 @@ next(error);
 }
 
 exports.returnBook=(request,response,next)=>{
-    MemberSchema.updateOne({_id :request.params._id},{
-        $set:{returned:request.body.returned}
+    MemberSchema.updateOne({ "borrowOper._id" : request.params._id} ,{
+        $set:{ "borrowOper.$.returned" : request.body.returned}
     }).then(data=>{
         if(data.matchedCount==0)
         {
-            next(new Error("This member is not found"));
+            next(new Error("This borrow operation is not found"));
         }
-        else
+        else{
+            console.log(request.body.returned);
             response.status(200).json({data:"Updated!"});
+        }
     })
     .catch(error=>next(error));
 }
