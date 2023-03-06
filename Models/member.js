@@ -33,6 +33,13 @@ const schema=new mongoose.Schema({
           ref:"Emp"},
           returned:Boolean
       }
+    ] ,
+    readingOper:[
+        {   
+        _id:Number,
+        book_id:{type:Number,require:true,ref:"book"},
+        read_date:{type:Date , default: new Date()}
+        }
     ]
 },
 { timestamps: true }   // createAT updateAT
