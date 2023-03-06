@@ -29,6 +29,7 @@ exports.getBooks=(request,response,next)=>{
                   { author: author },
                   { title: title }
                 ],
+                'noOfCopies': { $gt: 1 }                    ////////////////////
               }
               )
               .then(data=>{
@@ -36,8 +37,11 @@ exports.getBooks=(request,response,next)=>{
                     {
                         next(new Error("This Book is not found, Invalid Input"));
                     }
-                    else
-                        response.status(200).json({data});
+                    else{
+                        let bookdata = {availability:"This book is available",data};
+                        JSON.stringify(bookdata);
+                        response.status(200).json({data:bookdata})
+                    }
                 })
                 .catch(error=>{next(error);
                 })
@@ -121,10 +125,9 @@ exports.deleteBook=(request,response,next)=>{
 }
 
 //available books
-exports.getAvailableBooks=(request,resonse,next)=>{
-    BookSchema.find({
-        available:true
-    }).then(data=>{
-        response.status(200).json({data})
-    }).catch(error=>next(error));
+exports.getAvailableBooks=(request,response,next)=>{
+     BookSchema.find({ 'noOfCopies': { $gt: 1 } },{title:1,noOfCopies:1,_id:0})
+                .then(data=>{
+                    response.status(200).json({data})
+                }).catch(error=>next(error));
 }
