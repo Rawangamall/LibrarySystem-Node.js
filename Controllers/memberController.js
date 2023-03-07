@@ -116,7 +116,9 @@ exports.getborrowedBooks=(request,response,next)=>{
             year = data.borrow_Date.getFullYear()
             if(searchbyMonth == month && searchbyYear == year){
                 out.push(bookid)                  
- }
+ }else if((searchbyMonth == null || searchbyYear== null) && (currentMonth == month && currentYear==year)){
+                out.push(bookid)                  
+            }
           })
               JSON.parse(JSON.stringify(out))
                 console.log(typeof(out[0]))  //array of book id
