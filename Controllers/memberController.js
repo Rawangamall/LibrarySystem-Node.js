@@ -114,11 +114,9 @@ exports.getborrowedBooks=(request,response,next)=>{
             bookid = data.book_id
             month = data.borrow_Date.getMonth()+1
             year = data.borrow_Date.getFullYear()
-            if(searchbyMonth == month || searchbyYear == year){
+            if(searchbyMonth == month && searchbyYear == year){
                 out.push(bookid)                  
-            }else if (current != null && currentMonth == month){
-                out.push(bookid)                  
-            }
+ }
           })
               JSON.parse(JSON.stringify(out))
                 console.log(typeof(out[0]))  //array of book id
@@ -141,8 +139,8 @@ exports.getReadBooks=(request,response,next)=>{
     currentMonth = new Date().getMonth() + 1,
     currentYear = new Date().getFullYear()
     var out = [];
-     searchbyMonth = request.body.searchbyMonth
-     searchbyYear= request.body.searchbyYear
+    const searchbyMonth = request.body.searchbyMonth
+    const searchbyYear= request.body.searchbyYear
     MemberSchema.findOne({_id:request.params._id})
     .then((result)=>{
         if(result != null)
@@ -152,10 +150,11 @@ exports.getReadBooks=(request,response,next)=>{
             month = data.read_date.getMonth()+1
             year = data.read_date.getFullYear()
             if(searchbyMonth == month && searchbyYear == year){
-                        out.push(bookid)                  
-            }else if (currentMonth == month){
                    out.push(bookid)                  
+ }else if((searchbyMonth == null || searchbyYear== null) && (currentMonth == month && currentYear==year)){
+                out.push(bookid)                  
             }
+
           })
                 JSON.parse(JSON.stringify(out))
                 BookSchema.find({_id:out}).then((book)=>{
