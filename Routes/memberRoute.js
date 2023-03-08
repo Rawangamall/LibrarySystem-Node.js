@@ -18,10 +18,10 @@ router.route("/member/getborrowed/:_id")
 router.route("/member/getread/:_id")
         .get(memberController.getReadBooks)
 
-module.exports=router;
 router.route("/member/arrivedBooks/get")
        .get(memberController.getNewArrivedBooks)
 
-    
+router.route("/member/getbooks/get")
+       .get(memberController.getbooks)
 
 module.exports=router;
