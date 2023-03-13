@@ -24,4 +24,7 @@ router.route("/member/arrivedBooks/get")
 router.route("/member/getbooks/get")
        .get(memberController.getbooks)
 
+router.route("/member/getCurrentborrowed/:_id")
+       .get(memberController.currentBorrowedBooks)
+       
 module.exports=router;

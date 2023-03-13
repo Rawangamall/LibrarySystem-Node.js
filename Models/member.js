@@ -30,7 +30,7 @@ const schema=new mongoose.Schema({
           type:Number,
           require:true,
           ref:"Emp"},
-          returned:{type:Boolean,default:false}
+          returned:{type:String,default:"false"}
       }
     ] ,
     readingOper:[

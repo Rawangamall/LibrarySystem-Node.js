@@ -106,11 +106,17 @@ exports.getborrowedBooks=(request,response,next)=>{
     const searchbyMonth = request.body.searchbyMonth
     const searchbyYear= request.body.searchbyYear
     const current = request.body.currentmonth
+    test = new Date(`${searchbyYear}-${searchbyMonth+1}`)
+    console.log(test);
+    test22 = new Date()
+    console.log(test22)
+    
     MemberSchema.findOne({_id:request.params._id})
     .then((result)=>{
         if(result != null)
         {
-        result.borrowOper.forEach(function(data){
+            console.log(result)
+            result.borrowOper.forEach(function(data){
             bookid = data.book_id
             month = data.borrow_Date.getMonth()+1
             year = data.borrow_Date.getFullYear()
@@ -156,7 +162,6 @@ exports.getReadBooks=(request,response,next)=>{
  }else if((searchbyMonth == null || searchbyYear== null) && (currentMonth == month && currentYear==year)){
                 out.push(bookid)                  
             }
-
           })
                 JSON.parse(JSON.stringify(out))
                 BookSchema.find({_id:out}).then((book)=>{
@@ -211,9 +216,7 @@ const searchBYyear = request.body.publishingDate
                     }
                    // console.log(out)
                 })
-
                 response.status(200).json({out})
-
                 }
                 else{                     
                     response.status(404).json({data:"Not found"})
@@ -221,3 +224,12 @@ const searchBYyear = request.body.publishingDate
             }).catch(error=>{next(error);})
         }
     }
+
+exports.currentBorrowedBooks=(request,response,next)=>{
+    MemberSchema.find({ _id:request.params._id},{"borrowOper.returned":"true"}
+    ).then(result => {
+        response.status(200).json({result});
+    }).catch(err => {
+        console.log(err.message)
+    });
+}
