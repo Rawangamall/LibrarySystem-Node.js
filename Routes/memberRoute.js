@@ -15,19 +15,18 @@ router.route("/member/:_id")
         .get(memberController.getMember)
 
 router.route("/member/getborrowed/:_id")
-       .post(memberController.addBorrowbook)
        .get(memberController.getborrowedBooks)
 
 router.route("/member/getread/:_id")
         .get(memberController.getReadBooks)
-        .post(memberController.addReadbook)
 
-module.exports=router;
 router.route("/member/arrivedBooks/get")
        .get(memberController.getNewArrivedBooks)
 
  router.route("/member/getCurrentborrowed/:_id")
        .get(memberController.currentBorrowedBooks)
  
+router.route("/member/getbooks/get")
+       .get(memberController.getbooks)
 
 module.exports=router;
