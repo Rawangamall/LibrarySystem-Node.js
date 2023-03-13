@@ -2,6 +2,8 @@ const express=require("express");
 const router=express.Router();
 const validateData=require("./../Core/Validation/memberData");
 const memberController=require("./../Controllers/memberController");
+const BookController=require("./../Controllers/BookController");
+
       
 router.route("/member")
        .get(memberController.getAll)
@@ -24,6 +26,8 @@ module.exports=router;
 router.route("/member/arrivedBooks/get")
        .get(memberController.getNewArrivedBooks)
 
-    
+ router.route("/member/getCurrentborrowed/:_id")
+       .get(memberController.currentBorrowedBooks)
+ 
 
 module.exports=router;

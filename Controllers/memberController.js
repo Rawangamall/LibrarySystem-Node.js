@@ -230,3 +230,51 @@ BookSchema.find({ createdAt: { $gte: startDate, $lte: endDate } }, (err, result)
 });
 }
 
+  // // console.log( result[0].borrowOper);
+            // result[0].borrowOper.forEach((borrowOp) => {
+            //     if(borrowOp.returned==false){
+                   
+            //         final.push(borrowOp.borrow_Date,borrowOp.returned )
+            //     }
+               
+            // });
+            // console.log(final);
+
+exports.currentBorrowedBooks=(request,response,next)=>{
+  
+    MemberSchema
+    .aggregate([
+        { $match: { _id:19 } },
+        { 
+            $project:{ 
+            "borrowOper":1,
+            _id:0,
+            borrowOper: {$filter: {
+                input: '$borrowOper',
+                as: 'item',
+                cond: {$eq: ['$$item.returned', "false"]}
+            }}
+        }
+    },
+    
+     ])
+     .then(result => {
+        response.status(200).json({result});
+    }).catch(err => {
+        console.log(err.message)
+    });
+     
+    
+}
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+    

@@ -15,32 +15,32 @@ const schema=new mongoose.Schema({
     phoneNumber:Number ,
     birthdate: Date ,
     fullAddress:String,
-    borrowOper:[
-     {
-      _id:Number,
-        book_id:{ 
-           type:Number,
-           require:true,
-           ref:"book"},
-           borrow_Date: {type: Date , default: new Date() },
-            expire_Date: {
-          type: Date,
+    // borrowOper:[
+    //  {
+      // _id:Number,
+      //   book_id:{ 
+      //      type:Number,
+      //      require:true,
+      //      ref:"book"},
+      //      borrow_Date: {type: Date , default: new Date() },
+      //       expire_Date: {
+      //     type: Date,
           
-        },
-        employee_id:{ 
-          type:Number,
-          require:true,
-          ref:"Emp"},
-          returned:Boolean
-      }
-    ] ,
-    readingOper:[
-        {   
-        _id:Number,
-        book_id:{type:Number,require:true,ref:"book"},
-        read_date:{type:Date , default: new Date()}
-        }
-    ]
+      //   },
+      //   employee_id:{ 
+      //     type:Number,
+      //     require:true,
+      //     ref:"Emp"},
+      //     returned:String
+      // }
+    // ] ,
+    // readingOper:[
+    //     {   
+    //     _id:Number,
+    //     book_id:{type:Number,require:true,ref:"book"},
+    //     read_date:{type:Date , default: new Date()}
+    //     }
+    // ]
 },
 { timestamps: true }   // createAT updateAT
 );
