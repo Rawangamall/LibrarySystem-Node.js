@@ -20,11 +20,11 @@ router.route("/Employees")
 
 router.get("/Employees/:_id",validateOnGetEmp,validateMW,controller.getOneEmp)
 
-router.route("/Employees/addBorrowedBooks/:_id")
-       .post(controller.addBorrowbook)
-       .put(controller.returnBook)
+// router.route("/Employees/addBorrowedBooks/:_id")
+//        .post(controller.addBorrowbook)
+//        .put(controller.returnBook)
 
-router.route("/Employees/addReadBooks/:_id")
-        .post(controller.addReadbook)
+// router.route("/Employees/addReadBooks/:_id")
+//         .post(controller.addReadbook)
 
 module.exports=router;

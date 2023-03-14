@@ -5,6 +5,7 @@ const mongoose=require("mongoose");
 const memberRoute=require("./Routes/memberRoute");
 const BookRoute=require("./Routes/BookRoute");
 const EmpRoute=require("./Routes/EmpRoute");
+const BookOperationRoute=require("./Routes/BookOperationRoute");
 
 //server
 const server = express();
@@ -39,6 +40,7 @@ server.use(express.urlencoded({extended:false}));
 server.use(memberRoute);
 server.use(BookRoute);
 server.use(EmpRoute);
+server.use(BookOperationRoute);
 
 
 //Not Found Middleware
