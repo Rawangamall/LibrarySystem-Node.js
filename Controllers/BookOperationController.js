@@ -10,16 +10,6 @@ const BookSchema=mongoose.model("Book");
 const BookOperationSchema=mongoose.model("BookOperation");
 
 
-exports.getOperations=(request,response,next)=>{
-        //Get All Books
-        BookOperationSchema.find({})
-            .then((data)=>{
-                    response.status(200).json({data});
-                })
-            .catch(error=>{
-                next(error);
-        })         
-    }
 
 exports.getAll=(request,response)=>{
     BookOperationSchema.find({})
@@ -30,8 +20,6 @@ exports.getAll=(request,response)=>{
                         next(error);
                     })
 }
-
-
 
  exports.updateBookOperation=(request,response,next)=>{
     
@@ -101,7 +89,6 @@ exports.getAll=(request,response)=>{
                 memberID:request.params.memberID,
                 employeeID:request.body.employeeID,
                 bookID:request.body.bookID,
-                startDate:Date(),
                 expireDate:request.body.expireDate,   //after 2 weeks
             }).save()
             .then((data)=>{
@@ -123,7 +110,6 @@ exports.getAll=(request,response)=>{
         })
     }
 
- 
 exports.addReadbook=(request,response,next)=>{
     MemberSchema.findOne({_id:request.params._id})
     .then((result)=>{
@@ -162,7 +148,8 @@ exports.addReadbook=(request,response,next)=>{
 
     exports.borrowBYdate=async(request,response,next)=>{
         date = new Date();
-        const searchbyMonth = request.body.searchbyMonth
+        const Month = request.body.searchbyMonth
+        let searchbyMonth = Number(Month)
         const searchbyYear= request.body.searchbyYear
        try{ 
         if(searchbyMonth != null && searchbyYear != null){
@@ -210,7 +197,6 @@ exports.addReadbook=(request,response,next)=>{
     }
     
    
-
 exports.addReadbook=(request,response,next)=>{
     MemberSchema.findOne({_id:request.params._id})
     .then((result)=>{
