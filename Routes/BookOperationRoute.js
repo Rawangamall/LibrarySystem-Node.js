@@ -2,18 +2,15 @@ const express=require("express");
 const router=express.Router();
 
 const validateMW=require("../Core/Validation/validateMW");
-const Operationcontroller=require("./../Controllers/BookOperationController.js");
+const controller=require("../Controllers/BookOperationController.js");
 
-// const router=express.Router();
 // const validatePostBook=require("../Core/Validation/BookValidation").validatePost;
 // const validatePutBook=require("../Core/Validation/BookValidation").validatePut;
 // const validateOnGetBook=require("../Core/Validation/BookValidation").validateOnGet;
 // const validateOnDeleteBook=require("../Core/Validation/BookValidation").validateOnDelete;
 //const { checkAdmin, checkTeacherAndAdmin }=require("./../Core/auth/authenticationMW");
 
-router.route("/BookOperation")
-    .get(Operationcontroller.getOperations)
-    .post(Operationcontroller.addOperation)
+
 //     .put(validatePutBook,validateMW,controller.updateBook)
 //     .delete(validateOnDeleteBook,validateMW,controller.deleteBook)
 
@@ -22,9 +19,27 @@ router.route("/BookOperation")
 
 
 router.route("/BookOperation/readingBYdate/get")
-       .get(Operationcontroller.readingBYdate)
+      .get(controller.readingBYdate)
 
 router.route("/BookOperation/borrowBYdate/get")
-      .get(Operationcontroller.borrowBYdate)
+     .get(controller.borrowBYdate)
+     .get(controller.getAll)
+   
+   
+router.route("/BookOperation/:_id")
+    .patch(controller.updateBookOperation)
+    .delete(controller.deleteBookOperation)
+    .get(controller.getBookOperation)
+
+
+
+router.route("/Employees/addBorrowedBooks/:_id")
+       .post(controller.addBorrowbook)
+
+router.route("/Employees/returnBook/:_id")
+       .put(controller.returnBook)
+
+router.route("/Employees/addReadBooks/:_id")
+        .post(controller.addReadbook)
 
 module.exports=router;

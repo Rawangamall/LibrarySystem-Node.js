@@ -5,7 +5,8 @@ const mongoose=require("mongoose");
 const memberRoute=require("./Routes/memberRoute");
 const BookRoute=require("./Routes/BookRoute");
 const EmpRoute=require("./Routes/EmpRoute");
-const BookOperation = require("./Routes/BookOperationRoute")
+const BookOperationRoute=require("./Routes/BookOperationRoute");
+
 //server
 const server = express();
 let port=process.env.PORT||8080;
@@ -39,7 +40,7 @@ server.use(express.urlencoded({extended:false}));
 server.use(memberRoute);
 server.use(BookRoute);
 server.use(EmpRoute);
-server.use(BookOperation);
+server.use(BookOperationRoute);
 
 
 //Not Found Middleware

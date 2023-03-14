@@ -20,8 +20,7 @@ router.route("/member/getborrowed/:_id")
 router.route("/member/getread/:_id")
         .get(memberController.getReadBooks)
 
-router.route("/member/arrivedBooks/get")
-       .get(memberController.getNewArrivedBooks)
+
 
  router.route("/member/getCurrentborrowed/:_id")
        .get(memberController.currentBorrowedBooks)
