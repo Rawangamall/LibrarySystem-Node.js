@@ -101,84 +101,85 @@ exports.getMember=(request,response,next)=>{
         next(error);
     })
 }
-exports.getborrowedBooks=(request,response,next)=>{
-    currentMonth = new Date().getMonth() + 1,
-    currentYear = new Date().getFullYear()
-    var out = [];
-    const searchbyMonth = request.body.searchbyMonth
-    const searchbyYear= request.body.searchbyYear
-    const current = request.body.currentmonth
-    test = new Date(`${searchbyYear}-${searchbyMonth+1}`)
-    console.log(test);
-    test22 = new Date()
-    console.log(test22)
-    
-    MemberSchema.findOne({_id:request.params._id})
-    .then((result)=>{
-        if(result != null)
-        {
-            console.log(result)
-            result.borrowOper.forEach(function(data){
-            bookid = data.book_id
-            month = data.borrow_Date.getMonth()+1
-            year = data.borrow_Date.getFullYear()
-            if(searchbyMonth == month && searchbyYear == year){
-                out.push(bookid)                  
- }else if((searchbyMonth == null || searchbyYear== null) && (currentMonth == month && currentYear==year)){
-                out.push(bookid)                  
-            }
-          })
-              JSON.parse(JSON.stringify(out))
-                console.log(typeof(out[0]))  //array of book id
-                console.log(out)
-                BookSchema.find({_id:out}).then((book)=>{
-                    if(book != null){
-                        response.status(200).json({book});
-                     }
-                })                  
-        }else{
-            response.status(404).json({members:"There's no member"});
-            }
-    })
-    .catch(error=>{
-        next(error);
-    })
-}
 
-exports.getReadBooks=(request,response,next)=>{
-    currentMonth = new Date().getMonth() + 1,
-    currentYear = new Date().getFullYear()
-    var out = [];
-    const searchbyMonth = request.body.searchbyMonth
-    const searchbyYear= request.body.searchbyYear
-    MemberSchema.findOne({_id:request.params._id})
-    .then((result)=>{
-        if(result != null)
-        {
-         result.readingOper.forEach(function(data){
-            bookid = data.book_id
-            month = data.read_date.getMonth()+1
-            year = data.read_date.getFullYear()
-            if(searchbyMonth == month && searchbyYear == year){
-                   out.push(bookid)                  
- }else if((searchbyMonth == null || searchbyYear== null) && (currentMonth == month && currentYear==year)){
-                out.push(bookid)                  
-            }
-          })
-                JSON.parse(JSON.stringify(out))
-                BookSchema.find({_id:out}).then((book)=>{
-                    if(book != null){
-                        response.status(200).json({book});
-                     }
-                })                  
-        }else{
-        response.status(404).json({members:"There's no member"});
-        }
-    })
-    .catch(error=>{
-        next(error);
-    })
-}
+// exports.getborrowedBooks=(request,response,next)=>{
+//     currentMonth = new Date().getMonth() + 1,
+//     currentYear = new Date().getFullYear()
+//     var out = [];
+//     const searchbyMonth = request.body.searchbyMonth
+//     const searchbyYear= request.body.searchbyYear
+//     const current = request.body.currentmonth
+//     test = new Date(`${searchbyYear}-${searchbyMonth+1}`)
+//     console.log(test);
+//     test22 = new Date()
+//     console.log(test22)
+    
+//     MemberSchema.findOne({_id:request.params._id})
+//     .then((result)=>{
+//         if(result != null)
+//         {
+//             console.log(result)
+//             result.borrowOper.forEach(function(data){
+//             bookid = data.book_id
+//             month = data.borrow_Date.getMonth()+1
+//             year = data.borrow_Date.getFullYear()
+//             if(searchbyMonth == month && searchbyYear == year){
+//                 out.push(bookid)                  
+//  }else if((searchbyMonth == null || searchbyYear== null) && (currentMonth == month && currentYear==year)){
+//                 out.push(bookid)                  
+//             }
+//           })
+//               JSON.parse(JSON.stringify(out))
+//                 console.log(typeof(out[0]))  //array of book id
+//                 console.log(out)
+//                 BookSchema.find({_id:out}).then((book)=>{
+//                     if(book != null){
+//                         response.status(200).json({book});
+//                      }
+//                 })                  
+//         }else{
+//             response.status(404).json({members:"There's no member"});
+//             }
+//     })
+//     .catch(error=>{
+//         next(error);
+//     })
+// }
+
+// exports.getReadBooks=(request,response,next)=>{
+//     currentMonth = new Date().getMonth() + 1,
+//     currentYear = new Date().getFullYear()
+//     var out = [];
+//     const searchbyMonth = request.body.searchbyMonth
+//     const searchbyYear= request.body.searchbyYear
+//     MemberSchema.findOne({_id:request.params._id})
+//     .then((result)=>{
+//         if(result != null)
+//         {
+//          result.readingOper.forEach(function(data){
+//             bookid = data.book_id
+//             month = data.read_date.getMonth()+1
+//             year = data.read_date.getFullYear()
+//             if(searchbyMonth == month && searchbyYear == year){
+//                    out.push(bookid)                  
+//  }else if((searchbyMonth == null || searchbyYear== null) && (currentMonth == month && currentYear==year)){
+//                 out.push(bookid)                  
+//             }
+//           })
+//                 JSON.parse(JSON.stringify(out))
+//                 BookSchema.find({_id:out}).then((book)=>{
+//                     if(book != null){
+//                         response.status(200).json({book});
+//                      }
+//                 })                  
+//         }else{
+//         response.status(404).json({members:"There's no member"});
+//         }
+//     })
+//     .catch(error=>{
+//         next(error);
+//     })
+// }
 
 
 
@@ -211,47 +212,6 @@ exports.currentBorrowedBooks=(request,response,next)=>{
     
 }
     
-    
-    
-    
-    
-    
-    
-    
-    
-
-
-    
-exports.getbooks=(request,response,next)=>{
-    var out = [];
-if(request.body != null){
-const searchBYyear = request.body.publishingDate
-
-        BookSchema.find({
-            $and:[
-                { publisher: request.body.publisher },
-                { author: request.body.author },
-                { category: request.body.category },
-                { availability: request.body.availability },
-            ]
-            }).then(data=>{
-            if(data != null)
-            {
-                data.forEach(function(result){
-                    year = result.publishingDate.getFullYear()
-                    if(year == searchBYyear){
-                        out.push(result)                        
-                    }
-                   // console.log(out)
-                })
-                response.status(200).json({out})
-                }
-                else{                     
-                    response.status(404).json({data:"Not found"})
-                }
-            }).catch(error=>{next(error);})
-        }
-    }
 
 exports.currentBorrowedBooks=(request,response,next)=>{
     MemberSchema.find({ _id:request.params._id},{"borrowOper.returned":"true"}

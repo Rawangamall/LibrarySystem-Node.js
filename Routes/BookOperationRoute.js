@@ -17,19 +17,21 @@ const controller=require("../Controllers/BookOperationController.js");
 // router.get("/Book/available",controller.getAvailableBooks)
 // router.get("/Book/:id",validateOnGetBook,validateMW,controller.getOneBook)
 
-
+router.route("/BookOperation")
+       .get(controller.getAll)
+       
 router.route("/BookOperation/readingBYdate/get")
       .get(controller.readingBYdate)
 
 router.route("/BookOperation/borrowBYdate/get")
      .get(controller.borrowBYdate)
-     .get(controller.getAll)
    
    
 router.route("/BookOperation/:_id")
     .patch(controller.updateBookOperation)
     .delete(controller.deleteBookOperation)
     .get(controller.getBookOperation)
+
 
 
 
@@ -42,4 +44,7 @@ router.route("/Employees/returnBook/:_id")
 router.route("/Employees/addReadBooks/:_id")
         .post(controller.addReadbook)
 
+// router.route("/available")
+//         .get(controller.available)
+        
 module.exports=router;

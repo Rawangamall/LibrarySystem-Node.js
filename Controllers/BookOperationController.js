@@ -10,15 +10,46 @@ const BookSchema=mongoose.model("Book");
 const BookOperationSchema=mongoose.model("BookOperation");
 
 
-exports.getOperations=(request,response,next)=>{
-        //Get All Books
-        BookOperationSchema.find({})
-            .then((data)=>{
-                    response.status(200).json({data});
-                })
-            .catch(error=>{
-                next(error);
-        })         
+exports.addBorrowbook=(request,response,next)=>{
+    MemberSchema.findOne({_id:request.params._id})
+    .then((result)=>{
+        if(result != null )
+        {
+            BookSchema.findOneAndUpdate({_id:request.body.bookID}, {$inc : {'noOfCurrentBorrowed' : 1,'noBorrowed' : 1}})
+            .then((res)=>{            
+                if(res!=null){
+            new BookOperationSchema({
+            operation:"borrow",
+            returned:false,
+            memberID:request.params.memberID,
+            employeeID:request.body.employeeID,
+            bookID:request.body.bookID,
+            startDate:Date(),
+            expireDate:request.body.expireDate,   //after 2 weeks
+        }).save()
+        .then((data)=>{
+                //show if available or not
+                BookSchema.updateMany({},
+                    [{ $set: { available: { $lt: [{$subtract: [ "$noOfCurrentBorrowed","$noOfCopies" ]},0] } } }])
+                    .then(result=>{console.log(available),response.status(200).json({result})})
+                    .catch(error=>next(error))
+       
+            response.status(200).json({data});
+        })
+        .catch(error=>{
+        next(error);
+        })
+        }   
+        else{response.status(404).json({data:"This Book is not Found"});}      
+    })
+    }
+    else{
+    response.status(404).json({data:"This member is not Found"});
+    }
+    })
+    .catch(error=>{
+    next(error);
+    })
     }
 
 exports.getAll=(request,response)=>{
@@ -30,8 +61,6 @@ exports.getAll=(request,response)=>{
                         next(error);
                     })
 }
-
-
 
  exports.updateBookOperation=(request,response,next)=>{
     
@@ -101,7 +130,6 @@ exports.getAll=(request,response)=>{
                 memberID:request.params.memberID,
                 employeeID:request.body.employeeID,
                 bookID:request.body.bookID,
-                startDate:Date(),
                 expireDate:request.body.expireDate,   //after 2 weeks
             }).save()
             .then((data)=>{
@@ -123,7 +151,6 @@ exports.getAll=(request,response)=>{
         })
     }
 
- 
 exports.addReadbook=(request,response,next)=>{
     MemberSchema.findOne({_id:request.params._id})
     .then((result)=>{
@@ -162,20 +189,19 @@ exports.addReadbook=(request,response,next)=>{
 
     exports.borrowBYdate=async(request,response,next)=>{
         date = new Date();
-        const searchbyMonth = request.body.searchbyMonth
+        const Month = request.body.searchbyMonth
+        let searchbyMonth = Number(Month)
         const searchbyYear= request.body.searchbyYear
        try{ 
         if(searchbyMonth != null && searchbyYear != null){
         searchDate=new Date(`${searchbyYear}-${searchbyMonth}-2`).toISOString().split('T')[0]
         EndDate=new Date(`${searchbyYear}-${searchbyMonth+1}-2`).toISOString().split('T')[0]
-                  console.log(EndDate)
-                  console.log(searchDate)
+                  
          let BorrowedBooks_ByDate = await BookOperationSchema.find(
             {"startDate":{$gte:searchDate,$lt:EndDate},"operation":{$eq:"borrow"}})
             response.status(200).json({BorrowedBooks_ByDate});
          }else{
         CurrentMonth = new Date().toISOString().split('T')[0]
-                    console.log(CurrentMonth)
             let BorrowedBooks_CurrentMonth = await BookOperationSchema.find(
             {"startDate":{$gte:CurrentMonth},"operation":{$eq:"borrow"}})
             response.status(200).json({BorrowedBooks_CurrentMonth});
@@ -188,20 +214,19 @@ exports.addReadbook=(request,response,next)=>{
 
     exports.readingBYdate=async(request,response,next)=>{
         date = new Date();
-        const searchbyMonth = request.body.searchbyMonth
+        const Month = request.body.searchbyMonth
+        let searchbyMonth = Number(Month);
         const searchbyYear= request.body.searchbyYear
        try{ 
         if(searchbyMonth != null && searchbyYear != null){
         searchDate=new Date(`${searchbyYear}-${searchbyMonth}-2`).toISOString().split('T')[0]
         EndDate=new Date(`${searchbyYear}-${searchbyMonth+1}-2`).toISOString().split('T')[0]
-                  console.log(EndDate)
-                  console.log(searchDate)
+           
          let ReadBooks_ByDate = await BookOperationSchema.find(
             {"startDate":{$gte:searchDate,$lt:EndDate},"operation":{$eq:"read"}})
             response.status(200).json({ReadBooks_ByDate});
          }else{
         CurrentMonth = new Date().toISOString().split('T')[0]
-                    console.log(CurrentMonth)
             let ReadBooks_CurrentMonth = await BookOperationSchema.find(
             {"startDate":{$gte:CurrentMonth},"operation":{$eq:"read"}})
             response.status(200).json({ReadBooks_CurrentMonth});
@@ -213,7 +238,6 @@ exports.addReadbook=(request,response,next)=>{
     }
     
    
-
 exports.addReadbook=(request,response,next)=>{
     MemberSchema.findOne({_id:request.params._id})
     .then((result)=>{
@@ -251,19 +275,33 @@ exports.addReadbook=(request,response,next)=>{
 }
 
 
-exports.returnBook=(request,response,next)=>{
-    BookSchema.findOneAndUpdate({_id:request.body.bookID}, {$inc : {'noOfCurrentBorrowed' : -1}}).then((res)=>{
-    BookOperationSchema.updateOne({ "_id" : request.params._id} ,{
-        $set:{ "returned" : request.body.returned}
-    }).then(data=>{
-        if(data.matchedCount==0)
-        {
-            next(new Error("This borrow operation is not found"));
-        }
-        else{
-            console.log(request.body.returned);
-            response.status(200).json({data:"Updated!"});
-        }
+    exports.returnBook=(request,response,next)=>{
+        BookSchema.findOneAndUpdate({_id:request.body.bookID}, {$inc : {'noOfCurrentBorrowed' : -1}}).then((res)=>{
+
+        BookOperationSchema.updateOne({ "_id" : request.params._id} ,{
+            $set:{ "returned" : request.body.returned}
+        }).then(data=>{
+            if(data.matchedCount==0)
+            {
+                next(new Error("This borrow operation is not found"));
+            }
+            else{
+                //show if available or not
+                BookSchema.updateMany({},
+                    [{ $set: { available: { $lt: [{$subtract: [ "$noOfCurrentBorrowed","$noOfCopies" ]},0] } } }])
+                 .then(result=>{console.log(available),response.status(200).json({result})})
+                 .catch(error=>next(error))
+                console.log(request.body.returned);
+                response.status(200).json({data:"Updated!"});
+            }
+        })
+        .catch(error=>next(error));
+    })}
+
+exports.available=(request,response,next)=>{
+    BookSchema.find({})
+    .then(data=>{
     })
     .catch(error=>next(error));
-})}
+}
+        

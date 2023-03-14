@@ -10,7 +10,7 @@ exports.getBooks=(request,response,next)=>{
     if (Object.keys(request.body).length==""){
         //Get All Books
         BookSchema.find({})
-            .then((data)=>{
+             .then((data)=>{
                     response.status(200).json({data});
                 })
             .catch(error=>{
@@ -74,9 +74,11 @@ exports.addBook=async(request,response,next)=>{
                 edition:request.body.edition,
                 pages:request.body.pages,
                 noOfCopies:request.body.noOfCopies,
-                noOfCurrentBorrowed:request.body.noOfCurrentBorrowed,
+                noOfCopies:request.body.noOfCopies,
                 available:true,
-                noBorrowed:request.body.noBorrowed
+                noBorrowed:request.body.noBorrowed,
+                noOfCurrentBorrowed:request.body.noOfCurrentBorrowed,
+                returned:true
                }).save(); 
         response.status(201).json({data});
     }catch(error)
@@ -126,15 +128,7 @@ exports.deleteBook=(request,response,next)=>{
         }
         }).catch(error=>next(error));
 }
-/*
-//available books
-exports.getAvailableBooks=(request,response,next)=>{
-     BookSchema.find({ 'noOfCopies': { $gt: 1 } },{title:1,noOfCopies:1,_id:0})
-                .then(data=>{
-                    response.status(200).json({data})
-                }).catch(error=>next(error));
-}
-*/
+
 //most borrowed book
 exports.mostBorrowedBook=(request,response,next)=>{
     BookSchema.find().sort({noBorrowed:-1}).limit(1)
@@ -173,3 +167,26 @@ exports.getAvailableBooks=(request,response,next)=>{
             response.status(200).json({data})
             }).catch(error=>next(error));
 }
+
+//member filter books
+exports.filteredbooks=(request,response,next)=>{
+
+    if(request.body != null){
+    const PD = request.body.publishingDate
+    let searchbyYear = Number(PD);
+    searchDate=new Date(`${searchbyYear}-1-2`).toISOString().split('T')[0]
+    EndDate=new Date(`${searchbyYear+1}-1-2`).toISOString().split('T')[0]
+
+            BookSchema.find({
+                $or:[
+                    { publisher: request.body.publisher },
+                    { author: request.body.author },
+                    { category: request.body.category },
+                    { availability: request.body.availability },
+                    {publishingDate:{$gte:searchDate,$lt:EndDate}}
+                ] 
+                }).then(Books=>{
+                    response.status(200).json({Books});
+                }).catch(error=>{next(error);})
+            }
+ }
