@@ -21,27 +21,6 @@ exports.getAll=(request,response)=>{
 }
 
 
-exports.addBookOperation=(request,response,next)=>{
-   
- new BookOperationSchema({
-    _id:request.body._id,
-    operation:request.body.operation,
-    memberID:request.body.memberID,
-    bookID:request.body.bookID,
-    employeeID:request.body.employeeID,
-    expireDate:request.body.expireDate,
-    returned:request.body.returned,
-  
-   
-}).save()
-.then((data)=>{
-    response.status(201).json({data});
-})
-.catch(error=>{
-next(error);
-})
-}
-
 
  exports.updateBookOperation=(request,response,next)=>{
     

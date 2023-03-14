@@ -10,9 +10,9 @@ const router=express.Router();
 
 router.route("/BookOperation")
     .get(controller.getAll)
-    .post(controller.addBookOperation)
    
-git add
+   
+
 router.route("/BookOperation/:_id")
     .patch(controller.updateBookOperation)
     .delete(controller.deleteBookOperation)
