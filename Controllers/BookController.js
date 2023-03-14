@@ -33,7 +33,7 @@ exports.getBooks=(request,response,next)=>{
                   { title: title }
                 ],
                 'noOfCopies': { $gt: 1 }                ////////////////////
-              },{title:1,available:1,noBorrowed:1,noOfCurrentBorrowed:1}
+              },{title:1,available:1,noBorrowed:1,noOfCurrentBorrowed:1,noOfCopies:1,availableCopies: { $subtract: ['$noOfCopies', '$noOfCurrentBorrowed'] } }
               )
               .then(data=>{
                     if(data=="")
