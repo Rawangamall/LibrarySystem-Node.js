@@ -76,7 +76,9 @@ exports.addBook=async(request,response,next)=>{
                 noOfCopies:request.body.noOfCopies,
                 noOfCopies:request.body.noOfCopies,
                 //available:true,
-                noBorrowed:request.body.noBorrowed
+                noBorrowed:request.body.noBorrowed,
+                noOfCurrentBorrowed:request.body.noOfCurrentBorrowed,
+                returned:true
                }).save(); 
         response.status(201).json({data});
     }catch(error)
