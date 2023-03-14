@@ -165,7 +165,7 @@ exports.getAvailableBooks=(request,response,next)=>{
     BookSchema.find({"available" : true})
 .then(data=>{
             response.status(200).json({data})
-            }).catch(error=>next(error));
+        }).catch(error=>next(error));
 }
 
 //member filter books

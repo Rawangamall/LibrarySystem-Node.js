@@ -123,6 +123,7 @@ exports.getAll=(request,response)=>{
             {
             BookSchema.findOneAndUpdate({_id:request.body.bookID}, {$inc : {'noBorrowed' : 1},$inc : {'noOfCurrentBorrowed' : 1}}).then((res)=>{
                 if(res!=null){
+                    
                     console.log(res.noBorrowed);
             new BookOperationSchema({
                 operation:"borrow",
