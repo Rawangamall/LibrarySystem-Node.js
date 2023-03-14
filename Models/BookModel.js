@@ -14,6 +14,7 @@ const schema=new mongoose.Schema({
     available:Boolean,
     shelfNo:Number,
     noBorrowed:{type:Number,default:0},
+    noOfCurrentBorrowed:{type:Number,default:0},
     noReading:{type:Number,default:0}
 },
 { timestamps: true }  );

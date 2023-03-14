@@ -92,7 +92,7 @@ exports.getAll=(request,response)=>{
         .then((result)=>{
             if(result != null )
             {
-            BookSchema.findOneAndUpdate({_id:request.body.bookID}, {$inc : {'noBorrowed' : 1}}).then((res)=>{
+            BookSchema.findOneAndUpdate({_id:request.body.bookID}, {$inc : {'noBorrowed' : 1},$inc : {'noOfCurrentBorrowed' : 1}}).then((res)=>{
                 if(res!=null){
                     console.log(res.noBorrowed);
             new BookOperationSchema({
@@ -252,6 +252,7 @@ exports.addReadbook=(request,response,next)=>{
 
 
 exports.returnBook=(request,response,next)=>{
+    BookSchema.findOneAndUpdate({_id:request.body.bookID}, {$inc : {'noOfCurrentBorrowed' : -1}}).then((res)=>{
     BookOperationSchema.updateOne({ "_id" : request.params._id} ,{
         $set:{ "returned" : request.body.returned}
     }).then(data=>{
@@ -265,5 +266,4 @@ exports.returnBook=(request,response,next)=>{
         }
     })
     .catch(error=>next(error));
-}
-        
+})}

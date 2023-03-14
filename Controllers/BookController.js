@@ -74,8 +74,8 @@ exports.addBook=async(request,response,next)=>{
                 edition:request.body.edition,
                 pages:request.body.pages,
                 noOfCopies:request.body.noOfCopies,
-                noOfCopies:request.body.noOfCopies,
-                //available:true,
+                noOfCurrentBorrowed:request.body.noOfCurrentBorrowed,
+                available:true,
                 noBorrowed:request.body.noBorrowed
                }).save(); 
         response.status(201).json({data});
@@ -154,20 +154,22 @@ BookSchema.find({ createdAt: { $gte: startDate, $lte: endDate } }, (err, result)
   }
   else{
     response.status(200).json({result});
-  }
-  
+  } 
 });
+}
+
+
+
+exports.available=(request,response,next)=>{
+    BookSchema.
+    aggregate( [ { $project: { title: 1,available:1,noOfCopies:1,noOfCurrentBorrowed:1,
+        dateDifference: { $subtract: [ "$noOfCopies", "noOfCurrentBorrowed" ] } } } ] )
 }
 
 //available books
 exports.getAvailableBooks=(request,response,next)=>{
-    MemberSchema.find({"borrowOper.returned" : "true"},{fullName:1,borrowOper:1})
+    BookSchema.find({"available" : true})
 .then(data=>{
-    //response.status(200).json({data});
-    BookSchema.find({'noOfCopies:data':{$gt:1}},{title:1,noOfCopies:1,_id:0})
-            .then(res=>{
-                //var avBooks = noOfCopies;
-          console.log(res);
             response.status(200).json({data})
             }).catch(error=>next(error));
-})}
+}
