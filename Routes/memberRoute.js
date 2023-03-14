@@ -14,19 +14,18 @@ router.route("/member/:_id")
         .delete(validateData.memberArrayDel,memberController.deleteMember)
         .get(memberController.getMember)
 
-router.route("/member/getborrowed/:_id")
-       .get(memberController.getborrowedBooks)
+// router.route("/member/getborrowed/:_id")
+//        .get(memberController.getborrowedBooks)
 
-router.route("/member/getread/:_id")
-        .get(memberController.getReadBooks)
+// router.route("/member/getread/:_id")
+//         .get(memberController.getReadBooks)
 
-router.route("/member/arrivedBooks/get")
-       .get(memberController.getNewArrivedBooks)
 
  router.route("/member/getCurrentborrowed/:_id")
        .get(memberController.currentBorrowedBooks)
  
-router.route("/member/getbooks/get")
-       .get(memberController.getbooks)
 
+router.route("/member/getCurrentborrowed/:_id")
+       .get(memberController.currentBorrowedBooks)
+       
 module.exports=router;
