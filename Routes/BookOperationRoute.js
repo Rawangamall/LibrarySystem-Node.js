@@ -10,7 +10,6 @@ const controller=require("../Controllers/BookOperationController.js");
 // const validateOnDeleteBook=require("../Core/Validation/BookValidation").validateOnDelete;
 //const { checkAdmin, checkTeacherAndAdmin }=require("./../Core/auth/authenticationMW");
 
-
 //     .put(validatePutBook,validateMW,controller.updateBook)
 //     .delete(validateOnDeleteBook,validateMW,controller.deleteBook)
 
@@ -31,8 +30,6 @@ router.route("/BookOperation/:_id")
     .patch(controller.updateBookOperation)
     .delete(controller.deleteBookOperation)
     .get(controller.getBookOperation)
-
-
 
 
 router.route("/Employees/addBorrowedBooks/:_id")
