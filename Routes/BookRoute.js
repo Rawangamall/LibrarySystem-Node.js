@@ -14,7 +14,7 @@ router.route("/Book")
     .put(validatePutBook,validateMW,controller.updateBook)
     .delete(validateOnDeleteBook,validateMW,controller.deleteBook)
 
-// router.get("/Book/available",controller.getAvailableBooks)
+router.get("/Book/available",controller.getAvailableBooks)
 router.get("/Book/mostBorrowedBook",controller.mostBorrowedBook)
 router.get("/Book/:id",validateOnGetBook,validateMW,controller.getOneBook)
 

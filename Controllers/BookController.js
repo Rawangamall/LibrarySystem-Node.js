@@ -144,19 +144,14 @@ exports.mostBorrowedBook=(request,response,next)=>{
 }
 
 //available books
-// exports.getAvailableBooks=(request,response,next)=>{
-//     MemberSchema.find({"borrowOper.returned" : false})
-// .then(data=>{
-//     //response.status(200).json({data});
-//     BookSchema.find({'$dec:{noOfCopies:data}':{$gt:1}},{title:1,noOfCopies:1,_id:0})
-//             .then(res=>{
-//                 //var avBooks = noOfCopies;
-//           console.log(res);
-//             response.status(200).json({data})
-          
-                
-//             }).catch(error=>next(error));
-// })}
-
-//13
-
+exports.getAvailableBooks=(request,response,next)=>{
+    MemberSchema.find({"borrowOper.returned" : "true"},{fullName:1,borrowOper:1})
+.then(data=>{
+    //response.status(200).json({data});
+    BookSchema.find({'noOfCopies:data':{$gt:1}},{title:1,noOfCopies:1,_id:0})
+            .then(res=>{
+                //var avBooks = noOfCopies;
+          console.log(res);
+            response.status(200).json({data})
+            }).catch(error=>next(error));
+})}
