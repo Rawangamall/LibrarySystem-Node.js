@@ -171,3 +171,26 @@ exports.getAvailableBooks=(request,response,next)=>{
             response.status(200).json({data})
             }).catch(error=>next(error));
 })}
+
+//member filter books
+exports.filteredbooks=(request,response,next)=>{
+
+    if(request.body != null){
+    const PD = request.body.publishingDate
+    let searchbyYear = Number(PD);
+    searchDate=new Date(`${searchbyYear}-1-2`).toISOString().split('T')[0]
+    EndDate=new Date(`${searchbyYear+1}-1-2`).toISOString().split('T')[0]
+
+            BookSchema.find({
+                $or:[
+                    { publisher: request.body.publisher },
+                    { author: request.body.author },
+                    { category: request.body.category },
+                    { availability: request.body.availability },
+                    {publishingDate:{$gte:searchDate,$lt:EndDate}}
+                ] 
+                }).then(Books=>{
+                    response.status(200).json({Books});
+                }).catch(error=>{next(error);})
+            }
+ }

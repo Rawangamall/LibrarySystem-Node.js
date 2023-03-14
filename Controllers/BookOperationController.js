@@ -168,14 +168,12 @@ exports.addReadbook=(request,response,next)=>{
         if(searchbyMonth != null && searchbyYear != null){
         searchDate=new Date(`${searchbyYear}-${searchbyMonth}-2`).toISOString().split('T')[0]
         EndDate=new Date(`${searchbyYear}-${searchbyMonth+1}-2`).toISOString().split('T')[0]
-                  console.log(EndDate)
-                  console.log(searchDate)
+                  
          let BorrowedBooks_ByDate = await BookOperationSchema.find(
             {"startDate":{$gte:searchDate,$lt:EndDate},"operation":{$eq:"borrow"}})
             response.status(200).json({BorrowedBooks_ByDate});
          }else{
         CurrentMonth = new Date().toISOString().split('T')[0]
-                    console.log(CurrentMonth)
             let BorrowedBooks_CurrentMonth = await BookOperationSchema.find(
             {"startDate":{$gte:CurrentMonth},"operation":{$eq:"borrow"}})
             response.status(200).json({BorrowedBooks_CurrentMonth});
@@ -188,20 +186,19 @@ exports.addReadbook=(request,response,next)=>{
 
     exports.readingBYdate=async(request,response,next)=>{
         date = new Date();
-        const searchbyMonth = request.body.searchbyMonth
+        const Month = request.body.searchbyMonth
+        let searchbyMonth = Number(Month);
         const searchbyYear= request.body.searchbyYear
        try{ 
         if(searchbyMonth != null && searchbyYear != null){
         searchDate=new Date(`${searchbyYear}-${searchbyMonth}-2`).toISOString().split('T')[0]
         EndDate=new Date(`${searchbyYear}-${searchbyMonth+1}-2`).toISOString().split('T')[0]
-                  console.log(EndDate)
-                  console.log(searchDate)
+           
          let ReadBooks_ByDate = await BookOperationSchema.find(
             {"startDate":{$gte:searchDate,$lt:EndDate},"operation":{$eq:"read"}})
             response.status(200).json({ReadBooks_ByDate});
          }else{
         CurrentMonth = new Date().toISOString().split('T')[0]
-                    console.log(CurrentMonth)
             let ReadBooks_CurrentMonth = await BookOperationSchema.find(
             {"startDate":{$gte:CurrentMonth},"operation":{$eq:"read"}})
             response.status(200).json({ReadBooks_CurrentMonth});
