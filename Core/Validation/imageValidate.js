@@ -17,7 +17,7 @@ exports.empImage=multer({
     limits: { fileSize: 10000*10000 },
     storage:multer.diskStorage({
         destination:(req,file,cb)=>{
-            cb(null,path.join(__dirname,"..","..","images"));
+            cb(null,path.join(__dirname,"..","..","images","Employees_images"));
         },
         filename:(request, file, cb)=>{
                 photoExtension = file.originalname.split(".")[1];
@@ -28,7 +28,7 @@ exports.empImage=multer({
 }).single("image")
 
 exports.removeEmpIMG=function(req,res,next){
-    fs.unlink(path.join(__dirname,"..","..","images",imageName), function (err) {
+    fs.unlink(path.join(__dirname,"..","..","images","Employees_images",imageName), function (err) {
         if (err) throw err;
         next();
     })
@@ -47,7 +47,7 @@ exports.memberImage=multer({
     limits: { fileSize: 10000*10000 },
     storage:multer.diskStorage({
         destination:(req,file,cb)=>{
-            cb(null,path.join(__dirname,"..","..","images"));
+            cb(null,path.join(__dirname,"..","..","images","Members_images"));
         },
         filename:(request, file, cb)=>{
                 photoExtension = file.originalname.split(".")[1];
@@ -59,7 +59,7 @@ exports.memberImage=multer({
 }).single("image")
 
 exports.removeMemberIMG=function(req,res,next){
-    fs.unlink(path.join(__dirname,"..","..","images",imageName), function (err) {
+    fs.unlink(path.join(__dirname,"..","..","images","Members_images",imageName), function (err) {
         if (err) throw err;
         next();
     })
