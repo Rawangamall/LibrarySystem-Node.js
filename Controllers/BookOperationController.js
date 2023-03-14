@@ -9,7 +9,6 @@ const MemberSchema=mongoose.model("member");
 const BookSchema=mongoose.model("Book");
 const BookOperationSchema=mongoose.model("BookOperation");
 
-
 exports.addBorrowbook=(request,response,next)=>{
     MemberSchema.findOne({_id:request.params._id})
     .then((result)=>{
@@ -121,7 +120,7 @@ exports.getAll=(request,response)=>{
         .then((result)=>{
             if(result != null )
             {
-            BookSchema.findOneAndUpdate({_id:request.body.bookID}, {$inc : {'noBorrowed' : 1},$inc : {'noOfCurrentBorrowed' : 1}}).then((res)=>{
+            BookSchema.findOneAndUpdate({_id:request.body.bookID}, {$inc : {'noBorrowed' : 1}}).then((res)=>{
                 if(res!=null){
                     console.log(res.noBorrowed);
             new BookOperationSchema({
