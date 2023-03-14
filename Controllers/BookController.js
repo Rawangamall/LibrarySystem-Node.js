@@ -33,7 +33,7 @@ exports.getBooks=(request,response,next)=>{
                   { title: title }
                 ],
                 'noOfCopies': { $gt: 1 }                ////////////////////
-              },{title:1,available:1,noBorrowed:1,noOfCurrentBorrowed:1}
+              },{title:1,available:1,noBorrowed:1,noOfCurrentBorrowed:1,noOfCopies:1,availableCopies: { $subtract: ['$noOfCopies', '$noOfCurrentBorrowed'] } }
               )
               .then(data=>{
                     if(data=="")
@@ -148,14 +148,6 @@ BookSchema.find({ createdAt: { $gte: startDate, $lte: endDate } }, (err, result)
     response.status(200).json({result});
   } 
 });
-}
-
-
-
-exports.available=(request,response,next)=>{
-    BookSchema.
-    aggregate( [ { $project: { title: 1,available:1,noOfCopies:1,noOfCurrentBorrowed:1,
-        dateDifference: { $subtract: [ "$noOfCopies", "noOfCurrentBorrowed" ] } } } ] )
 }
 
 //available books
