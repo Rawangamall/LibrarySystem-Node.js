@@ -32,8 +32,8 @@ exports.getBooks=(request,response,next)=>{
                   { author: author },
                   { title: title }
                 ],
-                'noOfCopies': { $gt: 1 }                    ////////////////////
-              }
+                'noOfCopies': { $gt: 1 }                ////////////////////
+              },{title:1,available:1,noBorrowed:1,noOfCurrentBorrowed:1}
               )
               .then(data=>{
                     if(data=="")
@@ -41,9 +41,7 @@ exports.getBooks=(request,response,next)=>{
                         next(new Error("This Book is not found, Invalid Input"));
                     }
                     else{
-                        let bookdata = {availability:"This book is available",data};
-                        JSON.stringify(bookdata);
-                        response.status(200).json({data:bookdata})
+                        response.status(200).json({data})
                     }
                 })
                 .catch(error=>{next(error);
@@ -78,7 +76,7 @@ exports.addBook=async(request,response,next)=>{
                 available:true,
                 noBorrowed:request.body.noBorrowed,
                 noOfCurrentBorrowed:request.body.noOfCurrentBorrowed,
-                returned:true
+                returned:true,
                }).save(); 
         response.status(201).json({data});
     }catch(error)
@@ -150,14 +148,6 @@ BookSchema.find({ createdAt: { $gte: startDate, $lte: endDate } }, (err, result)
     response.status(200).json({result});
   } 
 });
-}
-
-
-
-exports.available=(request,response,next)=>{
-    BookSchema.
-    aggregate( [ { $project: { title: 1,available:1,noOfCopies:1,noOfCurrentBorrowed:1,
-        dateDifference: { $subtract: [ "$noOfCopies", "noOfCurrentBorrowed" ] } } } ] )
 }
 
 //available books
