@@ -1,6 +1,8 @@
 const mongoose=require("mongoose");
 require("../Models/BookModel");
+require("../Models/member");
 const BookSchema=mongoose.model("Book");
+const MemberSchema=mongoose.model("member");
 available=false;
 
 //Get
@@ -124,7 +126,7 @@ exports.deleteBook=(request,response,next)=>{
         }
         }).catch(error=>next(error));
 }
-
+/*
 //available books
 exports.getAvailableBooks=(request,response,next)=>{
      BookSchema.find({ 'noOfCopies': { $gt: 1 } },{title:1,noOfCopies:1,_id:0})
@@ -132,7 +134,7 @@ exports.getAvailableBooks=(request,response,next)=>{
                     response.status(200).json({data})
                 }).catch(error=>next(error));
 }
-
+*/
 //most borrowed book
 exports.mostBorrowedBook=(request,response,next)=>{
     BookSchema.find().sort({noBorrowed:-1}).limit(1)
@@ -157,3 +159,15 @@ BookSchema.find({ createdAt: { $gte: startDate, $lte: endDate } }, (err, result)
 });
 }
 
+//available books
+exports.getAvailableBooks=(request,response,next)=>{
+    MemberSchema.find({"borrowOper.returned" : "true"},{fullName:1,borrowOper:1})
+.then(data=>{
+    //response.status(200).json({data});
+    BookSchema.find({'noOfCopies:data':{$gt:1}},{title:1,noOfCopies:1,_id:0})
+            .then(res=>{
+                //var avBooks = noOfCopies;
+          console.log(res);
+            response.status(200).json({data})
+            }).catch(error=>next(error));
+})}

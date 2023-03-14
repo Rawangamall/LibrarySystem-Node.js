@@ -13,7 +13,8 @@ const schema=new mongoose.Schema({
     noOfCopies:Number,
     available:Boolean,
     shelfNo:Number,
-    noBorrowed:{type:Number,default:0}
+    noBorrowed:{type:Number,default:0},
+    noReading:{type:Number,default:0}
 },
 { timestamps: true }  );
 schema.plugin(AutoIncrement,{id:'Book_id',inc_field:"_id"});

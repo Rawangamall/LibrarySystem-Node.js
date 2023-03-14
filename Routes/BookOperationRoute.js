@@ -12,14 +12,21 @@ router.route("/BookOperation")
     .get(controller.getAll)
     .post(controller.addBookOperation)
    
-
- router.route("/BookOperation/:_id")
+git add
+router.route("/BookOperation/:_id")
     .patch(controller.updateBookOperation)
     .delete(controller.deleteBookOperation)
     .get(controller.getBookOperation)
 
 
 
+router.route("/Employees/addBorrowedBooks/:_id")
+       .post(controller.addBorrowbook)
 
+router.route("/Employees/returnBook/:_id")
+       .put(controller.returnBook)
+
+router.route("/Employees/addReadBooks/:_id")
+        .post(controller.addReadbook)
 
 module.exports=router;
