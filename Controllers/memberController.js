@@ -1,8 +1,11 @@
 const mongoose=require("mongoose");
 require("./../Models/member");
 require("../Models/BookModel");
+require("../Models/BookOperationModel");
+
 const MemberSchema=mongoose.model("member");
 const BookSchema=mongoose.model("Book");
+const BookOperationSchema=mongoose.model("BookOperation");
 
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -31,8 +34,7 @@ exports.addMember=(request,response,next)=>{
     image:request.body.image,
     phoneNumber:request.body.phoneNumber,
     birthdate:request.body.birthdate,
-    fullAddress:request.body.fullAddress,
-    borrowOper:request.body.borrowOper
+    fullAddress:request.body.fullAddress
    
    }).save()
     .then((data)=>{
@@ -57,8 +59,8 @@ exports.updateMember=(request,response,next)=>{
             image:request.body.image,
             phoneNumber:request.body.phoneNumber,
             birthdate:request.body.birthdate,
-            fullAddress:request.body.fullAddress,
-            borrowOper:request.body.borrowOper
+            fullAddress:request.body.fullAddress
+           
         }
     }).then(data=>{
         if(data.acknowledged==false)
@@ -173,50 +175,28 @@ exports.getReadBooks=(request,response,next)=>{
     })
 }
 
-exports.getNewArrivedBooks=(request,response,next)=>{
-    const endDate = new Date(); // current date and time
-    const startDate = new Date(endDate.getTime() - (14 * 24 * 60 * 60 * 1000)); // 14 days (two weeks) ago
-      
-BookSchema.find({ createdAt: { $gte: startDate, $lte: endDate } }, (err, result) => {
 
-  if (err) {
-    response.status(404).json({data:"Not Found"});
-  }
-  else{
-    response.status(200).json({result});
-  }
-  
-});
-}
 
-  // // console.log( result[0].borrowOper);
-            // result[0].borrowOper.forEach((borrowOp) => {
-            //     if(borrowOp.returned==false){
-                   
-            //         final.push(borrowOp.borrow_Date,borrowOp.returned )
-            //     }
-               
-            // });
-            // console.log(final);
+
 
 exports.currentBorrowedBooks=(request,response,next)=>{
   
-    MemberSchema
-    .aggregate([
-        { $match: { _id:19 } },
-        { 
-            $project:{ 
-            "borrowOper":1,
-            _id:0,
-            borrowOper: {$filter: {
-                input: '$borrowOper',
-                as: 'item',
-                cond: {$eq: ['$$item.returned', "false"]}
-            }}
-        }
-    },
+    BookOperationSchema.find({memberID:request.params._id , returned:false })
+    // .aggregate([
+    //     { $match: { _id:19 } },
+    //     { 
+    //         $project:{ 
+    //         "borrowOper":1,
+    //         _id:0,
+    //         borrowOper: {$filter: {
+    //             input: '$borrowOper',
+    //             as: 'item',
+    //             cond: {$eq: ['$$item.returned', "false"]}
+    //         }}
+    //     }
+    // },
     
-     ])
+    //  ])
      .then(result => {
         response.status(200).json({result});
     }).catch(err => {

@@ -17,6 +17,7 @@ router.route("/Book")
 router.get("/Book/available",controller.getAvailableBooks)
 router.get("/Book/mostBorrowedBook",controller.mostBorrowedBook)
 router.get("/Book/:id",validateOnGetBook,validateMW,controller.getOneBook)
-
+router.route("/member/arrivedBooks/get")
+       .get(controller.getNewArrivedBooks)
 
 module.exports=router;

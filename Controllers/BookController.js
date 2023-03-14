@@ -141,3 +141,19 @@ exports.mostBorrowedBook=(request,response,next)=>{
                 })
 }
 
+exports.getNewArrivedBooks=(request,response,next)=>{
+    const endDate = new Date(); // current date and time
+    const startDate = new Date(endDate.getTime() - (14 * 24 * 60 * 60 * 1000)); // 14 days (two weeks) ago
+      
+BookSchema.find({ createdAt: { $gte: startDate, $lte: endDate } }, (err, result) => {
+
+  if (err) {
+    response.status(404).json({data:"Not Found"});
+  }
+  else{
+    response.status(200).json({result});
+  }
+  
+});
+}
+
