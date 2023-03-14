@@ -18,6 +18,6 @@ router.route("/Employees/addReadBooks/:_id")
         .post(controller.addReadbook)
 
 // router.route("/available")
-//         .get(controller.getAvailableBooks)
+//         .get(controller.available)
         
 module.exports=router;

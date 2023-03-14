@@ -10,7 +10,7 @@ exports.getBooks=(request,response,next)=>{
     if (Object.keys(request.body).length==""){
         //Get All Books
         BookSchema.find({})
-            .then((data)=>{
+             .then((data)=>{
                     response.status(200).json({data});
                 })
             .catch(error=>{
@@ -75,7 +75,7 @@ exports.addBook=async(request,response,next)=>{
                 pages:request.body.pages,
                 noOfCopies:request.body.noOfCopies,
                 noOfCopies:request.body.noOfCopies,
-                //available:true,
+                available:true,
                 noBorrowed:request.body.noBorrowed,
                 noOfCurrentBorrowed:request.body.noOfCurrentBorrowed,
                 returned:true
@@ -128,15 +128,7 @@ exports.deleteBook=(request,response,next)=>{
         }
         }).catch(error=>next(error));
 }
-/*
-//available books
-exports.getAvailableBooks=(request,response,next)=>{
-     BookSchema.find({ 'noOfCopies': { $gt: 1 } },{title:1,noOfCopies:1,_id:0})
-                .then(data=>{
-                    response.status(200).json({data})
-                }).catch(error=>next(error));
-}
-*/
+
 //most borrowed book
 exports.mostBorrowedBook=(request,response,next)=>{
     BookSchema.find().sort({noBorrowed:-1}).limit(1)
