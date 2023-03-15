@@ -35,13 +35,13 @@ exports.addBorrowbook=(request,response,next)=>{
                                 [{ $set: { available: { $lt: [{$subtract: [ "$noOfCurrentBorrowed","$noOfCopies" ]},0] } } }])
                                 .then(result=>{console.log(available),response.status(200).json({result})})
                                 .catch(error=>next(error))
-                            response.status(200).json("Borrowd Successfully!");    
+                            response.status(200).json("Borrowed Successfully!");    
     }}
     ).catch(error=>{
                 next(error);
             })
     }
-        else{response.status(404).json({data:"This Book is not Avilable for Borrowing"});}
+        else{response.status(404).json({data:"This Book is not Available for Borrowing"});}
         }   
         else{response.status(404).json({data:"This Book is not Found"});}      
     })
