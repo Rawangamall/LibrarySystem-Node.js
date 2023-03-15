@@ -41,6 +41,14 @@ router.route("/Employees/returnBook/:_id")
 router.route("/Employees/addReadBooks/:_id")
         .post(controller.addReadbook)
 
+router.route("/member/borrowInfo/:_id")
+       .get(controller.borrowInfo)
+
+       // router.route("/member/currentBorrowedBooks/:_id")
+       // .get(controller.currentBorrowedBooks)
+
+router.route("/BookOperation")
+        .post(controller.addBorrowbook)
 // router.route("/available")
 //         .get(controller.available)
         

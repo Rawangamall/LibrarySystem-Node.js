@@ -14,8 +14,7 @@ exports.addBorrowbook=(request,response,next)=>{
     .then((result)=>{
         if(result != null )
         {
-            
-            
+  
             BookSchema.findOneAndUpdate({_id:request.body.bookID}, {$inc : {'noOfCurrentBorrowed' : 1,'noBorrowed' : 1}})
             .then((res)=>{            
                 if(res!=null){
@@ -35,7 +34,6 @@ exports.addBorrowbook=(request,response,next)=>{
                     [{ $set: { available: { $lt: [{$subtract: [ "$noOfCurrentBorrowed","$noOfCopies" ]},0] } } }])
                     .then(result=>{console.log(available),response.status(200).json({result})})
                     .catch(error=>next(error))
-       
             response.status(200).json({data});
         })
         .catch(error=>{
@@ -231,6 +229,47 @@ exports.addReadbook=(request,response,next)=>{
 exports.available=(request,response,next)=>{
     BookSchema.find({})
     .then(data=>{
+    })
+    .catch(error=>next(error));
+}
+
+//g  borrowedbooks with employee responsible for borrowing
+exports.borrowInfo=(request,response,next)=>{
+    strID = request.params._id
+    NumID=Number(strID)
+
+    BookOperationSchema.aggregate( [
+        {$match: {memberID:NumID, operation:"borrow"}},
+                 {
+          $lookup: {
+                      from: 'books',
+                      localField: 'bookID',
+                      foreignField: '_id',
+                      as: 'book'
+                    }    
+                  }
+                  ,
+                  {
+          $lookup: {
+                    from: 'employees',
+                    localField: 'employeeID',
+                    foreignField: '_id',
+                    as: 'emp'
+                 }    
+                }
+                  ,  
+              {
+                $project: { 
+                          _id:0,
+                          EmployeName: "$emp.firstName",
+                          BookTitle: "$book.title"
+                 }
+              }
+      ]).then(borrowedBook=>{
+     if(borrowedBook != "")
+{       
+     response.status(200).json({borrowedBook});
+}else{response.status(404).json({borrowedBook:"Borrowed Books Not Found"});}
     })
     .catch(error=>next(error));
 }
