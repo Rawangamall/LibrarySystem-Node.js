@@ -14,8 +14,6 @@ exports.addBorrowbook=(request,response,next)=>{
     .then((result)=>{
         if(result != null )
         {
-            
-            
             BookSchema.findOneAndUpdate({_id:request.body.bookID}, {$inc : {'noOfCurrentBorrowed' : 1,'noBorrowed' : 1}})
             .then((res)=>{            
                 if(res!=null){
