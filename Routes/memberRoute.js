@@ -14,6 +14,7 @@ router.route("/member/:_id")
         .delete(validateData.memberArrayDel,memberController.deleteMember)
         .get(memberController.getMember)
 
+        
 // router.route("/member/getborrowed/:_id")
 //        .get(memberController.getborrowedBooks)
 
