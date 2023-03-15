@@ -38,8 +38,11 @@ router.route("/BookOperation/:_id")
 router.route("/Employees/addBorrowedBooks/:_id")
        .post(controller.addBorrowbook)
 
-router.route("/Employees/returnBook/:_id")
-       .put(controller.returnBook)
+router.route("/Employees/returnBorrowBook/:_id")
+       .put(controller.returnBorrowBook)
+
+router.route("/Employees/returnReadBook/:_id")
+       .put(controller.returnReadBook)
 
 router.route("/Employees/addReadBooks/:_id")
         .post(controller.addReadbook)
