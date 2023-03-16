@@ -5,7 +5,6 @@ require("../Models/BookOperationModel");
 const BookSchema=mongoose.model("Book");
 const MemberSchema=mongoose.model("member");
 const BookOperationSchema=mongoose.model("BookOperation");
-available=false;
 
 //Get
 exports.getBooks=(request,response,next)=>{
