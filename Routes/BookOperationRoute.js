@@ -47,6 +47,9 @@ router.route("/Employees/addReadBooks/:_id")
 router.route("/member/borrowInfo/:_id")
        .get(controller.borrowInfo)
 
+router.route("/makeSureOfReturnedRead")
+       .put(controller.makeSureOfReturnedRead)
+
        // router.route("/member/currentBorrowedBooks/:_id")
        // .get(controller.currentBorrowedBooks)
 
