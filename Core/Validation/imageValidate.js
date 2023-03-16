@@ -66,7 +66,7 @@ exports.removeMemberIMG=function(req,res,next){
         if (err) throw err;
         next();
     })
-
+}
 
     exports.AdminImage=multer({
         fileFilter: function (req, file, cb) {
@@ -94,4 +94,3 @@ exports.removeMemberIMG=function(req,res,next){
             next();
         })
     }
-}

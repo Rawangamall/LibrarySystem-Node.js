@@ -31,7 +31,7 @@ exports.addBorrowbook=(request,response,next)=>{
                                     employeeID:request.body.employeeID,
                                     bookID:request.params._id,
                                     startDate:Date(),
-                                    expireDate:new Date(new Date().getTime()+(14*24*60*60*1000)),
+                                    expireDate:request.body.expireDate,//new Date(new Date().getTime()+(14*24*60*60*1000)),
                                     late:"Not late"
                             }).save()
                         .then((data)=>{

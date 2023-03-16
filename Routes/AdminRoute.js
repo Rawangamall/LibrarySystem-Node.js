@@ -8,12 +8,11 @@ const AdminValidate=require("./../Core/validation/AdminValidate")
 
 router.route("/Admin")
     .get(validateMW,controller.getAllAdmins)
-    .post(AdminValidate.validateAdminPost,validateMW,controller.addAdmin) //imageValidate,
-    .put(AdminValidate.validateAdminPut,validateMW,controller.updateAdmin) //imageValidate,
+    .post(imageValidate,AdminValidate.validateAdminPost,validateMW,controller.addAdmin)
+    .put(imageValidate,AdminValidate.validateAdminPut,validateMW,controller.updateAdmin)
 
 
 router.get("/Admin/:_id",AdminValidate.validateAdminGetID,validateMW,controller.getAdmin)
 router.delete("/Admin/:_id",AdminValidate.validateAdminDelete,validateMW,controller.deleteAdmin) //removeAdminIMG
-
 
 module.exports=router;
