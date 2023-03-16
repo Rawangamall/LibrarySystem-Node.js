@@ -31,7 +31,7 @@ exports.addBorrowbook=(request,response,next)=>{
                                     employeeID:request.body.employeeID,
                                     bookID:request.params._id,
                                     startDate:Date(),
-                                    expireDate:new Date(new Date().getTime()+(14*24*60*60*1000)),
+                                    expireDate:request.body.expireDate, //new Date(new Date().getTime()+(14*24*60*60*1000))
                                     late:"Not late"
                             }).save()
                         .then((data)=>{
@@ -121,30 +121,6 @@ exports.getAll=(request,response)=>{
                     })
 }
 
- exports.updateBookOperation=(request,response,next)=>{
-    
-            BookOperationSchema.updateOne({
-                _id:request.params._id
-            },{
-                $set:{
-                    operation:request.body.operation,
-                    memberID:request.body.memberID,
-                    bookID:request.body.bookID,
-                    employeeID:request.body.employeeID,
-                    expireDate:request.body.expireDate,
-                    returned:request.body.returned,         
-                }
-            }).then(data=>{
-                if(data.acknowledged==false)
-                {
-                
-                    next(new Error("bookOperation not found"));
-                }
-                else
-                response.status(200).json(data);
-            })
-            .catch(error=>next(error));
-        }
         
  exports.deleteBookOperation=(request,response)=>{
             BookOperationSchema.deleteOne({_id:request.params._id})
