@@ -17,31 +17,31 @@ exports.addBorrowbook=(request,response,next)=>{
             BookSchema.findOne({_id:request.body.bookID})
             .then((res)=>{            
                 if(res!=null){
-                    if(res.available && res.noOfCurrentBorrowed<res.noOfCopies-res.noOfCurrentBorrowed && res.noOfCopies != 1){
+                    if(res.available){
                         BookSchema.findOneAndUpdate({_id:request.body.bookID}, {$inc : {'noOfCurrentBorrowed' : 1,'noBorrowed' : 1}})
-                        .then((ress)=>{            
-                            if(ress!=null){
-                                new BookOperationSchema({
-                                operation:"borrow",
-                                returned:false,
-                                memberID:request.params.memberID,
-                                employeeID:request.body.employeeID,
-                                bookID:request.body.bookID,
-                                startDate:Date(),
-                                expireDate:request.body.expireDate,   //after 2 weeks
-                        }).save()
-                            //show if available or not
-                            BookSchema.updateMany({},
-                                [{ $set: { available: { $lt: [{$subtract: [ "$noOfCurrentBorrowed","$noOfCopies" ]},0] } } }])
-                                .then(result=>{console.log(available),response.status(200).json({result})})
-                                .catch(error=>next(error))
-                            response.status(200).json("Borrowed Successfully!");    
-    }}
-    ).catch(error=>{
-                next(error);
-            })
-    }
-        else{response.status(404).json({data:"This Book is not Available for Borrowing"});}
+                        .then((res)=>{
+                            new BookOperationSchema({
+                            operation:"borrow",
+                            returned:false,
+                            memberID:request.params.memberID,
+                            employeeID:request.body.employeeID,
+                            bookID:request.body.bookID,
+                            startDate:Date(),
+                            expireDate:new Date(new Date().getTime()+(14*24*60*60*1000)),
+                    }).save()
+        .then((data)=>{
+                //show if available or not
+                   BookSchema.updateMany({},
+                   [{ $set: { available: { $lt: [{$subtract: [ { $sum: ['$noOfCurrentReading', '$noOfCurrentBorrowed'] },"$noOfCopies" ]},0] } } }])
+                   .then(result=>{console.log(available),response.status(200).json({result})})
+                .catch(error=>next(error))
+       
+            response.status(200).json({data});
+        })
+        .catch(error=>{
+        next(error);
+        })})}
+        else{response.status(404).json({data:"This Book is not Avilable"});}
         }   
         else{response.status(404).json({data:"This Book is not Found"});}      
     })
@@ -123,24 +123,34 @@ exports.addReadbook=(request,response,next)=>{
     .then((result)=>{
         if(result != null )
         {
-        BookSchema.findOneAndUpdate({_id:request.body.bookID}, {$inc : {'noReading' : 1}}).then((res)=>{
-            if(res!=null){
-                console.log(res.noBorrowed);
-        new BookOperationSchema({
-            operation:"read",
-            returned:false,
-            memberID:request.params.memberID,
-            employeeID:request.body.employeeID,
-            bookID:request.body.bookID,
-            startDate:Date(),
-            expireDate:request.body.expireDate,   //after 24 hours
+            BookSchema.findOne({_id:request.body.bookID})
+            .then((res)=>{            
+                if(res!=null){
+                    if(res.available){
+                        BookSchema.findOneAndUpdate({_id:request.body.bookID}, {$inc : {'noOfCurrentReading' : 1,'noReading' : 1}})
+                        .then((res)=>{
+                            new BookOperationSchema({
+                            operation:"read",
+                            returned:false,
+                            memberID:request.params.memberID,
+                            employeeID:request.body.employeeID,
+                            bookID:request.body.bookID,
+                            startDate:Date(),
+                            expireDate:new Date(new Date().getTime()+(1*24*60*60*1000)),
         }).save()
         .then((data)=>{
+                //show if available or not
+                   BookSchema.updateMany({},
+                   [{ $set: { available: { $lt: [{$subtract: [ { $sum: ['$noOfCurrentReading', '$noOfCurrentBorrowed'] },"$noOfCopies" ]},0] } } }])
+                   .then(result=>{console.log(available),response.status(200).json({result})})
+                .catch(error=>next(error))
+       
             response.status(200).json({data});
         })
         .catch(error=>{
         next(error);
-        })
+        })})}
+        else{response.status(404).json({data:"This Book is not Avilable"});}
         }   
         else{response.status(404).json({data:"This Book is not Found"});}      
     })
@@ -152,7 +162,7 @@ exports.addReadbook=(request,response,next)=>{
     .catch(error=>{
     next(error);
     })
-    }   
+                } 
 
     exports.borrowBYdate=async(request,response,next)=>{
         date = new Date();
@@ -203,9 +213,10 @@ exports.addReadbook=(request,response,next)=>{
             next(error);
         }
     }
-    exports.returnBook=(request,response,next)=>{
-        BookSchema.findOneAndUpdate({_id:request.body.bookID}, {$inc : {'noOfCurrentBorrowed' : -1}}).then((res)=>{
 
+    
+    exports.returnBorrowBook=(request,response,next)=>{
+        BookSchema.findOneAndUpdate({_id:request.body.bookID}, {$inc : {'noOfCurrentBorrowed' : -1}}).then((res)=>{
         BookOperationSchema.updateOne({ "_id" : request.params._id} ,{
             $set:{ "returned" : request.body.returned}
         }).then(data=>{
@@ -214,11 +225,11 @@ exports.addReadbook=(request,response,next)=>{
                 next(new Error("This borrow operation is not found"));
             }
             else{
-                //show if available or not
-                BookSchema.updateMany({},
-                    [{ $set: { available: { $lt: [{$subtract: [ "$noOfCurrentBorrowed","$noOfCopies" ]},0] } } }])
-                 .then(result=>{console.log(available),response.status(200).json({result})})
-                 .catch(error=>next(error))
+                   //show if available or not
+                   BookSchema.updateMany({},
+                [{ $set: { available: { $lt: [{$subtract: [ { $sum: ['$noOfCurrentReading', '$noOfCurrentBorrowed'] },"$noOfCopies" ]},0] } } }])
+                .then(result=>{console.log(available),response.status(200).json({result})})
+                .catch(error=>next(error))
                 console.log(request.body.returned);
                 response.status(200).json({data:"Updated!"});
             }
@@ -226,9 +237,24 @@ exports.addReadbook=(request,response,next)=>{
         .catch(error=>next(error));
     })}
 
-exports.available=(request,response,next)=>{
-    BookSchema.find({})
-    .then(data=>{
-    })
-    .catch(error=>next(error));
-}
+    exports.returnReadBook=(request,response,next)=>{
+        BookSchema.findOneAndUpdate({_id:request.body.bookID}, {$inc : {'noOfCurrentReading' : -1}}).then((res)=>{
+        BookOperationSchema.updateOne({ "_id" : request.params._id} ,{
+            $set:{ "returned" : request.body.returned}
+        }).then(data=>{
+            if(data.matchedCount==0)
+            {
+                next(new Error("This reading operation is not found"));
+            }
+            else{
+                //show if available or not
+                BookSchema.updateMany({},
+                [{ $set: { available: { $lt: [{$subtract: [ { $sum: ['$noOfCurrentReading', '$noOfCurrentBorrowed'] },"$noOfCopies" ]},0] } } }])
+                .then(result=>{console.log(available),response.status(200).json({result})})
+                 .catch(error=>next(error))
+                console.log(request.body.returned);
+                response.status(200).json({data:"Updated!"});
+            }
+        })
+        .catch(error=>next(error));
+    })}
