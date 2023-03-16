@@ -1,8 +1,10 @@
 const mongoose=require("mongoose");
 require("../Models/BookModel");
 require("../Models/member");
+require("../Models/BookOperationModel");
 const BookSchema=mongoose.model("Book");
 const MemberSchema=mongoose.model("member");
+const BookOperationSchema=mongoose.model("BookOperation");
 available=false;
 
 //Get
@@ -180,3 +182,4 @@ exports.filteredbooks=(request,response,next)=>{
                 }).catch(error=>{next(error);})
             }
  }
+

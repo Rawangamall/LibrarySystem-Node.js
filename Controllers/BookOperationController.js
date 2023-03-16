@@ -16,7 +16,7 @@ exports.addBorrowbook=(request,response,next)=>{
         if(result != null )
         {
             BookSchema.findOne({_id:request.params._id})
-            .then((res)=>{            
+            .then((res)=>{
                 if(res!=null){
                     if(res.available){
                       BookOperationSchema.find({ memberID:request.body.memberID,bookID:request.params._id,"returned":{$eq:false}}).then((check)=>{
@@ -62,22 +62,22 @@ exports.addBorrowbook=(request,response,next)=>{
     }
     
     exports.addReadbook=(request,response,next)=>{
-        MemberSchema.findOne({_id:request.params._id})
+        MemberSchema.findOne({_id:request.body.memberID})
         .then((result)=>{
             if(result != null )
             {
-                BookSchema.findOne({_id:request.body.bookID})
+                BookSchema.findOne({_id:request.params._id})
                 .then((res)=>{            
                     if(res!=null){
                         if(res.available){
-                            BookSchema.findOneAndUpdate({_id:request.body.bookID}, {$inc : {'noOfCurrentReading' : 1,'noReading' : 1}})
+                            BookSchema.findOneAndUpdate({_id:request.params._id}, {$inc : {'noOfCurrentReading' : 1,'noReading' : 1}})
                             .then((res)=>{
                                 new BookOperationSchema({
                                 operation:"read",
                                 returned:false,
-                                memberID:request.params.memberID,
+                                memberID:request.body.memberID,
                                 employeeID:request.body.employeeID,
-                                bookID:request.body.bookID,
+                                bookID:request.params._id,
                                 startDate:Date(),
                                 expireDate:new Date(new Date().getTime()+(1*24*60*60*1000)),
             }).save()
@@ -175,6 +175,8 @@ exports.getAll=(request,response)=>{
             }
 
 
+  
+   
 exports.borrowBYdate=async(request,response,next)=>{
         date = new Date();
         const Month = request.body.searchbyMonth
@@ -225,28 +227,6 @@ exports.borrowBYdate=async(request,response,next)=>{
         }
     }
 
-    
-exports.returnBorrowBook=(request,response,next)=>{
-        BookSchema.findOneAndUpdate({_id:request.body.bookID}, {$inc : {'noOfCurrentBorrowed' : -1}}).then((res)=>{
-        BookOperationSchema.updateOne({ "_id" : request.params._id} ,{
-            $set:{ "returned" : request.body.returned}
-        }).then(data=>{
-            if(data.matchedCount==0)
-            {
-                next(new Error("This borrow operation is not found"));
-            }
-            else{
-                   //show if available or not
-                   BookSchema.updateMany({},
-                [{ $set: { available: { $lt: [{$subtract: [ { $sum: ['$noOfCurrentReading', '$noOfCurrentBorrowed'] },"$noOfCopies" ]},0] } } }])
-                .then(result=>{console.log(available),response.status(200).json({result})})
-                .catch(error=>next(error))
-                console.log(request.body.returned);
-                response.status(200).json({data:"Updated!"});
-            }
-        })
-        .catch(error=>next(error));
-    })}
 
 //g  borrowedbooks with employee responsible for borrowing
 exports.borrowInfo=(request,response,next)=>{
@@ -289,10 +269,34 @@ exports.borrowInfo=(request,response,next)=>{
     .catch(error=>next(error));
 }
 
+    
+exports.returnBorrowBook=(request,response,next)=>{
+    BookSchema.findOneAndUpdate({_id:request.body.bookID}, {$inc : {'noOfCurrentBorrowed' : -1}}).then((res)=>{
+    BookOperationSchema.updateOne({ "_id" : request.params._id} ,{
+        $set:{ "returned" : true}
+    }).then(data=>{
+        if(data.matchedCount==0)
+        {
+            next(new Error("This borrow operation is not found"));
+        }
+        else{
+               //show if available or not
+               BookSchema.updateMany({},
+            [{ $set: { available: { $lt: [{$subtract: [ { $sum: ['$noOfCurrentReading', '$noOfCurrentBorrowed'] },"$noOfCopies" ]},0] } } }])
+            .then(result=>{console.log(available),response.status(200).json({result})})
+            .catch(error=>next(error))
+            console.log(request.body.returned);
+            response.status(200).json({data:"Updated!"});
+        }
+    })
+    .catch(error=>next(error));
+})}
+
+
  exports.returnReadBook=(request,response,next)=>{
         BookSchema.findOneAndUpdate({_id:request.body.bookID}, {$inc : {'noOfCurrentReading' : -1}}).then((res)=>{
         BookOperationSchema.updateOne({ "_id" : request.params._id} ,{
-            $set:{ "returned" : request.body.returned}
+            $set:{ "returned" : true}
         }).then(data=>{
             if(data.matchedCount==0)
             {
@@ -312,16 +316,120 @@ exports.borrowInfo=(request,response,next)=>{
     })}
     
 
-exports.makeSureOfReturnedRead=(request,response,next)=>{
-    //make sure that book is returned before the end of the day
-    BookOperationSchema.updateMany({
-        expireDate: { $lt: new Date()},operation:"read",returned:false}, 
-        [{ $set: { returned: true}}])
-    .then(data=>{
-        if(data.matchedCount!=0)
-            response.status(200).json({data:"All read books are returned successfully"});
-        else
-            response.status(200).json({data:"All read books are already returned!"});
-        })
-    .catch(error=>next(error));
+    exports.mostreadingBooks=(request,response,next)=>{
+    
+        const PD = request.body.publishingDate;
+        let searchbyYear;
+        if(PD==null)
+        {
+            searchbyYear=new Date().getFullYear();   
+        }
+        else{ 
+            searchbyYear = Number(PD);
+        }
+       
+        BookOperationSchema.aggregate( [
+          {$match: { operation:"read"}},
+          {
+            $lookup: {
+                         from: 'books',
+                         localField: 'bookID',
+                         foreignField: '_id',
+                         as: 'book'
+                     }
+         }, 
+         { $unwind: "$book" },
+         {
+            $project: { 
+                            _id:0,       
+                            bookID: "$bookID" ,
+                            book_title:"$book.title",
+                            publishyear:{ $year:"$book.publishingDate"}
+                  }
+         },
+         {$match:  {publishyear:searchbyYear}},
+                  
+        { $group: { _id: "$bookID", borrowCount: { $sum: 1 }  ,  book_title: { $push: "$book_title" } } },
+        { $sort: { borrowCount: -1 } },
+         { $limit: 5 },
+         {
+           $project: { 
+                                         
+                     book_title: { $first: "$book_title" },
+                     
+                    }},
+                 
+        ])
+        
+         .then(result => {
+            response.status(200).json({result});
+        }) .catch(error=>next(error));
+    }
+         
+        
+    
+    
+exports.mostBorrowedBooks=(request,response,next)=>{
+    
+    const PD = request.body.publishingDate;
+    let searchbyYear;
+    if(PD==null)
+    {
+        searchbyYear=new Date().getFullYear();   
+    }
+    else{ 
+        searchbyYear = Number(PD);
+    }
+    
+    
+    console.log(PD);
+    BookOperationSchema.aggregate( [
+      {$match: { operation:"borrow"}},
+      {
+        $lookup: {
+                     from: 'books',
+                     localField: 'bookID',
+                     foreignField: '_id',
+                     as: 'book'
+                 }
+     }, 
+     { $unwind: "$book" },
+     {
+        $project: { 
+                        _id:0,       
+                        bookID: "$bookID" ,
+                        book_title:"$book.title",
+                        publishyear:{ $year:"$book.publishingDate"}
+              }
+     },
+     {$match:  {publishyear:searchbyYear}},
+              
+    { $group: { _id: "$bookID", borrowCount: { $sum: 1 }  ,  book_title: { $push: "$book_title" } } },
+    { $sort: { borrowCount: -1 } },
+     { $limit: 5 },
+     {
+       $project: { 
+                                     
+                 book_title: { $first: "$book_title" },
+                 
+                }},
+    ])
+     .then(result => {
+        response.status(200).json({result});
+    }) .catch(error=>next(error));
 }
+     
+    
+    exports.makeSureOfReturnedRead=(request,response,next)=>{
+        //make sure that book is returned before the end of the day
+        BookOperationSchema.updateMany({
+            expireDate: { $lt: new Date()},operation:"read",returned:false}, 
+            [{ $set: { returned: true}}])
+        .then(data=>{
+            if(data.matchedCount!=0)
+                response.status(200).json({data:"All read books are returned successfully"});
+            else
+                response.status(200).json({data:"All read books are already returned!"});
+            })
+            .catch(error=>next(error));
+    }

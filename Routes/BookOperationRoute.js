@@ -22,9 +22,11 @@ router.route("/BookOperation")
 router.route("/BookOperation/readingBYdate/get")
       .get(controller.readingBYdate)
 
+router.route("/BookOperation")
+     .get(controller.getAll)
+
 router.route("/BookOperation/borrowBYdate/get")
      .get(controller.borrowBYdate)
-   
    
 router.route("/BookOperation/:_id")
     .patch(controller.updateBookOperation)
@@ -47,7 +49,7 @@ router.route("/Employees/addReadBooks/:_id")
 router.route("/member/borrowInfo/:_id")
        .get(controller.borrowInfo)
 
-router.route("/makeSureOfReturnedRead")
+       router.route("/makeSureOfReturnedRead")
        .put(controller.makeSureOfReturnedRead)
 
        // router.route("/member/currentBorrowedBooks/:_id")
@@ -58,4 +60,7 @@ router.route("/BookOperation")
 // router.route("/available")
 //         .get(controller.available)
         
+router.get("/Bookoper/mostBorrowedBooks",controller.mostBorrowedBooks)
+router.get("/Bookoper/mostReadingBooks",controller.mostreadingBooks)
+
 module.exports=router;
