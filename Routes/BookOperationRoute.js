@@ -10,7 +10,6 @@ const controller=require("../Controllers/BookOperationController.js");
 // const validateOnDeleteBook=require("../Core/Validation/BookValidation").validateOnDelete;
 //const { checkAdmin, checkTeacherAndAdmin }=require("./../Core/auth/authenticationMW");
 
-
 //     .put(validatePutBook,validateMW,controller.updateBook)
 //     .delete(validateOnDeleteBook,validateMW,controller.deleteBook)
 
@@ -33,8 +32,6 @@ router.route("/BookOperation/:_id")
     .get(controller.getBookOperation)
 
 
-
-
 router.route("/Employees/addBorrowedBooks/:_id")
        .post(controller.addBorrowbook)
 
@@ -47,6 +44,14 @@ router.route("/Employees/returnReadBook/:_id")
 router.route("/Employees/addReadBooks/:_id")
         .post(controller.addReadbook)
 
+router.route("/member/borrowInfo/:_id")
+       .get(controller.borrowInfo)
+
+       // router.route("/member/currentBorrowedBooks/:_id")
+       // .get(controller.currentBorrowedBooks)
+
+router.route("/BookOperation")
+        .post(controller.addBorrowbook)
 // router.route("/available")
 //         .get(controller.available)
         
