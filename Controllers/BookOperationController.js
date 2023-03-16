@@ -16,7 +16,7 @@ exports.addBorrowbook=(request,response,next)=>{
         if(result != null )
         {
             BookSchema.findOne({_id:request.params._id})
-            .then((res)=>{            
+            .then((res)=>{
                 if(res!=null){
                     if(res.available){
                       BookOperationSchema.find({ memberID:request.body.memberID,bookID:request.params._id,"returned":{$eq:false}}).then((check)=>{
@@ -62,22 +62,22 @@ exports.addBorrowbook=(request,response,next)=>{
     }
     
     exports.addReadbook=(request,response,next)=>{
-        MemberSchema.findOne({_id:request.params._id})
+        MemberSchema.findOne({_id:request.body.memberID})
         .then((result)=>{
             if(result != null )
             {
-                BookSchema.findOne({_id:request.body.bookID})
+                BookSchema.findOne({_id:request.params._id})
                 .then((res)=>{            
                     if(res!=null){
                         if(res.available){
-                            BookSchema.findOneAndUpdate({_id:request.body.bookID}, {$inc : {'noOfCurrentReading' : 1,'noReading' : 1}})
+                            BookSchema.findOneAndUpdate({_id:request.params._id}, {$inc : {'noOfCurrentReading' : 1,'noReading' : 1}})
                             .then((res)=>{
                                 new BookOperationSchema({
                                 operation:"read",
                                 returned:false,
-                                memberID:request.params.memberID,
+                                memberID:request.body.memberID,
                                 employeeID:request.body.employeeID,
-                                bookID:request.body.bookID,
+                                bookID:request.params._id,
                                 startDate:Date(),
                                 expireDate:new Date(new Date().getTime()+(1*24*60*60*1000)),
             }).save()
@@ -229,7 +229,7 @@ exports.borrowBYdate=async(request,response,next)=>{
 exports.returnBorrowBook=(request,response,next)=>{
         BookSchema.findOneAndUpdate({_id:request.body.bookID}, {$inc : {'noOfCurrentBorrowed' : -1}}).then((res)=>{
         BookOperationSchema.updateOne({ "_id" : request.params._id} ,{
-            $set:{ "returned" : request.body.returned}
+            $set:{ "returned" : true}
         }).then(data=>{
             if(data.matchedCount==0)
             {
@@ -292,7 +292,7 @@ exports.borrowInfo=(request,response,next)=>{
  exports.returnReadBook=(request,response,next)=>{
         BookSchema.findOneAndUpdate({_id:request.body.bookID}, {$inc : {'noOfCurrentReading' : -1}}).then((res)=>{
         BookOperationSchema.updateOne({ "_id" : request.params._id} ,{
-            $set:{ "returned" : request.body.returned}
+            $set:{ "returned" : true}
         }).then(data=>{
             if(data.matchedCount==0)
             {
