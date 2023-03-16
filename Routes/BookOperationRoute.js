@@ -21,10 +21,12 @@ const controller=require("../Controllers/BookOperationController.js");
 router.route("/BookOperation/readingBYdate/get")
       .get(controller.readingBYdate)
 
-router.route("/BookOperation/borrowBYdate/get")
-     .get(controller.borrowBYdate)
+router.route("/BookOperation")
      .get(controller.getAll)
    
+router.route("/BookOperation/borrowBYdate/get")
+     .get(controller.borrowBYdate)
+     
    
 router.route("/BookOperation/:_id")
     .patch(controller.updateBookOperation)

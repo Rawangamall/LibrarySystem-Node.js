@@ -1,8 +1,10 @@
 const mongoose=require("mongoose");
 require("../Models/BookModel");
 require("../Models/member");
+require("../Models/BookOperationModel");
 const BookSchema=mongoose.model("Book");
 const MemberSchema=mongoose.model("member");
+const BookOperationSchema=mongoose.model("BookOperation");
 available=false;
 
 //Get
@@ -194,3 +196,111 @@ exports.filteredbooks=(request,response,next)=>{
                 }).catch(error=>{next(error);})
             }
  }
+
+ exports.mostreadingBooks=(request,response,next)=>{
+    
+        const PD = request.body.publishingDate;
+        let searchbyYear;
+        if(PD==null)
+        {
+            searchbyYear=new Date().getFullYear();   
+        }
+        else{ 
+            searchbyYear = Number(PD);
+        }
+       
+        BookOperationSchema.aggregate( [
+          {$match: { operation:"read"}},
+          {
+            $lookup: {
+                         from: 'books',
+                         localField: 'bookID',
+                         foreignField: '_id',
+                         as: 'book'
+                     }
+         }, 
+         { $unwind: "$book" },
+         {
+            $project: { 
+                            _id:0,       
+                            bookID: "$bookID" ,
+                            book_title:"$book.title",
+                            publishyear:{ $year:"$book.publishingDate"}
+                  }
+         },
+         {$match:  {publishyear:searchbyYear}},
+                  
+        { $group: { _id: "$bookID", borrowCount: { $sum: 1 }  ,  book_title: { $push: "$book_title" } } },
+        { $sort: { borrowCount: -1 } },
+         { $limit: 5 },
+         {
+           $project: { 
+                                         
+                     book_title: { $first: "$book_title" },
+                     
+                    }},
+                 
+        ])
+        
+         .then(result => {
+            response.status(200).json({result});
+        }).catch(err => {
+            console.log(err.message)
+        });
+         
+        
+    }
+    
+exports.mostBorrowedBooks=(request,response,next)=>{
+    
+    const PD = request.body.publishingDate;
+    let searchbyYear;
+    if(PD==null)
+    {
+        searchbyYear=new Date().getFullYear();   
+    }
+    else{ 
+        searchbyYear = Number(PD);
+    }
+    
+    
+    console.log(PD);
+    BookOperationSchema.aggregate( [
+      {$match: { operation:"borrow"}},
+      {
+        $lookup: {
+                     from: 'books',
+                     localField: 'bookID',
+                     foreignField: '_id',
+                     as: 'book'
+                 }
+     }, 
+     { $unwind: "$book" },
+     {
+        $project: { 
+                        _id:0,       
+                        bookID: "$bookID" ,
+                        book_title:"$book.title",
+                        publishyear:{ $year:"$book.publishingDate"}
+              }
+     },
+     {$match:  {publishyear:searchbyYear}},
+              
+    { $group: { _id: "$bookID", borrowCount: { $sum: 1 }  ,  book_title: { $push: "$book_title" } } },
+    { $sort: { borrowCount: -1 } },
+     { $limit: 5 },
+     {
+       $project: { 
+                                     
+                 book_title: { $first: "$book_title" },
+                 
+                }},
+    ])
+     .then(result => {
+        response.status(200).json({result});
+    }).catch(err => {
+        console.log(err.message)
+    });
+     
+    
+}

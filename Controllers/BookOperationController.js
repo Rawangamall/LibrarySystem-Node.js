@@ -98,7 +98,7 @@ exports.getAll=(request,response)=>{
             new BookOperationSchema({
                 operation:"borrow",
                 returned:false,
-                memberID:request.params.memberID,
+                memberID:request.params._id,
                 employeeID:request.body.employeeID,
                 bookID:request.body.bookID,
                 startDate:Date(),
@@ -135,7 +135,7 @@ exports.addReadbook=(request,response,next)=>{
         new BookOperationSchema({
             operation:"read",
             returned:false,
-            memberID:request.params.memberID,
+            memberID:request.params._id,
             employeeID:request.body.employeeID,
             bookID:request.body.bookID,
             startDate:Date(),
@@ -222,7 +222,7 @@ exports.addReadbook=(request,response,next)=>{
         new BookOperationSchema({
             operation:"read",
             returned:false,
-            memberID:request.params.memberID,
+            memberID:request.params._id,
             employeeID:request.body.employeeID,
             bookID:request.body.bookID,
             startDate:Date(),
