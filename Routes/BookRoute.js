@@ -3,6 +3,7 @@ const router=express.Router();
 
 const validateMW=require("../Core/Validation/validateMW");
 const controller=require("../Controllers/BookController.js");
+const controller2=require("../Controllers/BookOperationController");
 const validatePostBook=require("../Core/Validation/BookValidation").validatePost;
 const validatePutBook=require("../Core/Validation/BookValidation").validatePut;
 const validateOnGetBook=require("../Core/Validation/BookValidation").validateOnGet;
@@ -17,8 +18,6 @@ router.route("/Book")
     .delete(validateOnDeleteBook,validateMW,controller.deleteBook)
 
 router.get("/Book/available",controller.getAvailableBooks)
-router.get("/Book/mostBorrowedBooks",controller.mostBorrowedBooks)
-router.get("/Book/mostreadingBooks",controller.mostreadingBooks)
 
 router.get("/Book/:id",validateOnGetBook,validateMW,controller.getOneBook)
 router.route("/member/NewArrivedBooks/get")
