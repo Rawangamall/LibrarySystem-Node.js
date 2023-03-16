@@ -1,12 +1,13 @@
-<<<<<<< HEAD
 const multer=require("multer");
 const path=require("path");
 const fs = require('fs');
 const mongoose=require("mongoose");
 require("../../Models/EmpModel");
-const EmpSchema=mongoose.model("Employees");
 require("../../Models/member");
+require("../../Models/AdminModel");
+const EmpSchema=mongoose.model("Employees");
 const MemberSchema=mongoose.model("member");
+const AdminSchema=mongoose.model("Admin");
 
 exports.empImage=multer({
     fileFilter: function (req, file, cb) {
@@ -64,13 +65,7 @@ exports.removeMemberIMG=function(req,res,next){
         if (err) throw err;
         next();
     })
-=======
-const multer=require("multer");
-const path=require("path");
-const fs = require('fs');
-const mongoose=require("mongoose");
-require("../../Models/AdminModel");
-const AdminSchema=mongoose.model("Admin");
+
 
 exports.adminImg=multer({
     fileFilter: function (req, file, cb) {
@@ -82,7 +77,7 @@ exports.adminImg=multer({
     limits: { fileSize: 100000*100000 },
     storage:multer.diskStorage({
         destination:(req,file,cb)=>{
-            cb(null,path.join(__dirname,"..","..","images"));
+            cb(null,path.join(__dirname,"..","..","images","Admins_images"));
         },
         filename:(request, file, cb)=>{
                 photoExtension = file.originalname.split(".")[1];
@@ -93,9 +88,9 @@ exports.adminImg=multer({
 }).single("image")
 
 exports.removeAdminIMG=function(req,res,next){
-    fs.unlink(path.join(__dirname,"..","..","images",imageName), function (err) {
+    fs.unlink(path.join(__dirname,"..","..","images","Admins_images",imageName), function (err) {
         if (err) throw err;
         next();
     })
->>>>>>> Admin
+    }
 }
