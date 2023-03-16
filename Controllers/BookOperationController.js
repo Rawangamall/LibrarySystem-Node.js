@@ -18,9 +18,6 @@ exports.addBorrowbook=(request,response,next)=>{
             BookSchema.findOne({_id:request.params._id})
             .then((res)=>{            
                 if(res!=null){
-                    //make sure that book is returned before the end of the day
-                    BookOperationSchema.updateMany({expireDate: { $lt: new Date()},operation:"read",returned:false}, [{ $set: { returned: true}}])
-                    .then(data=>{console.log("done")}).catch(error=>next(error));
                     if(res.available){
                       BookOperationSchema.find({ memberID:request.body.memberID,bookID:request.params._id,"returned":{$eq:false}}).then((check)=>{
                             console.log(check)
@@ -69,9 +66,6 @@ exports.addBorrowbook=(request,response,next)=>{
         .then((result)=>{
             if(result != null )
             {
-                //make sure that book is returned before the end of the day
-                BookOperationSchema.updateMany({expireDate: { $lt: new Date()},operation:"read",returned:false}, [{ $set: { returned: true}}])
-                .then(data=>{console.log("done")}).catch(error=>next(error));  
                 BookSchema.findOne({_id:request.body.bookID})
                 .then((res)=>{            
                     if(res!=null){
@@ -115,11 +109,7 @@ exports.addBorrowbook=(request,response,next)=>{
                        
 exports.getAll=(request,response)=>{
     BookOperationSchema.find({})
-                    .then((data)=>{
-                        //make sure that book is returned before the end of the day
-                        BookOperationSchema.updateMany({expireDate: { $lt: new Date()},operation:"read",returned:false}, [{ $set: { returned: true}}])
-                        .then(data=>{console.log("done")}).catch(error=>next(error));  
-                        
+                    .then((data)=>{        
                         //member exceeds the return date of borrowed books
                         BookOperationSchema.updateMany({expireDate: { $lt: new Date()},operation:"borrow",returned:false}, [{ $set: { late: "Late: This book isn't returned yet"}}])
                         .then(data=>{console.log("done")}).catch(error=>next(error));  
@@ -433,10 +423,22 @@ exports.mostBorrowedBooks=(request,response,next)=>{
         response.status(200).json({result});
     }).catch(err => {
         console.log(err.message)
-    });
+    });}
      
     
-}
+    exports.makeSureOfReturnedRead=(request,response,next)=>{
+        //make sure that book is returned before the end of the day
+        BookOperationSchema.updateMany({
+            expireDate: { $lt: new Date()},operation:"read",returned:false}, 
+            [{ $set: { returned: true}}])
+        .then(data=>{
+            if(data.matchedCount!=0)
+                response.status(200).json({data:"All read books are returned successfully"});
+            else
+                response.status(200).json({data:"All read books are already returned!"});
+            })
+            .catch(error=>next(error));
+    }
 
 //i-2  borrow again
 // exports.borrowSameBook
