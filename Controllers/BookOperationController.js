@@ -22,7 +22,7 @@ exports.addBorrowbook=(request,response,next)=>{
                       BookOperationSchema.find({ memberID:request.body.memberID,bookID:request.params._id,"returned":{$eq:false}}).then((check)=>{
                             console.log(check)
                             if(check == ""){
-                                BookSchema.findOneAndUpdate({_id:request.body.bookID}, {$inc : {'noOfCurrentBorrowed' : 1,'noBorrowed' : 1}})
+                                BookSchema.findOneAndUpdate({_id:request.params._id}, {$inc : {'noOfCurrentBorrowed' : 1,'noBorrowed' : 1}})
                                 .then((res)=>{
                                     new BookOperationSchema({
                                     operation:"borrow",
@@ -248,13 +248,6 @@ exports.returnBorrowBook=(request,response,next)=>{
         .catch(error=>next(error));
     })}
 
-exports.available=(request,response,next)=>{
-    BookSchema.find({})
-    .then(data=>{
-    })
-    .catch(error=>next(error));
-}
-
 //g  borrowedbooks with employee responsible for borrowing
 exports.borrowInfo=(request,response,next)=>{
     strID = request.params._id
@@ -331,6 +324,3 @@ exports.makeSureOfReturnedRead=(request,response,next)=>{
         })
     .catch(error=>next(error));
 }
-
-//i-2  borrow again
-exports.borrowSameBook
