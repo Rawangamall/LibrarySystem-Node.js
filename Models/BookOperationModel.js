@@ -11,7 +11,7 @@ const schema=new mongoose.Schema({
     bookID:{ 
         type:Number,
         require:true,
-        ref:"book"},
+        ref:"Book"},
      employeeID:{ 
        type:Number,
        require:true,

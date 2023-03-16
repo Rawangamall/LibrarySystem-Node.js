@@ -186,23 +186,49 @@ exports.getMember=(request,response,next)=>{
 
 
 exports.currentBorrowedBooks=(request,response,next)=>{
-  
-    BookOperationSchema.find({memberID:request.params._id , returned:false })
-    // .aggregate([
-    //     { $match: { _id:19 } },
-    //     { 
-    //         $project:{ 
-    //         "borrowOper":1,
-    //         _id:0,
-    //         borrowOper: {$filter: {
-    //             input: '$borrowOper',
-    //             as: 'item',
-    //             cond: {$eq: ['$$item.returned', "false"]}
-    //         }}
-    //     }
-    // },
+    strID=request.params._id;
+    NumID=Number(strID);
+    console.log(NumID);
+    BookOperationSchema.aggregate( [
+      {$match: {memberID:NumID , returned:false , operation:"borrow"}},
+
+      { $group: { _id: "$bookID", 
+                 noBorrowedTimes: { $sum: 1 }, 
+                 BorrowedDate: { $push: "$startDate" } ,
+                 expireDate: { $push: "$expireDate" },
+                 currentDate: { $push:  new Date().toISOString()  },
+                 } },
+
+    {
+        $lookup: {
+                    from: 'books',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'book'
+                  }
+                },  
+         { $unwind: "$book" },
+            {
+              $project: { 
+                        _id:0,
+                        book_title: "$book.title" ,
+                        expireDate:1,
+                        count:1,
+                        BorrowedDate:1,
+                        currentDate:1,
+                       warning: { 
+
+                           $cond: { 
+                              if: { $gte: [ "$expireDate", new Date() ] }, 
+                              then: "Book is late!", 
+                              else: null
+                           }
+                   }
+               }
+            }
+               
+    ])
     
-    //  ])
      .then(result => {
         response.status(200).json({result});
     }).catch(err => {
@@ -213,11 +239,3 @@ exports.currentBorrowedBooks=(request,response,next)=>{
 }
     
 
-exports.currentBorrowedBooks=(request,response,next)=>{
-    MemberSchema.find({ _id:request.params._id},{"borrowOper.returned":"true"}
-    ).then(result => {
-        response.status(200).json({result});
-    }).catch(err => {
-        console.log(err.message)
-    });
-}
