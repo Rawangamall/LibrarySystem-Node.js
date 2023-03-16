@@ -37,7 +37,7 @@ exports.addBorrowbook=(request,response,next)=>{
                         .then((data)=>{
                                 //show if available or not
                                    BookSchema.updateMany({},
-                                   [{ $set: { available: { $lt: [{$subtract: [ { $sum: ['$noOfCurrentReading', '$noOfCurrentBorrowed'] },"$noOfCopies" ]},0] } } }])
+                                   [{ $set: { available: { $lt: [{$subtract: [ { $sum: ['$noOfCurrentReading', '$noOfCurrentBorrowed'] },"$noOfCopies" ]},1] } } }])
                                    .then(result=>{console.log(available),response.status(200).json({result})})
                                 .catch(error=>next(error))
                        
@@ -310,6 +310,7 @@ exports.borrowInfo=(request,response,next)=>{
         })
         .catch(error=>next(error));
     })}
+    
 
 exports.makeSureOfReturnedRead=(request,response,next)=>{
     //make sure that book is returned before the end of the day
