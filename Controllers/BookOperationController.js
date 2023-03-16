@@ -361,12 +361,11 @@ exports.borrowInfo=(request,response,next)=>{
         
          .then(result => {
             response.status(200).json({result});
-        }).catch(err => {
-            console.log(err.message)
-        });
+        }) .catch(error=>next(error));
+    }
          
         
-    }
+    
     
 exports.mostBorrowedBooks=(request,response,next)=>{
     
@@ -415,9 +414,8 @@ exports.mostBorrowedBooks=(request,response,next)=>{
     ])
      .then(result => {
         response.status(200).json({result});
-    }).catch(err => {
-        console.log(err.message)
-    });}
+    }) .catch(error=>next(error));
+}
      
     
     exports.makeSureOfReturnedRead=(request,response,next)=>{
