@@ -2,6 +2,8 @@ const express=require("express");
 const router=express.Router();
 
 const validateMW=require("../Core/Validation/validateMW");
+const BookOperationValidation=require("../Core/Validation/BookOperationValidation");
+
 const controller=require("../Controllers/BookOperationController.js");
 
 // const validatePostBook=require("../Core/Validation/BookValidation").validatePost;
@@ -29,22 +31,21 @@ router.route("/BookOperation/borrowBYdate/get")
      .get(controller.borrowBYdate)
    
 router.route("/BookOperation/:_id")
-    .patch(controller.updateBookOperation)
     .delete(controller.deleteBookOperation)
     .get(controller.getBookOperation)
 
 
 router.route("/Employees/addBorrowedBooks/:_id")
-       .post(controller.addBorrowbook)
+       .post(controller.addBorrowbook,validateMW, BookOperationValidation.validatePost)
 
 router.route("/Employees/returnBorrowBook/:_id")
-       .put(controller.returnBorrowBook)
+       .put(controller.returnBorrowBook ,validateMW, BookOperationValidation.validatePut)
 
 router.route("/Employees/returnReadBook/:_id")
-       .put(controller.returnReadBook)
+       .put(controller.returnReadBook ,validateMW, BookOperationValidation.validatePut)
 
 router.route("/Employees/addReadBooks/:_id")
-        .post(controller.addReadbook)
+        .post(controller.addReadbook ,validateMW, BookOperationValidation.validatePost)
 
 router.route("/member/borrowInfo/:_id")
        .get(controller.borrowInfo)

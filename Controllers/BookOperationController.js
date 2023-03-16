@@ -31,14 +31,14 @@ exports.addBorrowbook=(request,response,next)=>{
                                     employeeID:request.body.employeeID,
                                     bookID:request.params._id,
                                     startDate:Date(),
-                                    expireDate:request.body.expireDate,//new Date(new Date().getTime()+(14*24*60*60*1000)),
+                                    expireDate:new Date(new Date().getTime()+(14*24*60*60*1000)),
                                     late:"Not late"
                             }).save()
                         .then((data)=>{
                                 //show if available or not
                                    BookSchema.updateMany({},
-                                   [{ $set: { available: { $lt: [{$subtract: [ { $sum: ['$noOfCurrentReading', '$noOfCurrentBorrowed'] },"$noOfCopies" ]},1] } } }])
-                                   .then(result=>{console.log(available),response.status(200).json({result})})
+                                   [{ $set: { available: { $lt: [{$subtract: [ { $sum: ['$noOfCurrentReading', '$noOfCurrentBorrowed'] },"$noOfCopies" ]},0] } } }])
+                                   .then(result=>{response.status(200).json({result})})
                                 .catch(error=>next(error))
                        
                             response.status(200).json({data});
@@ -70,7 +70,7 @@ exports.addBorrowbook=(request,response,next)=>{
                 .then((res)=>{            
                     if(res!=null){
                         if(res.available){
-                            BookSchema.findOneAndUpdate({_id:request.params._id}, {$inc : {'noOfCurrentReading' : 1,'noReading' : 1}})
+                            BookSchema.findOneAndUpdate({_id:request.params._id}, {$inc : {'noOfCurrentReading' : 1,'noReading' : 0}})
                             .then((res)=>{
                                 new BookOperationSchema({
                                 operation:"read",
@@ -85,7 +85,7 @@ exports.addBorrowbook=(request,response,next)=>{
                     //show if available or not
                        BookSchema.updateMany({},
                        [{ $set: { available: { $lt: [{$subtract: [ { $sum: ['$noOfCurrentReading', '$noOfCurrentBorrowed'] },"$noOfCopies" ]},0] } } }])
-                       .then(result=>{console.log(available),response.status(200).json({result})})
+                       .then(result=>{response.status(200).json({result})})
                     .catch(error=>next(error))
            
                 response.status(200).json({data});
@@ -121,30 +121,6 @@ exports.getAll=(request,response)=>{
                     })
 }
 
- exports.updateBookOperation=(request,response,next)=>{
-    
-            BookOperationSchema.updateOne({
-                _id:request.params._id
-            },{
-                $set:{
-                    operation:request.body.operation,
-                    memberID:request.body.memberID,
-                    bookID:request.body.bookID,
-                    employeeID:request.body.employeeID,
-                    expireDate:request.body.expireDate,
-                    returned:request.body.returned,         
-                }
-            }).then(data=>{
-                if(data.acknowledged==false)
-                {
-                
-                    next(new Error("bookOperation not found"));
-                }
-                else
-                response.status(200).json(data);
-            })
-            .catch(error=>next(error));
-        }
         
  exports.deleteBookOperation=(request,response)=>{
             BookOperationSchema.deleteOne({_id:request.params._id})
@@ -271,31 +247,30 @@ exports.borrowInfo=(request,response,next)=>{
 
     
 exports.returnBorrowBook=(request,response,next)=>{
-    BookSchema.findOneAndUpdate({_id:request.body.bookID}, {$inc : {'noOfCurrentBorrowed' : -1}}).then((res)=>{
-    BookOperationSchema.updateOne({ "_id" : request.params._id} ,{
+    BookOperationSchema.findOneAndUpdate({ "_id" : request.params._id} ,{
         $set:{ "returned" : true}
     }).then(data=>{
         if(data.matchedCount==0)
         {
-            next(new Error("This borrow operation is not found"));
+            next(new Error("This Borrow operation is not found"));
         }
         else{
-               //show if available or not
-               BookSchema.updateMany({},
+            BookSchema.findOneAndUpdate({_id:data.bookID}, {$inc : {'noOfCurrentBorrowed' : -1}}).then((res)=>{
+            //show if available or not
+            BookSchema.updateMany({},
             [{ $set: { available: { $lt: [{$subtract: [ { $sum: ['$noOfCurrentReading', '$noOfCurrentBorrowed'] },"$noOfCopies" ]},0] } } }])
             .then(result=>{console.log(available),response.status(200).json({result})})
-            .catch(error=>next(error))
+             .catch(error=>next(error))
             console.log(request.body.returned);
             response.status(200).json({data:"Updated!"});
-        }
+        })}
     })
     .catch(error=>next(error));
-})}
+}
 
 
  exports.returnReadBook=(request,response,next)=>{
-        BookSchema.findOneAndUpdate({_id:request.body.bookID}, {$inc : {'noOfCurrentReading' : -1}}).then((res)=>{
-        BookOperationSchema.updateOne({ "_id" : request.params._id} ,{
+        BookOperationSchema.findOneAndUpdate({ "_id" : request.params._id} ,{
             $set:{ "returned" : true}
         }).then(data=>{
             if(data.matchedCount==0)
@@ -303,6 +278,7 @@ exports.returnBorrowBook=(request,response,next)=>{
                 next(new Error("This reading operation is not found"));
             }
             else{
+                BookSchema.findOneAndUpdate({_id:data.bookID}, {$inc : {'noOfCurrentReading' : -1}}).then((res)=>{
                 //show if available or not
                 BookSchema.updateMany({},
                 [{ $set: { available: { $lt: [{$subtract: [ { $sum: ['$noOfCurrentReading', '$noOfCurrentBorrowed'] },"$noOfCopies" ]},0] } } }])
@@ -310,10 +286,10 @@ exports.returnBorrowBook=(request,response,next)=>{
                  .catch(error=>next(error))
                 console.log(request.body.returned);
                 response.status(200).json({data:"Updated!"});
-            }
+            })}
         })
         .catch(error=>next(error));
-    })}
+    }
     
 
     exports.mostreadingBooks=(request,response,next)=>{
