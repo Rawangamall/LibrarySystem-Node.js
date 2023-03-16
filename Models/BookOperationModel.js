@@ -18,7 +18,8 @@ const schema=new mongoose.Schema({
        ref:"Emp"},
     startDate:{type:Date , default:new Date()},    
     expireDate:Date,
-    returned:Boolean
+    returned:Boolean,
+    late:String
 });
 schema.plugin(AutoIncrement,{id:'BookOper_id',inc_field:"_id"});
 //mapping
