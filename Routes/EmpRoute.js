@@ -9,22 +9,16 @@ const validatePostEmp=require("../Core/Validation/EmpValidation").validatePost;
 const validatePutEmp=require("../Core/Validation/EmpValidation").validatePut;
 const validateOnGetEmp=require("../Core/Validation/EmpValidation").validateOnGet;
 const validateOnDeleteEmp=require("../Core/Validation/EmpValidation").validateOnDelete;
-//const { checkAdmin, checkTeacherAndAdmin }=require("./../Core/auth/authenticationMW");
+const { checkBasicAdminAndAdmin, checkBasicAdminAndEmp, checkBaAdminAndAdminAndEmp, checkBaAdminAndMemberAndEmp }=require("./../Core/auth/AuthenticateMW");
 
 router.route("/Employees")
-    //.get(controller.SearchForEmp)
-    .get(controller.getEmps)
-    .post(validatePostEmp,validateMW,controller.addEmp)              //make it validatePostMember  controller.addMember
-    .put(imageValidate,validatePutEmp,validateMW,controller.updateEmp)
-    .delete(validateOnDeleteEmp,validateMW,controller.deleteEmp,removeEmpIMG)
+    .get(checkBaAdminAndAdminAndEmp,validateMW,controller.getEmps)
+    .post(validateMW,validatePostEmp,controller.addEmp) //checkBasicAdminAndAdmin
 
-router.get("/Employees/:_id",validateOnGetEmp,validateMW,controller.getOneEmp)
+router.get("/Employees/:_id",validateMW,validateOnGetEmp,controller.getOneEmp) //checkBaAdminAndAdminAndEmp
 
-// router.route("/Employees/addBorrowedBooks/:_id")
-//        .post(controller.addBorrowbook)
-//        .put(controller.returnBook)
-
-// router.route("/Employees/addReadBooks/:_id")
-//         .post(controller.addReadbook)
+router.route("/Employees/:_id")
+    .put(imageValidate,validateMW,validatePutEmp,controller.updateEmp) //checkBaAdminAndAdminAndEmp
+    .delete(validateMW,validateOnDeleteEmp,removeEmpIMG,controller.deleteEmp) //checkBasicAdminAndAdmin
 
 module.exports=router;

@@ -28,45 +28,44 @@ module.exports=(request,response,next)=>{
 
 //   }
 // }
-// module.exports.checkBasicAdminAndAdmin=(request,response,next)=>{
-//   if(request.role =="BasicAdmin"||request.role =="Admin"){
-//       next();
-//   }
-//   else{
-//       let error =new Error("Not Authorized");
-//       error.status=403;
-//       next(error);
-//   }
-// }
-// module.exports.checkBasicAdminAndEmp=(request,response,next)=>{
-//   if(request.role =="BasicAdmin"||request.role =="Employee"){
-//       next();
-//   }
-//   else{
-//       let error =new Error("Not Authorized");
-//       error.status=403;
-//       next(error);
-//   }
-// }
-// module.exports.checkBaAdminAndAdminAndEmp=(request,response,next)=>{
-//   if(request.role =="BasicAdmin"||request.role =="Admin" || request.role =="Employee"){
-//       next();
-//   }
-//   else{
-//       let error =new Error("Not Authorized");
-//       error.status=403;
-//       next(error);
-      
-//   }
-// }
-// module.exports.checkBaAdminAndMemberAndEmp=(request,response,next)=>{
-//   if(request.role =="BasicAdmin"||request.role =="Member" || request.role =="Employee"){
-//       next();
-//   }
-//   else{
-//       let error =new Error("Not Authorized");
-//       error.status=403;
-//       next(error);
-      
-//   }
-// }
+module.exports.checkBasicAdminAndAdmin=(request,response,next)=>{
+  if(request.role =="BasicAdmin"||request.role =="Admin"){
+      next();
+  }
+  else{
+      let error =new Error("Not Authorized");
+      error.status=403;
+      next(error);
+  }
+}
+module.exports.checkBasicAdminAndEmp=(request,response,next)=>{
+  if(request.role =="BasicAdmin"||request.role =="Employee"){
+      next();
+  }
+  else{
+      let error =new Error("Not Authorized");
+      error.status=403;
+      next(error);
+  }
+}
+module.exports.checkBaAdminAndAdminAndEmp=(request,response,next)=>{
+  if(request.role =="BasicAdmin"||request.role =="Admin" || request.role =="Employee"){
+      next();
+  }
+  else{
+      let error =new Error("Not Authorized");
+      error.status=403;
+      next(error);
+   
+  }
+}
+module.exports.checkBaAdminAndMemberAndEmp=(request,response,next)=>{
+  if(request.role =="BasicAdmin"||request.role =="Member" || request.role =="Employee"){
+      next();
+  }
+  else{
+      let error =new Error("Not Authorized");
+      error.status=403;
+      next(error);
+  }
+}

@@ -13,6 +13,6 @@ router.route("/Admin")
 
 
 router.get("/Admin/:_id",AdminValidate.validateAdminGetID,validateMW,controller.getAdmin)
-router.delete("/Admin/:_id",AdminValidate.validateAdminDelete,validateMW,controller.deleteAdmin) //removeAdminIMG
+router.delete("/Admin/:_id",removeAdminIMG,AdminValidate.validateAdminDelete,validateMW,controller.deleteAdmin)
 
 module.exports=router;

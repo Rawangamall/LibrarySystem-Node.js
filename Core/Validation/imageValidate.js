@@ -23,7 +23,7 @@ exports.empImage=multer({
         },
         filename:(request, file, cb)=>{
                 photoExtension = file.originalname.split(".")[1];
-                imageName= EmpSchema.findOne({_id:request.body._id})._conditions._id + "." + photoExtension;
+                imageName= EmpSchema.findOne({_id:request.params._id})._conditions._id + "." + photoExtension;
                 cb(null, imageName);
         }
     })
