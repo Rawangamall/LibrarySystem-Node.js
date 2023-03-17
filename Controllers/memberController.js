@@ -150,7 +150,6 @@ exports.currentBorrowedBooks=(request,response,next)=>{
                  expireDate: { $push: "$expireDate" },
                  currentDate: { $push:  new Date().toISOString()  },
                  } },
-
     {
         $lookup: {
                     from: 'books',
@@ -165,17 +164,29 @@ exports.currentBorrowedBooks=(request,response,next)=>{
                         _id:0,
                         book_title: "$book.title" ,
                         expireDate:1,
-                        count:1,
+                        noBorrowedTimes:1,
                         BorrowedDate:1,
-                        currentDate:1,
-                       warning: { 
-
-                           $cond: { 
-                              if: { $gte: [ "$expireDate", new Date() ] }, 
-                              then: "Book is late!", 
-                              else: null
-                           }
-                   }
+                        // currentDate:1,
+                        warning: {
+                            $cond: {
+                              if: {
+                                $gt: [
+                                  {
+                                    $size: {
+                                      $filter: {
+                                        input: "$expireDate",
+                                        as: "date",
+                                        cond: { $gte: [ { $subtract: [ "$$date", new Date() ] }, 0 ] }
+                                      }
+                                    }
+                                  },
+                                  0
+                                ]
+                              },
+                              then: null,
+                              else: "Book is late!"
+                            }
+                          }
                }
             }
                

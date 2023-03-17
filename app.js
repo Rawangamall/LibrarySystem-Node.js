@@ -2,6 +2,10 @@ const express= require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const mongoose=require("mongoose");
+
+const AdminRoute=require("./Routes/AdminRoute");
+const loginRoute=require("./Routes/login");
+const AuthenticateMW=require("./Core/auth/AuthenticateMW");
 const memberRoute=require("./Routes/memberRoute");
 const BookRoute=require("./Routes/BookRoute");
 const EmpRoute=require("./Routes/EmpRoute");
@@ -10,7 +14,6 @@ const BookOperationRoute=require("./Routes/BookOperationRoute");
 //server
 const server = express();
 let port=process.env.PORT||8080;
-
 
 //db connection
 mongoose.set('strictQuery', true);  //warning
@@ -26,11 +29,8 @@ mongoose.connect("mongodb+srv://rawangamaal21:iti@node.gvt5cis.mongodb.net/?retr
             console.log("Db Problem "+error);
         })
 
-
 server.use(cors());
 server.use(morgan('combined'))
-//auth
-
 
 //body parse
 server.use(express.json());
@@ -42,14 +42,16 @@ server.use(memberRoute);
 server.use(BookRoute);
 server.use(EmpRoute);
 server.use(BookOperationRoute);
-
+server.use(loginRoute);
+server.use(AuthenticateMW);
+server.use(AdminRoute);
 
 //Not Found Middleware
 server.use((request,response,next)=>{
     response.status(404).json({message:"Not Found"})
 })
 
-//EROR handeling Middleware
+//ERROR handeling Middleware
 server.use((error,request,response,next)=>{
     response.status(500).json({message:error+""});
 })

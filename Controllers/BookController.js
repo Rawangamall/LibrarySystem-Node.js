@@ -5,7 +5,6 @@ require("../Models/BookOperationModel");
 const BookSchema=mongoose.model("Book");
 const MemberSchema=mongoose.model("member");
 const BookOperationSchema=mongoose.model("BookOperation");
-available=false;
 
 //Get
 exports.getBooks=(request,response,next)=>{
@@ -139,7 +138,8 @@ exports.mostBorrowedBook=(request,response,next)=>{
 
 exports.getNewArrivedBooks=(request,response,next)=>{
     const endDate = new Date(); // current date and time
-    const startDate = new Date(endDate.getTime() - (14 * 24 * 60 * 60 * 1000)); // 14 days (two weeks) ago
+    const startDate = new Date(); 
+    startDate.setDate(endDate.getMonth()-1);// one month  ago
       
 BookSchema.find({ createdAt: { $gte: startDate, $lte: endDate } }, (err, result) => {
 
@@ -183,3 +183,4 @@ exports.filteredbooks=(request,response,next)=>{
             }
  }
 
+ 
