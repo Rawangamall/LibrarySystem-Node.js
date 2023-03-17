@@ -23,7 +23,7 @@ exports.login= async (request,response,next)=>{
         //     let token = jwt.sign({
         //         firstName: request.body.firstName,role: "Employee"},"OStrack",{expiresIn: "5h"})
         //         response.status(200).json({message:"Authentecated",token});
-        // }`
+        // }
         // else if (member){
         //     let token = jwt.sign({
         //         firstName: request.body.firstName,role: "Member"},"OStrack",{expiresIn: "5h"})
@@ -35,5 +35,6 @@ exports.login= async (request,response,next)=>{
             next(error);
         }    
     }
+
 
 //}

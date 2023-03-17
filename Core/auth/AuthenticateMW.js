@@ -14,8 +14,6 @@ module.exports=(request,response,next)=>{
         error.message="Not Authenticated";
         next(error);
   }
-  
-
 }
 // module.exports.checkBasicAdmin=(request,response,next)=>{
 //   if(request.role =="BasicAdmin"){
