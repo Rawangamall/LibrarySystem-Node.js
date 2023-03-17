@@ -268,7 +268,6 @@ exports.returnBorrowBook=(request,response,next)=>{
     .catch(error=>next(error));
 }
 
-
  exports.returnReadBook=(request,response,next)=>{
         BookOperationSchema.findOneAndUpdate({ "_id" : request.params._id} ,{
             $set:{ "returned" : true}

@@ -2,9 +2,9 @@ const express=require("express");
 const router=express.Router();
 const validateMW=require("./../Core/Validation/validateMW");
 const controller=require("./../Controllers/AdminController");
-const imageValidate=require("../Core/Validation/imageValidate").AdminImage;
-const removeAdminIMG=require("../Core/Validation/imageValidate").removeAdminIMG;
-const AdminValidate=require("./../Core/validation/AdminValidate")
+const imageValidate=require("./../Core/Validation/imageValidate").AdminImage;
+const removeAdminIMG=require("./../Core/Validation/imageValidate").removeAdminIMG;
+const AdminValidate=require("./../Core/Validation/AdminValidate")
 
 router.route("/Admin")
     .get(validateMW,controller.getAllAdmins)
