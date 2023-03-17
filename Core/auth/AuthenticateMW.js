@@ -33,13 +33,8 @@ module.exports.checkBasicAdmin=(request,response,next)=>{
       error.status=403;
       next(error);
 
-<<<<<<< HEAD
-//   }
-// }
-=======
   }
 }
->>>>>>> d9e56d31b48db1f759f76b1685f5ccdf7e486680
 module.exports.checkBasicAdminAndAdmin=(request,response,next)=>{
   if(request.role =="BasicAdmin"||request.role =="Admin"){
       next();
@@ -51,37 +46,6 @@ module.exports.checkBasicAdminAndAdmin=(request,response,next)=>{
   }
 }
 module.exports.checkBasicAdminAndEmp=(request,response,next)=>{
-<<<<<<< HEAD
-  if(request.role =="BasicAdmin"||request.role =="Employee"){
-      next();
-  }
-  else{
-      let error =new Error("Not Authorized");
-      error.status=403;
-      next(error);
-  }
-}
-module.exports.checkBaAdminAndAdminAndEmp=(request,response,next)=>{
-  if(request.role =="BasicAdmin"||request.role =="Admin" || request.role =="Employee"){
-      next();
-  }
-  else{
-      let error =new Error("Not Authorized");
-      error.status=403;
-      next(error);
-   
-  }
-}
-module.exports.checkBaAdminAndMemberAndEmp=(request,response,next)=>{
-  if(request.role =="BasicAdmin"||request.role =="Member" || request.role =="Employee"){
-      next();
-  }
-  else{
-      let error =new Error("Not Authorized");
-      error.status=403;
-      next(error);
-  }
-=======
   EmpSchema.findOne({email:`${request.email}`}).then((data)=>{
     if(request.role =="BasicAdmin"){
         next();
@@ -141,5 +105,4 @@ module.exports.checkBaAdminAndMemberAndEmp=(request,response,next)=>{
 next(error);
 })
  
->>>>>>> d9e56d31b48db1f759f76b1685f5ccdf7e486680
 }

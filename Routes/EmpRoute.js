@@ -14,7 +14,7 @@ const AuthenticateMW=require("./../Core/auth/AuthenticateMW");
 //const { checkAdmin, checkTeacherAndAdmin }=require("./../Core/auth/authenticationMW");
 
 router.route("/Employees")
-    .get(checkBaAdminAndAdminAndEmp,validateMW,controller.getEmps)
+    .get(validateMW,controller.getEmps) //checkBaAdminAndAdminAndEmp
     .post(validateMW,validatePostEmp,controller.addEmp) //checkBasicAdminAndAdmin
 
 router.get("/Employees/:_id",AuthenticateMW.checkBaAdminAndAdminAndEmp,validateOnGetEmp,validateMW,controller.getOneEmp)
