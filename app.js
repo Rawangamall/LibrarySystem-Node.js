@@ -37,12 +37,14 @@ server.use(express.json());
 server.use(express.urlencoded({extended:false}));
 
 //Routes 
+server.use(loginRoute);
+server.use(AuthenticateMW);
 server.use(memberRoute);
 server.use(BookRoute);
 server.use(EmpRoute);
 server.use(BookOperationRoute);
-server.use(loginRoute);
-server.use(AuthenticateMW);
+
+
 server.use(AdminRoute);
 
 //Not Found Middleware

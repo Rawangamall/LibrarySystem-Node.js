@@ -87,6 +87,8 @@ exports.deleteMember=(request,response)=>{
 }
 
 exports.getMember=(request,response,next)=>{
+    console.log(request.role);
+    console.log(request.password);
     MemberSchema.findOne({_id:request.params._id})
     .then((result)=>{
         if(result != null)

@@ -8,7 +8,7 @@ const AdminValidate=require("./../Core/validation/AdminValidate")
 
 router.route("/Admin")
     .get(validateMW,controller.getAllAdmins)
-    .post(AdminValidate.validateAdminPost,validateMW,controller.addAdmin) //imageValidate,
+    .post(validateMW,controller.addAdmin) //imageValidate,//AdminValidate.validateAdminPost,
     .put(AdminValidate.validateAdminPut,validateMW,controller.updateAdmin) //imageValidate,
 
 
