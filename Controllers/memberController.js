@@ -82,11 +82,11 @@ exports.updateMember=(request,response,next)=>{
 exports.deleteMember=(request,response,next)=>{
       var out=[]
       //check if user exist first
-MemberSchema.findOne({_id:request.body._id}).then((check)=>{
+MemberSchema.findOne({_id:request.params._id}).then((check)=>{
    if(check != null){  
 
     //bookids which gonna be returned
-    BookOperationSchema.find({memberID:request.body._id ,"returned":{$eq:false}})
+    BookOperationSchema.find({memberID:request.params._id ,"returned":{$eq:false}})
     .then((ids)=>{
         ids.forEach(function(data){
             book_id=data.bookID
@@ -94,7 +94,7 @@ MemberSchema.findOne({_id:request.body._id}).then((check)=>{
         })
         
     //returned
-    BookOperationSchema.updateMany({memberID:request.body._id ,"returned":{$eq:false},"operation":{$eq:"borrow"}},{
+    BookOperationSchema.updateMany({memberID:request.params._id ,"returned":{$eq:false},"operation":{$eq:"borrow"}},{
         $set:{ "returned" : true}
           }).then((borrow)=>{
             if(borrow.modifiedCount != 0)
@@ -108,7 +108,7 @@ MemberSchema.findOne({_id:request.body._id}).then((check)=>{
         }).catch(error=>next(error));
 
         //delete member
-     MemberSchema.deleteOne({_id:request.body._id})
+     MemberSchema.deleteOne({_id:request.params._id})
         .then((result)=>{
             if(result.deletedCount !=0 ){
                 response.status(200).json({result:"deleted"});
@@ -121,8 +121,7 @@ MemberSchema.findOne({_id:request.body._id}).then((check)=>{
 }
 
 exports.getMember=(request,response,next)=>{
-    console.log(request.role);
-    console.log(request.password);
+
     MemberSchema.findOne({_id:request.params._id})
     .then((result)=>{
         if(result != null)
@@ -152,7 +151,7 @@ exports.currentBorrowedBooks=(request,response,next)=>{
                  expireDate: { $push: "$expireDate" },
                  currentDate: { $push:  new Date().toISOString()  },
                  } },
-    {
+      {
         $lookup: {
                     from: 'books',
                     localField: '_id',
