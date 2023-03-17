@@ -199,7 +199,7 @@ exports.currentBorrowedBooks=(request,response,next)=>{
     }).catch(err => {
         console.log(err.message)
     });
-     
+}
     
     exports.updatefirstLogin=(request,response,next)=>{
         if(request.body.password != null ){
@@ -229,6 +229,5 @@ exports.currentBorrowedBooks=(request,response,next)=>{
     }
     }
     
-}
     
 
