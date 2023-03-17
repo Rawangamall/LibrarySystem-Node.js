@@ -1,5 +1,6 @@
 const express=require("express");
 const router=express.Router();
+const validateMW=require("../Core/Validation/validateMW");
 const validateData=require("./../Core/Validation/memberData");
 const memberController=require("./../Controllers/memberController");
 const BookController=require("./../Controllers/BookController");

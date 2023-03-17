@@ -9,6 +9,8 @@ const validatePostEmp=require("../Core/Validation/EmpValidation").validatePost;
 const validatePutEmp=require("../Core/Validation/EmpValidation").validatePut;
 const validateOnGetEmp=require("../Core/Validation/EmpValidation").validateOnGet;
 const validateOnDeleteEmp=require("../Core/Validation/EmpValidation").validateOnDelete;
+const AuthenticateMW=require("./../Core/auth/AuthenticateMW");
+
 //const { checkAdmin, checkTeacherAndAdmin }=require("./../Core/auth/authenticationMW");
 
 router.route("/Employees")
@@ -18,7 +20,7 @@ router.route("/Employees")
     .put(imageValidate,validatePutEmp,validateMW,controller.updateEmp)
     .delete(validateOnDeleteEmp,validateMW,controller.deleteEmp,removeEmpIMG)
 
-router.get("/Employees/:_id",validateOnGetEmp,validateMW,controller.getOneEmp)
+router.get("/Employees/:_id",AuthenticateMW.checkBaAdminAndAdminAndEmp,validateOnGetEmp,validateMW,controller.getOneEmp)
 
 // router.route("/Employees/addBorrowedBooks/:_id")
 //        .post(controller.addBorrowbook)
