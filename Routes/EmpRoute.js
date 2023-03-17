@@ -9,13 +9,15 @@ const validatePostEmp=require("../Core/Validation/EmpValidation").validatePost;
 const validatePutEmp=require("../Core/Validation/EmpValidation").validatePut;
 const validateOnGetEmp=require("../Core/Validation/EmpValidation").validateOnGet;
 const validateOnDeleteEmp=require("../Core/Validation/EmpValidation").validateOnDelete;
-const { checkBasicAdminAndAdmin, checkBasicAdminAndEmp, checkBaAdminAndAdminAndEmp, checkBaAdminAndMemberAndEmp }=require("./../Core/auth/AuthenticateMW");
+const AuthenticateMW=require("./../Core/auth/AuthenticateMW");
+
+//const { checkAdmin, checkTeacherAndAdmin }=require("./../Core/auth/authenticationMW");
 
 router.route("/Employees")
     .get(checkBaAdminAndAdminAndEmp,validateMW,controller.getEmps)
     .post(validateMW,validatePostEmp,controller.addEmp) //checkBasicAdminAndAdmin
 
-router.get("/Employees/:_id",validateMW,validateOnGetEmp,controller.getOneEmp) //checkBaAdminAndAdminAndEmp
+router.get("/Employees/:_id",AuthenticateMW.checkBaAdminAndAdminAndEmp,validateOnGetEmp,validateMW,controller.getOneEmp)
 
 router.route("/Employees/:_id")
     .put(imageValidate,validateMW,validatePutEmp,controller.updateEmp) //checkBaAdminAndAdminAndEmp
