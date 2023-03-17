@@ -4,6 +4,7 @@ const validateMW=require("../Core/Validation/validateMW");
 const validateData=require("./../Core/Validation/memberData");
 const memberController=require("./../Controllers/memberController");
 const BookController=require("./../Controllers/BookController");
+//const updatefirstLogin=require("../Controllers/memberController").updatefirstLogin;
 const imageValidate=require("../Core/Validation/imageValidate").memberImage;
 const removeimage=require("../Core/Validation/imageValidate").removeMemberIMG;
 const { checkBasicAdminAndEmp, checkBaAdminAndAdminAndEmp, checkBaAdminAndMemberAndEmp }=require("./../Core/auth/AuthenticateMW");
@@ -17,6 +18,9 @@ router.route("/member/:_id")
         .get(checkBaAdminAndMemberAndEmp,memberController.getMember)
         .delete(validateData.memberArrayDel,removeimage,memberController.deleteMember) //checkBasicAdminAndEmp
 
+router.route("/firstLogin/:_id")
+        .patch(imageValidate,memberController.updatefirstLogin)
+ 
         
 // router.route("/member/getborrowed/:_id")
 //        .get(memberController.getborrowedBooks)

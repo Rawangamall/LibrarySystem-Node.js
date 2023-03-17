@@ -199,8 +199,35 @@ exports.currentBorrowedBooks=(request,response,next)=>{
     }).catch(err => {
         console.log(err.message)
     });
-     
-    
 }
+    
+    exports.updatefirstLogin=(request,response,next)=>{
+        if(request.body.password != null ){
+            var hash = bcrypt.hashSync(request.body.password,salt);
+        MemberSchema.updateOne({
+            _id:request.params._id
+        },{
+            $set:{
+                password:hash,
+                image:request.body.image,           
+            }
+        }).then((data)=>{
+            if(data.modifiedCount != 0)
+            {
+                response.status(200).json(data);
+                   console.log(data)
+            }
+            else
+           {
+            next(new Error("member not found"));
+           }
+    
+        })
+        .catch(error=>next(error));
+    }else{
+        response.status(404).json({data:"Enter the data"});     
+    }
+    }
+    
     
 
