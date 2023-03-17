@@ -9,6 +9,7 @@ const EmpSchema=mongoose.model("Employees");
 const MemberSchema=mongoose.model("member");
 const AdminSchema=mongoose.model("Admin");
 
+
 exports.empImage=multer({
     fileFilter: function (req, file, cb) {
         if (file.mimetype != "image/png" && file.mimetype != "image/jpg" && file.mimetype != "image/jpeg" && file.mimetype != "image/avif") {
@@ -67,8 +68,8 @@ exports.removeMemberIMG=function(req,res,next){
         next();
     })
 
-
-    exports.AdminImage=multer({
+}
+exports.AdminImag=multer({
         fileFilter: function (req, file, cb) {
             if (file.mimetype != "image/png" && file.mimetype != "image/jpg" && file.mimetype != "image/jpeg" && file.mimetype != "image/avif") {
                 return cb(new Error('Only images are allowed'))
@@ -94,4 +95,3 @@ exports.removeMemberIMG=function(req,res,next){
             next();
         })
     }
-}
