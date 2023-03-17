@@ -67,9 +67,9 @@ exports.removeMemberIMG=function(req,res,next){
         if (err) throw err;
         next();
     })
-
 }
-exports.AdminImag=multer({
+
+    exports.AdminImage=multer({
         fileFilter: function (req, file, cb) {
             if (file.mimetype != "image/png" && file.mimetype != "image/jpg" && file.mimetype != "image/jpeg" && file.mimetype != "image/avif") {
                 return cb(new Error('Only images are allowed'))
