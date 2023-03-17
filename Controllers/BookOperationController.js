@@ -69,7 +69,9 @@ exports.addBorrowbook=(request,response,next)=>{
                 BookSchema.findOne({_id:request.params._id})
                 .then((res)=>{            
                     if(res!=null){
-                        if(res.available){
+                      console.log(typeof(res.noOfCurrentBorrowed))
+                      console.log(res.noOfCurrentBorrowed + res.noOfCurrentReading)
+                        if(res.noOfCurrentBorrowed + res.noOfCurrentReading < res.noOfCopies){
                             BookSchema.findOneAndUpdate({_id:request.params._id}, {$inc : {'noOfCurrentReading' : 1,'noReading' : 0}})
                             .then((res)=>{
                                 new BookOperationSchema({

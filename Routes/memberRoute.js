@@ -1,5 +1,7 @@
 const express=require("express");
 const router=express.Router();
+const validateMW=require("../Core/Validation/validateMW");
+const AuthenticateMW=require("./../Core/auth/AuthenticateMW");
 const validateData=require("./../Core/Validation/memberData");
 const memberController=require("./../Controllers/memberController");
 const BookController=require("./../Controllers/BookController");
@@ -14,8 +16,10 @@ router.route("/member")
    
 router.route("/member/:_id")
         .patch(imageValidate,validateData.memberArrayPatch,memberController.updateMember)
-        .get(memberController.getMember)
+        .get(AuthenticateMW.checkBaAdminAndMemberAndEmp, memberController.getMember)
 
+router.route("/firstlogin/:_id")
+      .patch(imageValidate,memberController.updatefirstLogin)
         
 // router.route("/member/getborrowed/:_id")
 //        .get(memberController.getborrowedBooks)
