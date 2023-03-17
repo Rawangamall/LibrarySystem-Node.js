@@ -3,15 +3,17 @@ const router=express.Router();
 const validateData=require("./../Core/Validation/memberData");
 const memberController=require("./../Controllers/memberController");
 const BookController=require("./../Controllers/BookController");
+const imageValidate=require("../Core/Validation/imageValidate").memberImage;
+const removeimage=require("../Core/Validation/imageValidate").removeMemberIMG;
 
       
 router.route("/member")
        .get(memberController.getAll)
       .post(validateData.memberArrayPOST,memberController.addMember)
-      
+      .delete(validateData.memberArrayDel,memberController.deleteMember,removeimage)
+   
 router.route("/member/:_id")
-        .patch(validateData.memberArrayPatch,memberController.updateMember)
-        .delete(validateData.memberArrayDel,memberController.deleteMember)
+        .patch(imageValidate,validateData.memberArrayPatch,memberController.updateMember)
         .get(memberController.getMember)
 
         

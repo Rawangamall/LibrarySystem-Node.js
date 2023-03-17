@@ -14,7 +14,7 @@ let port=process.env.PORT||8080;
 
 //db connection
 mongoose.set('strictQuery', true);  //warning
-// mongoose.connect("mongodb://127.0.0.1:27017/Library")
+ //mongoose.connect("mongodb://127.0.0.1:27017/Library")
 mongoose.connect("mongodb+srv://rawangamaal21:iti@node.gvt5cis.mongodb.net/?retryWrites=true&w=majority")
         .then(()=>{
             console.log("DB connected");
@@ -35,6 +35,7 @@ server.use(morgan('combined'))
 //body parse
 server.use(express.json());
 server.use(express.urlencoded({extended:false}));
+
 
 //Routes 
 server.use(memberRoute);

@@ -292,7 +292,6 @@ exports.returnBorrowBook=(request,response,next)=>{
     .catch(error=>next(error));
 })}
 
-
  exports.returnReadBook=(request,response,next)=>{
         BookSchema.findOneAndUpdate({_id:request.body.bookID}, {$inc : {'noOfCurrentReading' : -1}}).then((res)=>{
         BookOperationSchema.updateOne({ "_id" : request.params._id} ,{

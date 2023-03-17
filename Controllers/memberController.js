@@ -49,6 +49,8 @@ exports.updateMember=(request,response,next)=>{
     if(request.body.password != null){
         var hash = bcrypt.hashSync(request.body.password,salt);
       }
+      console.log(request.body.image);
+      console.log(request.body.fullName);
     console.log(request.params._id);
     MemberSchema.updateOne({
         _id:request.params._id
@@ -62,28 +64,60 @@ exports.updateMember=(request,response,next)=>{
             fullAddress:request.body.fullAddress
            
         }
-    }).then(data=>{
-        if(data.acknowledged==false)
+    }).then((data)=>{
+        if(data == null)
         {
-            console.log(request.body._id);
             next(new Error("member not found"));
         }
         else
-        response.status(200).json(data);
+{        console.log(data);
+
+        response.status(200).json(data);}
     })
     .catch(error=>next(error));
 }
-exports.deleteMember=(request,response)=>{
-    MemberSchema
-    .deleteOne({_id:request.params._id})
-    .then((result)=>{
-        if(result.deletedCount !=0 ){
-            response.status(200).json({data:"deleted"});
-        }
-        else
-        {   response.status(404).json({data:"delete Not Found"});}
-    })
-    .catch(error=>next(error));
+
+
+//delete
+exports.deleteMember=(request,response,next)=>{
+      var out=[]
+      //check if user exist first
+MemberSchema.findOne({_id:request.body._id}).then((check)=>{
+   if(check != null){  
+
+    //bookids which gonna be returned
+    BookOperationSchema.find({memberID:request.body._id ,"returned":{$eq:false}})
+    .then((ids)=>{
+        ids.forEach(function(data){
+            book_id=data.bookID
+            out.push(book_id)})   
+        })
+        
+    //returned
+    BookOperationSchema.updateMany({memberID:request.body._id ,"returned":{$eq:false},"operation":{$eq:"borrow"}},{
+        $set:{ "returned" : true}
+          }).then((borrow)=>{
+            if(borrow.modifiedCount != 0)
+            {           
+                JSON.parse(JSON.stringify(out)) 
+                console.log(out)
+             //increment returned books
+            BookSchema.updateMany({_id:out},{$inc:{'noOfCurrentBorrowed': -1}}).then((increment)=>{
+            }).catch(error=>next(error));
+           }
+        }).catch(error=>next(error));
+
+        //delete member
+     MemberSchema.deleteOne({_id:request.body._id})
+        .then((result)=>{
+            if(result.deletedCount !=0 ){
+                response.status(200).json({result:"deleted"});
+            }
+        }).catch(error=>next(error));
+
+   }else{response.status(404).json({data:"Member Not Found"});}
+    
+})
 }
 
 exports.getMember=(request,response,next)=>{
@@ -101,88 +135,6 @@ exports.getMember=(request,response,next)=>{
         next(error);
     })
 }
-
-// exports.getborrowedBooks=(request,response,next)=>{
-//     currentMonth = new Date().getMonth() + 1,
-//     currentYear = new Date().getFullYear()
-//     var out = [];
-//     const searchbyMonth = request.body.searchbyMonth
-//     const searchbyYear= request.body.searchbyYear
-//     const current = request.body.currentmonth
-//     test = new Date(`${searchbyYear}-${searchbyMonth+1}`)
-//     console.log(test);
-//     test22 = new Date()
-//     console.log(test22)
-    
-//     MemberSchema.findOne({_id:request.params._id})
-//     .then((result)=>{
-//         if(result != null)
-//         {
-//             console.log(result)
-//             result.borrowOper.forEach(function(data){
-//             bookid = data.book_id
-//             month = data.borrow_Date.getMonth()+1
-//             year = data.borrow_Date.getFullYear()
-//             if(searchbyMonth == month && searchbyYear == year){
-//                 out.push(bookid)                  
-//  }else if((searchbyMonth == null || searchbyYear== null) && (currentMonth == month && currentYear==year)){
-//                 out.push(bookid)                  
-//             }
-//           })
-//               JSON.parse(JSON.stringify(out))
-//                 console.log(typeof(out[0]))  //array of book id
-//                 console.log(out)
-//                 BookSchema.find({_id:out}).then((book)=>{
-//                     if(book != null){
-//                         response.status(200).json({book});
-//                      }
-//                 })                  
-//         }else{
-//             response.status(404).json({members:"There's no member"});
-//             }
-//     })
-//     .catch(error=>{
-//         next(error);
-//     })
-// }
-
-// exports.getReadBooks=(request,response,next)=>{
-//     currentMonth = new Date().getMonth() + 1,
-//     currentYear = new Date().getFullYear()
-//     var out = [];
-//     const searchbyMonth = request.body.searchbyMonth
-//     const searchbyYear= request.body.searchbyYear
-//     MemberSchema.findOne({_id:request.params._id})
-//     .then((result)=>{
-//         if(result != null)
-//         {
-//          result.readingOper.forEach(function(data){
-//             bookid = data.book_id
-//             month = data.read_date.getMonth()+1
-//             year = data.read_date.getFullYear()
-//             if(searchbyMonth == month && searchbyYear == year){
-//                    out.push(bookid)                  
-//  }else if((searchbyMonth == null || searchbyYear== null) && (currentMonth == month && currentYear==year)){
-//                 out.push(bookid)                  
-//             }
-//           })
-//                 JSON.parse(JSON.stringify(out))
-//                 BookSchema.find({_id:out}).then((book)=>{
-//                     if(book != null){
-//                         response.status(200).json({book});
-//                      }
-//                 })                  
-//         }else{
-//         response.status(404).json({members:"There's no member"});
-//         }
-//     })
-//     .catch(error=>{
-//         next(error);
-//     })
-// }
-
-
-
 
 
 exports.currentBorrowedBooks=(request,response,next)=>{
