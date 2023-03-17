@@ -121,30 +121,6 @@ exports.getAll=(request,response)=>{
                     })
 }
 
- exports.updateBookOperation=(request,response,next)=>{
-    
-            BookOperationSchema.updateOne({
-                _id:request.params._id
-            },{
-                $set:{
-                    operation:request.body.operation,
-                    memberID:request.body.memberID,
-                    bookID:request.body.bookID,
-                    employeeID:request.body.employeeID,
-                    expireDate:request.body.expireDate,
-                    returned:request.body.returned,         
-                }
-            }).then(data=>{
-                if(data.acknowledged==false)
-                {
-                
-                    next(new Error("bookOperation not found"));
-                }
-                else
-                response.status(200).json(data);
-            })
-            .catch(error=>next(error));
-        }
         
  exports.deleteBookOperation=(request,response)=>{
             BookOperationSchema.deleteOne({_id:request.params._id})
@@ -291,7 +267,6 @@ exports.returnBorrowBook=(request,response,next)=>{
     })
     .catch(error=>next(error));
 }
-
 
  exports.returnReadBook=(request,response,next)=>{
         BookOperationSchema.findOneAndUpdate({ "_id" : request.params._id} ,{

@@ -4,15 +4,16 @@ const validateData=require("./../Core/Validation/memberData");
 const memberController=require("./../Controllers/memberController");
 const BookController=require("./../Controllers/BookController");
 const imageValidate=require("../Core/Validation/imageValidate").memberImage;
-const removeEmpIMG=require("../Core/Validation/imageValidate").removeMemberIMG;
+const removeimage=require("../Core/Validation/imageValidate").removeMemberIMG;
+
       
 router.route("/member")
        .get(memberController.getAll)
-      .post(imageValidate,validateData.memberArrayPOST,memberController.addMember)
-      
+      .post(validateData.memberArrayPOST,memberController.addMember)
+      .delete(validateData.memberArrayDel,memberController.deleteMember,removeimage)
+   
 router.route("/member/:_id")
         .patch(imageValidate,validateData.memberArrayPatch,memberController.updateMember)
-        .delete(validateData.memberArrayDel,memberController.deleteMember,removeEmpIMG)
         .get(memberController.getMember)
 
         
