@@ -11,10 +11,10 @@ const router=express.Router();
 router.route("/Admin")
     .get(validateMW,controller.getAllAdmins)
     .post(validateMW,controller.addAdmin) //imageValidate,//AdminValidate.validateAdminPost,
-    .put(AdminValidate.validateAdminPut,validateMW,controller.updateAdmin) //imageValidate,
+    .put(imageValidate,AdminValidate.validateAdminPut,validateMW,controller.updateAdmin) 
 
 
 router.get("/Admin/:_id",AdminValidate.validateAdminGetID,validateMW,controller.getAdmin)
-router.delete("/Admin/:_id",AdminValidate.validateAdminDelete,validateMW,controller.deleteAdmin,removeAdminIMG)
+router.delete("/Admin/:_id",removeAdminIMG,AdminValidate.validateAdminDelete,validateMW,controller.deleteAdmin)
 
 module.exports=router;

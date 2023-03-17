@@ -2,7 +2,7 @@ const express=require("express");
 const {body,param,query}=require("express-validator");
 
 //validate on post
-exports.validateAdminPost=[body("_id").isInt().withMessage("Admin Id should be Integer id"),
+exports.validateAdminPost=[
                          body("firstName").isString().withMessage("Admin first-name should be string"),
                          body("lastName").isString().withMessage("Admin last-name should be string"),
                          body("password").isStrongPassword().withMessage("your password is weak"),

@@ -14,19 +14,13 @@ const AuthenticateMW=require("./../Core/auth/AuthenticateMW");
 //const { checkAdmin, checkTeacherAndAdmin }=require("./../Core/auth/authenticationMW");
 
 router.route("/Employees")
-    //.get(controller.SearchForEmp)
-    .get(controller.getEmps)
-    .post(validatePostEmp,validateMW,controller.addEmp)              //make it validatePostMember  controller.addMember
-    .put(imageValidate,validatePutEmp,validateMW,controller.updateEmp)
-    .delete(validateOnDeleteEmp,validateMW,controller.deleteEmp,removeEmpIMG)
+    .get(validateMW,controller.getEmps) //checkBaAdminAndAdminAndEmp
+    .post(validateMW,validatePostEmp,controller.addEmp) //checkBasicAdminAndAdmin
 
 router.get("/Employees/:_id",AuthenticateMW.checkBaAdminAndAdminAndEmp,validateOnGetEmp,validateMW,controller.getOneEmp)
 
-// router.route("/Employees/addBorrowedBooks/:_id")
-//        .post(controller.addBorrowbook)
-//        .put(controller.returnBook)
-
-// router.route("/Employees/addReadBooks/:_id")
-//         .post(controller.addReadbook)
+router.route("/Employees/:_id")
+    .put(imageValidate,validateMW,validatePutEmp,controller.updateEmp) //checkBaAdminAndAdminAndEmp
+    .delete(validateMW,validateOnDeleteEmp,removeEmpIMG,controller.deleteEmp) //checkBasicAdminAndAdmin
 
 module.exports=router;

@@ -44,8 +44,6 @@ server.use(memberRoute);
 server.use(BookRoute);
 server.use(EmpRoute);
 server.use(BookOperationRoute);
-
-
 server.use(AdminRoute);
 
 //Not Found Middleware
