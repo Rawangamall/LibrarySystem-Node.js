@@ -82,7 +82,7 @@ exports.updateMember=(request,response,next)=>{
 exports.deleteMember=(request,response,next)=>{
       var out=[]
       //check if user exist first
-MemberSchema.findOne({_id:request.body._id}).then((check)=>{
+MemberSchema.findOne({_id:request.params._id}).then((check)=>{
    if(check != null){  
 
     //bookids which gonna be returned
