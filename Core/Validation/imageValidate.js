@@ -9,6 +9,7 @@ const EmpSchema=mongoose.model("Employees");
 const MemberSchema=mongoose.model("member");
 const AdminSchema=mongoose.model("Admin");
 
+
 exports.empImage=multer({
     fileFilter: function (req, file, cb) {
         if (file.mimetype != "image/png" && file.mimetype != "image/jpg" && file.mimetype != "image/jpeg" && file.mimetype != "image/avif") {
@@ -66,7 +67,7 @@ exports.removeMemberIMG=function(req,res,next){
         if (err) throw err;
         next();
     })
-
+}
 
     exports.AdminImage=multer({
         fileFilter: function (req, file, cb) {
@@ -94,4 +95,3 @@ exports.removeMemberIMG=function(req,res,next){
             next();
         })
     }
-}
