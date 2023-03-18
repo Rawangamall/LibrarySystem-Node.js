@@ -18,7 +18,6 @@ const schema=new mongoose.Schema({
     noOfCurrentReading:{type:Number,default:0},
     noReading:{type:Number,default:0}
 },
-{ timestamps: true }  );
+{timestamps: true });
 schema.plugin(AutoIncrement,{id:'Book_id',inc_field:"_id"});
-//mapping
 mongoose.model("Book",schema);

@@ -24,6 +24,17 @@ module.exports=(request,response,next)=>{
         next(error);
   }
 }
+module.exports.checkOwn=(request,response,next)=>{
+  if(request.role =="Owner"){
+      next();
+  }
+  else{
+      let error =new Error("Not Authorized");
+      error.status=403;
+      next(error);
+
+  }
+}
 module.exports.checkBasicAdmin=(request,response,next)=>{
   if(request.role =="BasicAdmin" || request.role =="Owner"){
       next();
