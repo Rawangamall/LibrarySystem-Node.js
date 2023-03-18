@@ -11,13 +11,8 @@ module.exports=(request,response,next)=>{
     console.log(token,"yyyyyyyyyy");
     let decodedToken=jwt.verify(token,"OStrack");
     request.email=decodedToken.email;
-<<<<<<< HEAD
-    request.role=decodedToken.role;
-    request.password=decodedToken.password
-=======
     request.password=decodedToken.password;
     request.role=decodedToken.role;
->>>>>>> aac898b7c0c35359cd771cae7c4b0706fec68c19
     console.log(request.email);
     next();
   }
@@ -49,51 +44,11 @@ module.exports.checkBasicAdminAndAdmin=(request,response,next)=>{
   }
 }
 module.exports.checkBasicAdminAndEmp=(request,response,next)=>{
-<<<<<<< HEAD
-  if(request.role =="BasicAdmin"||request.role =="Employee"){
-      next();
-  }
-  else{
-      let error =new Error("Not Authorized");
-      error.status=403;
-      next(error);
-  }
-}
-module.exports.checkBaAdminAndAdminAndEmp=(request,response,next)=>{
-  EmpSchema.findOne({email:`${request.email}`}).then((data)=>{
-  if(request.role =="BasicAdmin"||request.role =="Admin" ){
-      next();
-  }
-  else if(request.role =="Employee" &&( request.params._id==data._id) ){
-    next();
- }
-  else{
-    let error =new Error("Not Authorized");
-    error.status=403;
-    next(error);
-    
-}
-})
-.catch(error=>{
-next(error);
-})
-}
-module.exports.checkBaAdminAndMemberAndEmp=(request,response,next)=>{
-
-  MemberSchema.findOne({email:`${request.email}`}).then((data)=>{
-  
-    if((request.role =="BasicAdmin" || request.role =="Employee")){
-  
-      next();
-   }
-   else if(request.role =="Member" &&( request.params._id==data._id) ){
-=======
   EmpSchema.findOne({email:`${request.email}`}).then((data)=>{
     if(request.role =="BasicAdmin"){
         next();
     }
     else if(request.role =="Employee" &&( request.params._id==data._id) ){
->>>>>>> aac898b7c0c35359cd771cae7c4b0706fec68c19
       next();
    }
     else{
@@ -102,8 +57,6 @@ module.exports.checkBaAdminAndMemberAndEmp=(request,response,next)=>{
       next(error);
       
   }
-<<<<<<< HEAD
-=======
   })
   .catch(error=>{
   next(error);
@@ -145,7 +98,6 @@ module.exports.checkBaAdminAndMemberAndEmp=(request,response,next)=>{
       next(error);
       
   }
->>>>>>> aac898b7c0c35359cd771cae7c4b0706fec68c19
 })
 .catch(error=>{
 next(error);

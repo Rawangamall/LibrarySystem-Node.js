@@ -38,8 +38,8 @@ server.use(express.urlencoded({extended:false}));
 
 
 //Routes 
-server.use(loginRoute);
-server.use(AuthenticateMW);
+// server.use(loginRoute);
+// server.use(AuthenticateMW);
 server.use(memberRoute);
 server.use(BookRoute);
 server.use(EmpRoute);
