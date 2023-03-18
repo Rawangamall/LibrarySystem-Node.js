@@ -2,13 +2,13 @@ const multer=require("multer");
 const path=require("path");
 const fs = require('fs');
 const mongoose=require("mongoose");
+const { response } = require("express");
 require("../../Models/EmpModel");
 require("../../Models/member");
 require("../../Models/AdminModel");
 const EmpSchema=mongoose.model("Employees");
 const MemberSchema=mongoose.model("member");
 const AdminSchema=mongoose.model("Admin");
-var imageName 
 
 exports.addIMG=multer({
     fileFilter: function (req, file, cb) {
@@ -30,70 +30,72 @@ exports.addIMG=multer({
         },
         filename:(request, file, cb)=>{
             if(request.role=="Employee"){
-                let imageName=EmpSchema.findOne({_id:request.params._id})._conditions._id + ".png";
-                cb(null, imageName);
+                EmpSchema.findOne({email:request.email}).then((data)=>{
+                    imageName = data._id+ "." + "jpg";
+                    cb(null, imageName);
+                    console.log(imageName)
+                })
+                
             }else if(request.role=="Member"){
-                let imageName=MemberSchema.findOne({_id:request.params._id})._conditions._id + ".png";
-                cb(null, imageName);
+
+                MemberSchema.findOne({email:request.email}).then((data)=>{
+                    imageName = data._id+ "." + "jpg";
+                    cb(null, imageName);
+                    console.log(imageName)
+                })
+           
             }else if(request.role=="Admin"){
-                let imageName=AdminSchema.findOne({_id:request.params._id})._conditions._id + ".png";
-                cb(null, imageName);
+                AdminSchema.findOne({email:request.email}).then((data)=>{
+                    imageName = data._id+ "." + "jpg";
+                    cb(null, imageName);
+                    console.log(imageName)
+                })
             }
         }
     })
 }).single("image")
 
-exports.removeIMG=function(req,res,next){
-    if(req.role=="Employee"){
-        let imageName=EmpSchema.findOne({_id:req.params._id})._conditions._id + ".png";
+exports.removeEmpIMG=function(req,res,next){
+    EmpSchema.findOne({_id:request.params._id}).then((data)=>{
+        if(data != null){
+        imageName = data._id+ "." + "jpg";
+        console.log(imageName)
         fs.unlink(path.join(__dirname,"..","..","images","Employees_images",imageName), function (err) {
             if (err)
-            next(new Error("Employee doesn't have img "));
-        else
-            next();
+                next(new Error("member not found"));
+            else
+                next();
         })
-    }else if(req.role=="Member"){
-        MemberSchema.findOne({_id:req.params._id}).then((result)=>{
-            console.log(result);
-            if(result != null)
-            {
-                
-                let imageName=result._id + ".png";
-                fs.unlink(path.join(__dirname,"..","..","images","Members_images",imageName), function (err) {
-                if (err)
-                    next(new Error("Member doesn't have img "));
-                else
-                    next();
-                })
-                    }
-            else{
-                next(new Error("Member Not Found"));
-              //  response.status(404).json({result:"Member Not Found"});
-            }
-        })
-        .catch(error=>{
-            next(error);
-        })}
-        // else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-        // }
+    }
+    })
+}
 
-        // let imageName=MemberSchema.findOne({_id:req.params._id})._conditions._id + ".png";
-        // fs.unlink(path.join(__dirname,"..","..","images","Members_images",imageName), function (err) {
-        //     if (err)
-        //     next(new Error("Member doesn't have img "));
-        // else
-        //     next();
-        // })
-    else if(req.role=="Admin"){
-        let imageName=AdminSchema.findOne({_id:req.params._id})._conditions._id + ".png";
-        fs.unlink(path.join(__dirname,"..","..","images","Admin_images",imageName), function (err) {
+exports.removeMemberIMG=function(request,res,next){
+    MemberSchema.findOne({_id:request.params._id}).then((data)=>{
+        if(data != null){
+        imageName = data._id+ "." + "jpg";
+        console.log(imageName)
+        fs.unlink(path.join(__dirname,"..","..","images","Members_images",imageName), function (err) {
             if (err)
-            next(new Error("member not found"));
-        else
-            next();
+                next(new Error("member not found"));
+            else
+                next();
         })
     }
-    else{
-        next();
+    }).catch(error=>next(error))
+}
+
+exports.removeAdminIMG=function(request,res,next){
+    AdminSchema.findOne({_id:request.params._id}).then((data)=>{
+        if(data != null){
+        imageName = data._id+ "." + "jpg";
+        console.log(imageName)
+        fs.unlink(path.join(__dirname,"..","..","images","Admins_images",imageName), function (err) {
+            if (err)
+                next(new Error("member not found"));
+            else
+                next();
+        })
     }
+    })
 }

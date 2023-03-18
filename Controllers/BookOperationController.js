@@ -68,8 +68,10 @@ exports.addBorrowbook=(request,response,next)=>{
                 BookSchema.findOne({_id:request.params._id})
                 .then((res)=>{            
                     if(res!=null){
+                        BookOperationSchema.find({ memberID:request.body.memberID,bookID:request.params._id,"returned":{$eq:false}}).then((check)=>{
+                            if(check == ""){
                         if(res.noOfCurrentBorrowed + res.noOfCurrentReading < res.noOfCopies){
-                            BookSchema.findOneAndUpdate({_id:request.params._id}, {$inc : {'noOfCurrentReading' : 1,'noReading' : 0}})
+                            BookSchema.findOneAndUpdate({_id:request.params._id}, {$inc : {'noOfCurrentReading' : 1,'noReading' : 1}})
                             .then((res)=>{
                                 new BookOperationSchema({
                                 operation:"read",
@@ -88,14 +90,17 @@ exports.addBorrowbook=(request,response,next)=>{
                     .catch(error=>next(error))
            
                 response.status(200).json({data});
-            })
-            .catch(error=>{
-            next(error);
-            })})}
-            else{response.status(404).json({data:"This Book is not Avilable"});}
-            }   
-            else{response.status(404).json({data:"This Book is not Found"});}      
+            }).catch(error=>{next(error);})
+     
         })
+      
+        }else{response.status(404).json({data:"This Book is not Avilable"});}
+    }else{response.status(404).json({data:"This Book is already borrowed!"});}
+
+ })
+      }else{response.status(404).json({data:"This Book is already borrowed!"});}
+
+    })
         }
         else{
         response.status(404).json({data:"This member is not Found"});
@@ -103,8 +108,9 @@ exports.addBorrowbook=(request,response,next)=>{
         })
         .catch(error=>{
         next(error);
-        })}
-        else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+        })
+
+    }else{response.status(404).json({result:"Please update your profile data!! and login again"});}
         }
                        
 exports.getAll=(request,response,next)=>{
