@@ -1,6 +1,5 @@
 const express=require("express");
 const router=express.Router();
-
 const validateMW=require("../Core/Validation/validateMW");
 const AuthenticateMW=require("./../Core/auth/AuthenticateMW");
 const validateData=require("./../Core/Validation/memberData");
@@ -14,7 +13,7 @@ const removeimage=require("../Core/Validation/imageValidate").removeIMG;
 const { checkBasicAdminAndEmp, checkBaAdminAndAdminAndEmp, checkBaAdminAndMemberAndEmp }=require("./../Core/auth/AuthenticateMW");
       
 router.route("/members")
-       .get( checkBaAdminAndAdminAndEmp, validateMW ,memberController.getAll)
+       .get(  validateMW ,memberController.getAll) //checkBaAdminAndAdminAndEmpforMember
        .post( checkBasicAdminAndEmp,validateMW,memberController.addMember)
        
        
@@ -28,17 +27,10 @@ router.route("/firstLogin/:_id")
  
 router.get("/searchForMember",memberController.searchForMember)        
         
-// router.route("/member/getborrowed/:_id")
-//        .get(memberController.getborrowedBooks)
-
-// router.route("/member/getread/:_id")
-//         .get(memberController.getReadBooks)
-
-
  router.route("/member/currentBorrowedBooks/:_id")
        .get(checkBaAdminAndMemberAndEmp,validateMW,memberController.currentBorrowedBooks)
 
-router.route("/member/borrowInfo/:_id")
-       .get(memberController.borrowInfo)
+router.route("/member/borrowInfoOneMember/:_id")
+       .get(memberController.borrowInfoOneMember)
       
 module.exports=router;

@@ -8,6 +8,7 @@ require("../../Models/AdminModel");
 const EmpSchema=mongoose.model("Employees");
 const MemberSchema=mongoose.model("member");
 const AdminSchema=mongoose.model("Admin");
+var imageName 
 
 exports.addIMG=multer({
     fileFilter: function (req, file, cb) {
