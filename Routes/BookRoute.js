@@ -8,8 +8,6 @@ const validatePostBook=require("../Core/Validation/BookValidation").validatePost
 const validatePutBook=require("../Core/Validation/BookValidation").validatePut;
 const validateOnIDParams=require("../Core/Validation/BookValidation").validateOnIDParams;
 
-//const { checkAdmin, checkTeacherAndAdmin }=require("./../Core/auth/authenticationMW");
-
 router.route("/Book")
     .get(controller.getBooks)
     .post(validateMW,controller.addBook)              //make it validatePostMember  controller.addMember
@@ -24,5 +22,8 @@ router.route("/member/NewArrivedBooks/get")
 
 router.route("/Book/filterBooks/get")
       .get(controller.filteredbooks)
+
+router.route("/searchForBook")
+      .get(controller.searchForBook)
 
 module.exports=router;

@@ -12,9 +12,8 @@ const schema=new mongoose.Schema({
         type:Number,
         require:true,
         ref:"Book"},
-     employeeID:{ 
-       type:Number,
-       require:true,
+    employeeEmail:{ 
+       type:String,
        ref:"Emp"},
     startDate:{type:Date , default:new Date()},    
     expireDate:Date,

@@ -24,11 +24,12 @@ exports.addBorrowbook=(request,response,next)=>{
                             if(check == ""){
                                 BookSchema.findOneAndUpdate({_id:request.params._id}, {$inc : {'noOfCurrentBorrowed' : 1,'noBorrowed' : 1}})
                                 .then((res)=>{
+                                    console.log("aaaaaaaaaaaaaaa",request._id);
                                     new BookOperationSchema({
                                     operation:"borrow",
                                     returned:false,
                                     memberID:request.body.memberID,
-                                    employeeID:request.body.employeeID,
+                                    employeeEmail:request.email,
                                     bookID:request.params._id,
                                     startDate:Date(),
                                     expireDate:new Date(new Date().getTime()+(14*24*60*60*1000)),
@@ -47,7 +48,7 @@ exports.addBorrowbook=(request,response,next)=>{
                             }else{response.status(404).json({data:"This Book is already borrowed!"});}
                         })
 }
-        else{response.status(404).json({data:"This Book is not Avilable"});}
+        else{response.status(404).json({data:"This Book is not Available"});}
         }   
         else{response.status(404).json({data:"This Book is not Found"});}      
     })
@@ -76,7 +77,7 @@ exports.addBorrowbook=(request,response,next)=>{
                                 operation:"read",
                                 returned:false,
                                 memberID:request.body.memberID,
-                                employeeID:request.body.employeeID,
+                                employeeEmail:request.email,
                                 bookID:request.params._id,
                                 startDate:Date(),
                                 expireDate:new Date(new Date().getTime()+(1*24*60*60*1000)),
@@ -223,8 +224,8 @@ exports.borrowInfo=(request,response,next)=>{
                   {
           $lookup: {
                     from: 'employees',
-                    localField: 'employeeID',
-                    foreignField: '_id',
+                    localField: 'employeeEmail',
+                    foreignField: 'email',
                     as: 'emp'
                  }    
                 }

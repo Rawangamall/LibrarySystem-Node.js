@@ -10,8 +10,6 @@ const validatePutEmp=require("../Core/Validation/EmpValidation").validatePut;
 const validateOnIDParams=require("../Core/Validation/EmpValidation").validateOnIDParams;
 const AuthenticateMW=require("./../Core/auth/AuthenticateMW");
 
-//const { checkAdmin, checkTeacherAndAdmin }=require("./../Core/auth/authenticationMW");
-
 router.route("/Employees")
     .get(validateMW,controller.getEmps) //checkBaAdminAndAdminAndEmp
     .post(validateMW,validatePostEmp,controller.addEmp) //checkBasicAdminAndAdmin
@@ -20,5 +18,8 @@ router.route("/Employee/:_id")
     .put(imageValidate,validateMW,validatePutEmp,controller.updateEmp) //checkBaAdminAndAdminAndEmp
     .delete(validateMW,validateOnIDParams,removeEmpIMG,controller.deleteEmp) //checkBasicAdminAndAdmin
     .get(validateOnIDParams,validateMW,controller.getOneEmp) //AuthenticateMW.checkBaAdminAndAdminAndEmp,
+
+router.route("/searchForEmp")
+    .put(controller.searchForEmp)
 
 module.exports=router;

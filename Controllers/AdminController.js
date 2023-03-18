@@ -1,12 +1,18 @@
 const mongoose=require("mongoose");
 require("./../Models/AdminModel");
-
+require("../Models/BookOperationModel");
+const BookOperationSchema =mongoose.model("BookOperation");
 const AdminSchema =mongoose.model("Admin");
-
-
+require("../Models/EmpModel");
+require("../Models/member");
+require("../Models/BookModel");
+let BookSchema=mongoose.model("Book");
+let EmpSchema=mongoose.model("Employees");
+let MemberSchema=mongoose.model("member");
+const { writeFile } = require('fs');
+const path = './Monthly Report.json';
 
 exports.getAllAdmins=(request,response,next)=>{
-    if (Object.keys(request.body).length==""){
         AdminSchema.find({})
             .then((data)=>{
                     response.status(200).json({data});
@@ -14,39 +20,33 @@ exports.getAllAdmins=(request,response,next)=>{
             .catch(error=>{
                 next(error);
         })
-    }
-    else{
+}
+
+exports.searchForAdmin=(request,response,next)=>{
         //Search for Admin
-            const searchName = request.body.searchName;
-            const firstName = request.body.firstName;
-            const lastName = request.body.lastName;
-            AdminSchema.find({
-                $or: [
-                  { firstName: searchName },
-                  { lastName: searchName },
-                  { firstName: firstName },
-                  { lastName: lastName }
-                ],
-              }
-              )
-              .then(data=>{
-                    if(data=="")
-                    {
-                        next(new Error("This Admin is not found, Invalid Input"));
-                    }
-                    else
-                        response.status(200).json({data});
-                })
-                .catch(error=>{next(error);
-                })
-         }
-    }
-
-
-
-
-
-
+        const searchName = request.body.searchName?.toLowerCase();
+        const firstName = request.body.firstName?.toLowerCase();
+        const lastName = request.body.lastName?.toLowerCase();
+        AdminSchema.find({
+            $or: [
+              { firstName: searchName },
+              { lastName: searchName },
+              { firstName: firstName },
+              { lastName: lastName }
+            ],
+          }
+          )
+          .then(data=>{
+                if(data=="")
+                {
+                    next(new Error("This Admin is not found, Invalid Input"));
+                }
+                else
+                    response.status(200).json({data});
+            })
+            .catch(error=>{next(error);
+            })
+     }
 
 // exports.getAllAdmins=(request,response,next)=>{
 
@@ -124,7 +124,7 @@ exports.deleteAdmin = (request, response, next)=>{
 }
     
 
-exports.getAdmin=(request,response)=>{
+exports.getAdmin=(request,response,next)=>{
     AdminSchema.findOne({
 		_id: request.params._id,
 	}).then(data=>{
@@ -138,3 +138,44 @@ exports.getAdmin=(request,response)=>{
     .catch(error=>next(error));
 }
 
+exports.report=(request,response,next)=>{
+    //report for the last month
+    BookOperationSchema.find({startDate:{$gte: new Date().getTime()-(30*24*60*60*1000)}})
+        .then((data)=>{
+            EmpSchema.find({hireDate:{$gte: new Date().getTime()-(30*24*60*60*1000)}})
+            .then((data2)=>{
+                MemberSchema.find({createdAt:{$gte: new Date().getTime()-(30*24*60*60*1000)}})
+                        .then((data3)=>{
+                            AdminSchema.find({hireDate:{$gte: new Date().getTime()-(30*24*60*60*1000)}})
+                                .then((data4)=>{
+                                    BookSchema.find({createdAt:{$gte: new Date().getTime()-(30*24*60*60*1000)}})
+                                        .then((data5)=>{
+                                            writeFile(path, JSON.stringify({"New Employees":data,"New Operations":data2,"New Members":data3,"New Admins":data4,"New Books":data5}, null, 2), (error) => {
+                                                if (error) {
+                                                  console.log('An error has occurred ', error);
+                                                  return;
+                                                }
+                                                console.log('Data written successfully to disk');
+                                              });
+                                            response.status(200).send({Section1:"New Employees",data2,Section2:"New Operations",data,Section3:"New Members",data3,Section4:"New Admins",data4,Section5:"New Books",data5});
+                                            })
+                                        .catch(error=>{
+                                            next(error);
+                                        })
+                                    })
+                                .catch(error=>{
+                                    next(error);
+                                })
+                        })
+                        .catch(error=>{
+                            next(error);
+                        })
+                })
+            .catch(error=>{
+                next(error);
+            })
+            })
+        .catch(error=>{
+            next(error);
+        }) 
+}
