@@ -68,14 +68,16 @@ exports.memberImage=multer({
 }).single("image")
 
 
-exports.removeMemberIMG=function(req,res,next){
+exports.removeMemberIMG=function(request,res,next){
     MemberSchema.findOne({_id:request.params._id}).then((data)=>{
+        if(data != null){
         imageName = data._id+ "." + "jpg";
         console.log(imageName)
         fs.unlink(path.join(__dirname,"..","..","images","Members_images",imageName), function (err) {
             if (err) throw err;
             next();
         })
+    }
     })
 }
 
