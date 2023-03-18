@@ -28,7 +28,7 @@ router.route("/member/:_id")
 router.route("/firstLogin/:_id")
         .patch(imageValidate,validateData.MemberfirstLogin,memberController.updatefirstLogin)
  
-router.route("/searchForMember",memberController.searchForMember)        
+router.get("/searchForMember",memberController.searchForMember)        
         
 // router.route("/member/getborrowed/:_id")
 //        .get(memberController.getborrowedBooks)
