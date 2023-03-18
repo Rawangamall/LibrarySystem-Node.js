@@ -12,6 +12,5 @@ exports.validatePost=[
 ];
 exports.validatePut=[
     param("_id").isInt().withMessage("bookID must be integer"),
-    param("bookID").isInt().withMessage("bookID must be integer"),
-    
+    param("bookID").isInt().withMessage("bookID must be integer"),  
 ];

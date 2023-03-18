@@ -10,9 +10,7 @@ exports.validatePost=[
     body("password").isAlphanumeric().withMessage("Employee's password must be string or integer or both")
         .isLength({min:6,max:20}).withMessage("Password can't be > 20 or < 6"),
     body("birthdate").isDate().withMessage("Employee's birthdate must be date"),
-    body("hireDate").isDate().withMessage("Employee's hireDate must be date"),
-    //body("image").isString().withMessage("Employee's image must be string"),
-    body("salary").isNumeric().withMessage("Employee's salary must be number"),
+    body("salary").isNumeric().withMessage("Employee's salary must be number")
 ]
 
 //Put validation
@@ -26,9 +24,7 @@ exports.validatePut=[
     body("password").isAlphanumeric().optional().withMessage("Employee's password must be string or integer or both")
         .isLength({min:6,max:20}).withMessage("Password can't be > 20 or < 6"),
     body("birthdate").isDate().optional().withMessage("Employee's birthdate must be date"),
-    body("hireDate").isEmpty().withMessage("You Can't update hireDate!"),
-    //body("image").isString().optional().withMessage("Employee's image must be string"),
-    body("salary").isEmpty().withMessage("You Can't update salary!"),
+    body("salary").isEmpty().withMessage("You Can't update salary!")
 ]
 
 //Delete&Get validation

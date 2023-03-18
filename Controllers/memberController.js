@@ -107,7 +107,6 @@ exports.updatefirstLogin=(request,response,next)=>{
 else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
 
-
 exports.updateMember=(request,response,next)=>{
     if(request.password != "new"){
         if(request.role=="Employee" || request.role=="BasicAdmin"){
@@ -168,7 +167,6 @@ exports.updateMember=(request,response,next)=>{
 
 //delete
 exports.deleteMember=(request,response,next)=>{
-    
     if(request.password != "new"){
       var out=[]
       //check if user exist first

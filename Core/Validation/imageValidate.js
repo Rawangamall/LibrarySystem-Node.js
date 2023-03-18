@@ -61,8 +61,10 @@ exports.removeEmpIMG=function(req,res,next){
         imageName = data._id+ "." + "jpg";
         console.log(imageName)
         fs.unlink(path.join(__dirname,"..","..","images","Employees_images",imageName), function (err) {
-            if (err) throw err;
-            next();
+            if (err)
+                next(new Error("member not found"));
+            else
+                next();
         })
     }
     })
@@ -73,8 +75,11 @@ exports.removeMemberIMG=function(request,res,next){
         if(data != null){
         imageName = data._id+ "." + "jpg";
         console.log(imageName)
-        fs.unlink(path.join(__dirname,"..","..","images","Members_images",imageName), function (error) {
-            if (error) new Error("erorrrrrrr")
+        fs.unlink(path.join(__dirname,"..","..","images","Members_images",imageName), function (err) {
+            if (err)
+                next(new Error("member not found"));
+            else
+                next();
         })
     }
     }).catch(error=>next(error))
@@ -86,8 +91,10 @@ exports.removeAdminIMG=function(request,res,next){
         imageName = data._id+ "." + "jpg";
         console.log(imageName)
         fs.unlink(path.join(__dirname,"..","..","images","Admins_images",imageName), function (err) {
-            if (err) {response.status(404).json({data})};
-            next();
+            if (err)
+                next(new Error("member not found"));
+            else
+                next();
         })
     }
     })
