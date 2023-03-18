@@ -12,7 +12,7 @@ const Operationcontroller=require("../Controllers/BookOperationController.js");
 //const updatefirstLogin=require("../Controllers/memberController").updatefirstLogin;
 const imageValidate=require("../Core/Validation/imageValidate").memberImage;
 const removeimage=require("../Core/Validation/imageValidate").removeMemberIMG;
-const { checkBasicAdminAndEmp, checkBaAdminAndAdminAndEmpforMember, checkBaAdminAndMemberAndEmp }=require("./../Core/auth/AuthenticateMW");
+const { checkMember,checkBasicAdminAndEmp, checkBaAdminAndAdminAndEmpforMember, checkBaAdminAndMemberAndEmp }=require("./../Core/auth/AuthenticateMW");
     
 
 
@@ -22,19 +22,19 @@ router.route("/members")
        
        
 router.route("/member/:_id")
-        .patch(imageValidate,validateData.memberArrayPatch,memberController.updateMember)
+        .patch(checkBaAdminAndMemberAndEmp,imageValidate,validateData.memberArrayPatch,memberController.updateMember)
         .get(checkBaAdminAndMemberAndEmp,validateData.memberIDParams,memberController.getMember)
-        .delete(validateData.memberIDParams,removeimage,memberController.deleteMember) //checkBasicAdminAndEmp
+        .delete(checkBasicAdminAndEmp,validateData.memberIDParams,removeimage,memberController.deleteMember) //checkBasicAdminAndEmp
 
 router.route("/firstLogin/:_id")
-        .patch(imageValidate,validateData.MemberfirstLogin,memberController.updatefirstLogin)
+        .patch(checkMember,imageValidate,validateData.MemberfirstLogin,memberController.updatefirstLogin)
  
-router.get("/searchForMember",memberController.searchForMember)        
+router.get("/searchForMember",checkBasicAdminAndEmp,memberController.searchForMember)        
         
  router.route("/member/currentBorrowedBooks/:_id")
        .get(checkBaAdminAndMemberAndEmp,validateMW,memberController.currentBorrowedBooks)
 
 router.route("/member/borrowInfoOneMember/:_id")
-       .get(memberController.borrowInfoOneMember)
+       .get(checkBaAdminAndMemberAndEmp,memberController.borrowInfoOneMember)
       
 module.exports=router;

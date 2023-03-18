@@ -170,6 +170,7 @@ exports.updateMember=(request,response,next)=>{
 
 //delete
 exports.deleteMember=(request,response,next)=>{
+    
     if(request.password != "new"){
       var out=[]
       //check if user exist first

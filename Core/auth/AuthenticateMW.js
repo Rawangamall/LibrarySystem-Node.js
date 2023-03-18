@@ -10,12 +10,12 @@ const AdminSchema =mongoose.model("Admin");
 module.exports=(request,response,next)=>{
   try{
     let token=request.get("authorization").split(" ")[1];
-    console.log(token,"yyyyyyyyyy");
+    
     let decodedToken=jwt.verify(token,"OStrack");
     request.email=decodedToken.email;
     request.password=decodedToken.password;
     request.role=decodedToken.role;
-    console.log(request.email);
+   
     next();
   }
   catch(error){
@@ -25,7 +25,7 @@ module.exports=(request,response,next)=>{
   }
 }
 module.exports.checkBasicAdmin=(request,response,next)=>{
-  if(request.role =="BasicAdmin"){
+  if(request.role =="BasicAdmin" || request.role =="Owner"){
       next();
   }
   else{
@@ -35,31 +35,32 @@ module.exports.checkBasicAdmin=(request,response,next)=>{
 
   }
 }
-// module.exports.checkBasicAdminAndAdminAndEmpAndMember=(request,response,next)=>{
-//   if(request.role =="BasicAdmin"||request.role =="Admin"||request.role =="Employee"||request.role =="Member"){
-//       next();
-//   }
-//   else{
-//       let error =new Error("Not Authorized");
-//       error.status=403;
-//       next(error);
-//   }
-// }
 
 module.exports.checkEmp=(request,response,next)=>{
-  if(request.role =="Employee"){
+
+  EmpSchema.findOne({email:`${request.email}`}).then((data)=>{
+  
+    if((request.role =="Employee" || request.role =="Owner")){
+  
       next();
-  }
-  else{
+   }
+  
+    else{
       let error =new Error("Not Authorized");
       error.status=403;
       next(error);
+      
   }
+})
+.catch(error=>{
+next(error);
+})
+
 }
 
 module.exports.checkBasicAdminAndAdminforAdmin=(request,response,next)=>{ 
   AdminSchema.findOne({email:`${request.email}`}).then((data)=>{
-    if(request.role =="BasicAdmin" ){
+    if(request.role =="BasicAdmin"|| request.role =="Owner" ){
         next();
     }
     else if(request.role =="Admin" &&( request.params._id==data._id) ){
@@ -77,7 +78,7 @@ module.exports.checkBasicAdminAndAdminforAdmin=(request,response,next)=>{
   })
 }
 module.exports.checkBasicAdminAndAdmin=(request,response,next)=>{
-  if(request.role =="BasicAdmin"||request.role =="Admin"){
+  if(request.role =="BasicAdmin"||request.role =="Admin"|| request.role =="Owner"){
       next();
   }
   else{
@@ -86,10 +87,31 @@ module.exports.checkBasicAdminAndAdmin=(request,response,next)=>{
       next(error);
   }
 }
+module.exports.checkMember=(request,response,next)=>{
+
+  MemberSchema.findOne({email:`${request.email}`}).then((data)=>{
+  
+    if((request.role =="Member" )){
+  
+      next();
+   }
+  
+    else{
+      let error =new Error("Not Authorized");
+      error.status=403;
+      next(error);
+      
+  }
+})
+.catch(error=>{
+next(error);
+})
+
+}
 
 module.exports.checkBasicAdminAndEmp=(request,response,next)=>{
   console.log(request.role);
-    if(request.role =="BasicAdmin" || request.role =="Employee"){
+    if(request.role =="BasicAdmin" || request.role =="Employee" || request.role =="Owner"){
      
         next();
     }
@@ -105,7 +127,7 @@ module.exports.checkBasicAdminAndEmp=(request,response,next)=>{
 module.exports.checkBaAdminAndAdminAndEmpforEmp=(request,response,next)=>{
 
   EmpSchema.findOne({email:`${request.email}`}).then((data)=>{
-  if(request.role =="BasicAdmin"||request.role =="Admin" ){
+  if(request.role =="BasicAdmin"||request.role =="Admin"|| request.role =="Owner" ){
       next();
   }
   else if(request.role =="Employee" &&( request.params._id==data._id) ){
@@ -124,7 +146,7 @@ next(error);
 }
 module.exports.checkBaAdminAndAdminAndEmpforMember=(request,response,next)=>{
 
-  if(request.role =="BasicAdmin"||request.role =="Admin" ||request.role =="Employee" ){
+  if(request.role =="BasicAdmin"||request.role =="Admin" ||request.role =="Employee"|| request.role =="Owner" ){
           next();
       }
       else{
@@ -140,7 +162,7 @@ module.exports.checkBaAdminAndMemberAndEmp=(request,response,next)=>{
 
   MemberSchema.findOne({email:`${request.email}`}).then((data)=>{
   
-    if((request.role =="BasicAdmin" || request.role =="Employee")){
+    if((request.role =="BasicAdmin" || request.role =="Employee" || request.role =="Owner")){
   
       next();
    }

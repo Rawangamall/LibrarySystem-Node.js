@@ -35,7 +35,7 @@ router.route("/Employees/addReadBooks/:_id")
 // router.route("/member/borrowInfo/:_id") // basicadminand employee andmember
 //        .get(checkBaAdminAndMemberAndEmp,controller.borrowInfo)
 
-router.route("/Employees/borrowInfo/:_id")
+router.route("/Employees/borrowInfo")
        .get(controller.borrowInfo)
 
 
