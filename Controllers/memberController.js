@@ -134,8 +134,8 @@ exports.updateMember=(request,response,next)=>{
                 response.status(200).json(data);}
             })
             .catch(error=>next(error));
-        }else{
-    if(request.body.password != null  ){
+        }else if(request.role=="Member"){
+          if(request.body.password != null  ){
         var hash = bcrypt.hashSync(request.body.password,salt);
       }
      
