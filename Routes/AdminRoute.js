@@ -7,34 +7,34 @@ const imageValidate=require("./../Core/Validation/imageValidate").addIMG;
 const removeAdminIMG=require("./../Core/Validation/imageValidate").removeAdminIMG;
 const AdminValidate=require("./../Core/Validation/AdminValidate");
 const adminFirstLogin=require("./../Core/Validation/AdminValidate").adminFirstLogin;
-const { checkBasicAdminAndAdmin }=require("./../Core/auth/AuthenticateMW");
+const { checkBasicAdminAndAdmin, checkOwn }=require("./../Core/auth/AuthenticateMW");
 const router=express.Router();
 const { checkBasicAdmin, checkBasicAdminAndAdminforAdmin }=require("./../Core/auth/AuthenticateMW");
 
 //Admin
 router.route("/Admin")
-    .get(validateMW,controller.getAllAdmins)
-    .post(validateMW,controller.addAdmins) //imageValidate,//AdminValidate.validateAdminPost,
+    .get(checkBasicAdminAndAdmin,validateMW,controller.getAllAdmins)
+    .post(checkBasicAdmin,validateMW,controller.addAdmins) //imageValidate,//AdminValidate.validateAdminPost,
     
 router.route("/Admin/:id")
-      .get(AdminValidate.validateIDParams,validateMW,controller.getAdmin)
-      .put(imageValidate,AdminValidate.validateAdminPut,validateMW,controller.updateAdmin) 
-      .delete(AdminValidate.validateIDParams,validateMW,removeAdminIMG,controller.deleteAdmin)
+      .get(checkBasicAdminAndAdmin,AdminValidate.validateIDParams,validateMW,controller.getAdmin)
+      .put(checkBasicAdminAndAdmin,imageValidate,AdminValidate.validateAdminPut,validateMW,controller.updateAdmin) 
+      .delete(checkBasicAdmin,AdminValidate.validateIDParams,validateMW,removeAdminIMG,controller.deleteAdmin)
 
 //BasicAdmin
 router.route("/Basic")
-    .get(validateMW,controller.getAllBasicAdmins)
-    .post(validateMW,controller.addAdmins) //imageValidate,//AdminValidate.validateAdminPost,
+    .get(checkBasicAdmin,validateMW,controller.getAllBasicAdmins)
+    .post(checkOwn,validateMW,controller.addAdmins) //imageValidate,//AdminValidate.validateAdminPost,
     
 router.route("/Basic/:_id")
-       .put(imageValidate,AdminValidate.validateAdminPut,validateMW,controller.updateBasicAdmin) 
-       .get(AdminValidate.validateIDParams,validateMW,controller.getBasicAdmin)
-       .delete(AdminValidate.validateIDParams,validateMW,removeAdminIMG,controller.deleteBasicAdmin)
+       .put(checkBasicAdmin,imageValidate,AdminValidate.validateAdminPut,validateMW,controller.updateBasicAdmin) 
+       .get(checkBasicAdmin,AdminValidate.validateIDParams,validateMW,controller.getBasicAdmin)
+       .delete(checkOwn,AdminValidate.validateIDParams,validateMW,removeAdminIMG,controller.deleteBasicAdmin)
 
 //owner
-router.route("/ownerGetsAll").get(validateMW,controller.getAllKindsAdmins)
-router.put("/owner/:_id",imageValidate,AdminValidate.validateAdminPut,validateMW,controller.updateOwner)
-router.get("/owner/:_id",AdminValidate.validateIDParams,validateMW,controller.getOwner)
+router.route("/ownerGetsAll").get(checkOwn,validateMW,controller.getAllKindsAdmins)
+router.put("/owner/:_id",checkOwn,imageValidate,AdminValidate.validateAdminPut,validateMW,controller.updateOwner)
+router.get("/owner/:_id",checkOwn,AdminValidate.validateIDParams,validateMW,controller.getOwner)
 
 //report
 router.get("/report",checkBasicAdminAndAdmin,validateMW,controller.report)
