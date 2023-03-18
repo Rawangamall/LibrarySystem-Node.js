@@ -32,16 +32,16 @@ router.route("/BookOperation/:_id")
     .get(checkBasicAdminAndEmp, validateMW, controller.getBookOperation)
 
 router.route("/Employees/addBorrowedBooks/:_id")
-       .post(controller.addBorrowbook, BookOperationValidation.validatePost)
+       .post(checkBasicAdminAndEmp,validateMW,controller.addBorrowbook, BookOperationValidation.validatePost)
 
 router.route("/Employees/returnBorrowBook/:_id")
-       .put( controller.returnBorrowBook , BookOperationValidation.validatePut)
+       .put(checkBasicAdminAndEmp, validateMW, controller.returnBorrowBook , BookOperationValidation.validatePut)
 
 router.route("/Employees/returnReadBook/:_id")
-       .put(controller.returnReadBook , BookOperationValidation.validatePut)
+       .put(checkBasicAdminAndEmp,validateMW,controller.returnReadBook , BookOperationValidation.validatePut)
 
 router.route("/Employees/addReadBooks/:_id")
-        .post( controller.addReadbook ,BookOperationValidation.validatePost)
+        .post(checkBasicAdminAndEmp,validateMW, controller.addReadbook ,BookOperationValidation.validatePost)
 
 router.route("/member/borrowInfo/:_id")
        .get(controller.borrowInfo)
