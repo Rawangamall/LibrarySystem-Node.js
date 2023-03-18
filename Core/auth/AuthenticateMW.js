@@ -86,17 +86,20 @@ module.exports.checkBasicAdminAndAdmin=(request,response,next)=>{
       next(error);
   }
 }
+
 module.exports.checkBasicAdminAndEmp=(request,response,next)=>{
   console.log(request.role);
     if(request.role =="BasicAdmin" || request.role =="Employee"){
      
         next();
+    }
+    else if(request.role =="Employee" ){ // &&( request.params._id==data._id)
+      next();
    }
     else{
       let error =new Error("Not Authorized");
       error.status=403;
       next(error);
-      
   }
 }
 module.exports.checkBaAdminAndAdminAndEmpforEmp=(request,response,next)=>{

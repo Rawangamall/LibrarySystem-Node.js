@@ -9,9 +9,11 @@ const validatePostEmp=require("../Core/Validation/EmpValidation").validatePost;
 const validatePutEmp=require("../Core/Validation/EmpValidation").validatePut;
 const validateOnGetEmp=require("../Core/Validation/EmpValidation").validateOnGet;
 const validateOnDeleteEmp=require("../Core/Validation/EmpValidation").validateOnDelete;
-const { checkEmp, checkBaAdminAndAdminAndEmpforEmp, checkBasicAdminAndAdmin }=require("./../Core/auth/AuthenticateMW");
+const validateOnIDParams=require("../Core/Validation/EmpValidation").validateOnIDParams;
+const { checkBaAdminAndAdminAndEmpforEmp, checkBasicAdminAndAdmin }=require("./../Core/auth/AuthenticateMW");
 
 // checkBasicAdminAndEmp
+
 
 router.route("/Employees")
     .get(checkBasicAdminAndAdmin,validateMW,controller.getEmps) //checkBaAdminAndAdmin
@@ -19,9 +21,12 @@ router.route("/Employees")
 
 // router.get("/Employees/:_id",checkBaAdminAndAdminAndEmpforEmp,validateOnGetEmp,validateMW,controller.getOneEmp)
 
-router.route("/Employees/:_id")
-    .get(checkBaAdminAndAdminAndEmpforEmp,validateOnGetEmp,validateMW,controller.getOneEmp) //checkBaAdminAndAdminAndEmp
-    .put(checkEmp,imageValidate,validateMW,validatePutEmp,controller.updateEmp) //checkEmp  //another update function for adminandbadmin
-    .delete(checkBasicAdminAndAdmin,validateMW,validateOnDeleteEmp,removeEmpIMG,controller.deleteEmp) //checkBasicAdminAndAdmin
+router.route("/Employee/:_id")
+    .put(checkBaAdminAndAdminAndEmpforEmp,imageValidate,validateMW,validatePutEmp,controller.updateEmp) //checkBaAdminAndAdminAndEmp
+    .delete(checkBasicAdminAndAdmin,validateMW,validateOnIDParams,removeEmpIMG,controller.deleteEmp) //checkBasicAdminAndAdmin
+    .get(checkBaAdminAndAdminAndEmpforEmp,validateOnIDParams,validateMW,controller.getOneEmp) //AuthenticateMW.checkBaAdminAndAdminAndEmp,
+
+router.route("/searchForEmp")
+    .put(controller.searchForEmp)
 
 module.exports=router;

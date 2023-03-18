@@ -32,8 +32,12 @@ router.route("/Employees/returnReadBook/:_id")
 router.route("/Employees/addReadBooks/:_id")
         .post(checkBasicAdminAndEmp,validateMW, controller.addReadbook ,BookOperationValidation.validatePost)
 
-router.route("/member/borrowInfo/:_id") // basicadminand employee andmember
-       .get(checkBaAdminAndMemberAndEmp,controller.borrowInfo)
+// router.route("/member/borrowInfo/:_id") // basicadminand employee andmember
+//        .get(checkBaAdminAndMemberAndEmp,controller.borrowInfo)
+
+router.route("/Employees/borrowInfo/:_id")
+       .get(controller.borrowInfo)
+
 
 router.route("/makeSureOfReturnedRead")
        .put(checkBasicAdminAndEmp, validateMW,controller.makeSureOfReturnedRead)

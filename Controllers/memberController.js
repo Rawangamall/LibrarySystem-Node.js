@@ -2,7 +2,8 @@ const mongoose=require("mongoose");
 require("./../Models/member");
 require("../Models/BookModel");
 require("../Models/BookOperationModel");
-
+const validateMW=require("../Core/Validation/validateMW");
+const AuthenticateMW=require("./../Core/auth/AuthenticateMW");
 const MemberSchema=mongoose.model("member");
 const BookSchema=mongoose.model("Book");
 const BookOperationSchema=mongoose.model("BookOperation");
@@ -21,17 +22,40 @@ exports.getAll=(request,response)=>{
                     })
 }
 
+exports.searchForMember=(request,response,next)=>{
+    //Search for Member
+    const searchKey = request.body.searchKey?.toLowerCase();
+    const fullName = request.body.fullName?.toLowerCase();
+    const email = request.body.email?.toLowerCase();
+    AdminSchema.find({
+        $or: [
+          { fullName: searchKey },
+          { email: searchKey },
+          { fullName: fullName },
+          { email: email }
+        ],
+      }
+      )
+      .then(data=>{
+            if(data=="")
+            {
+                next(new Error("This Member is not found, Invalid Input"));
+            }
+            else
+                response.status(200).json({data});
+        })
+        .catch(error=>{next(error);
+        })
+ }
+
 
 exports.addMember=(request,response,next)=>{
-    if(request.body.password != null){
-        var hash = bcrypt.hashSync(request.body.password,salt);
-      }
+   
  new MemberSchema({
     _id:request.body._id,
     fullName:request.body.fullName,
     email:request.body.email,
-    password:hash,
-    image:request.body.image,
+    password:"new",
     phoneNumber:request.body.phoneNumber,
     birthdate:request.body.birthdate,
     fullAddress:request.body.fullAddress
@@ -45,8 +69,40 @@ exports.addMember=(request,response,next)=>{
     })
 }
 
+exports.updatefirstLogin=(request,response,next)=>{
+    strpass=request.body.password
+    if((strpass).length > 8 ){
+        var hash = bcrypt.hashSync(request.body.password,salt);
+    MemberSchema.updateOne({
+        _id:request.params._id
+    },{
+        $set:{
+            password:hash,
+            image:request.body.image,           
+        }
+    }).then((data)=>{
+        if(data.modifiedCount != 0)
+        {
+            response.status(200).json(data);
+               console.log(data)
+        }
+        else
+       {response.status(200).json(data);
+               console.log(data)
+    }
+
+    })
+    .catch(error=>next(error));
+}else{
+    response.status(404).json({data:"Enter the data"});     
+}
+}
+
+
 exports.updateMember=(request,response,next)=>{
-    if(request.body.password != null){
+    if(request.password != "new"){    
+        
+    if(request.body.password != null  ){
         var hash = bcrypt.hashSync(request.body.password,salt);
       }
       console.log(request.body.image);
@@ -75,6 +131,8 @@ exports.updateMember=(request,response,next)=>{
         response.status(200).json(data);}
     })
     .catch(error=>next(error));
+        }else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+
 }
 
 
@@ -101,12 +159,27 @@ MemberSchema.findOne({_id:request.params._id}).then((check)=>{
             {           
                 JSON.parse(JSON.stringify(out)) 
                 console.log(out)
-             //increment returned books
+
+             //increment returned borrowed books
             BookSchema.updateMany({_id:out},{$inc:{'noOfCurrentBorrowed': -1}}).then((increment)=>{
             }).catch(error=>next(error));
            }
         }).catch(error=>next(error));
 
+            //read returned
+    BookOperationSchema.updateMany({memberID:request.body._id ,"returned":{$eq:false},"operation":{$eq:"read"}},{
+        $set:{ "returned" : true}
+          }).then((borrow)=>{
+            if(borrow.modifiedCount != 0)
+            {           
+                JSON.parse(JSON.stringify(out)) 
+                console.log(out)
+                
+             //increment returned borrowed books
+            BookSchema.updateMany({_id:out},{$inc:{'noOfCurrentBorrowed': -1}}).then((increment)=>{
+            }).catch(error=>next(error));
+           }
+        }).catch(error=>next(error));
         //delete member
      MemberSchema.deleteOne({_id:request.params._id})
         .then((result)=>{
@@ -121,6 +194,7 @@ MemberSchema.findOne({_id:request.params._id}).then((check)=>{
 }
 
 exports.getMember=(request,response,next)=>{
+   if(request.password != "new"){
 
     MemberSchema.findOne({_id:request.params._id})
     .then((result)=>{
@@ -135,10 +209,13 @@ exports.getMember=(request,response,next)=>{
     .catch(error=>{
         next(error);
     })
+}else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
 
 
 exports.currentBorrowedBooks=(request,response,next)=>{
+    if(request.password != "new"){    
+
     strID=request.params._id;
     NumID=Number(strID);
     console.log(NumID);
@@ -197,7 +274,9 @@ exports.currentBorrowedBooks=(request,response,next)=>{
         response.status(200).json({result});
     }).catch(err => {
         console.log(err.message)
-    });
+    }); 
+   }else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+
 }
     
     exports.updatefirstLogin=(request,response,next)=>{
@@ -227,6 +306,48 @@ exports.currentBorrowedBooks=(request,response,next)=>{
         response.status(404).json({data:"Enter the data"});     
     }
     }
-    
-    
 
+//g for member => borrowedbooks with employee responsible for borrowing
+exports.borrowInfoOneMember=(request,response,next)=>{
+    strID = request.params._id
+    NumID=Number(strID)
+
+    if(request.password != "new"){    
+
+    BookOperationSchema.aggregate( [
+        {$match: {memberID:NumID, operation:"borrow"}},
+                 {
+          $lookup: {
+                      from: 'books',
+                      localField: 'bookID',
+                      foreignField: '_id',
+                      as: 'book'
+                    }    
+                  }
+                  ,
+                  {
+          $lookup: {
+                    from: 'employees',
+                    localField: 'employeeEmail',
+                    foreignField: 'email',
+                    as: 'emp'
+                 }    
+                }
+                  ,  
+              {
+                $project: { 
+                          _id:0,
+                          EmployeName: "$emp.firstName",
+                          BookTitle: "$book.title"
+                 }
+              }
+      ]).then(borrowedBook=>{
+     if(borrowedBook != "")
+{       
+     response.status(200).json({borrowedBook});
+}else{response.status(404).json({borrowedBook:"Borrowed Books Not Found"});}
+    })
+    .catch(error=>next(error));
+}else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+
+}
