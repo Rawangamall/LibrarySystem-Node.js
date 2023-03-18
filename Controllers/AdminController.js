@@ -17,14 +17,24 @@ const saltRounds = 10;
 const salt = bcrypt.genSaltSync(saltRounds)
 
 exports.getAllAdmins=(request,response,next)=>{
-        AdminSchema.find({})
-            .then((data)=>{
-                    response.status(200).json({data});
-                })
-            .catch(error=>{
-                next(error);
-        })
+    if(request.role=="BasicAdmin")
+    { AdminSchema.find({role:"Admin"}).then((data)=>
+        {
+            response.status(200).json({data});
+        }).catch(error=>{
+        next(error);
+    })}
+else{
+     AdminSchema.find({}).then((data)=>
+        {
+            response.status(200).json({data});
+        }).catch(error=>
+            {
+        next(error);
+        })}
 }
+       
+
 
 exports.searchForAdmin=(request,response,next)=>{
     if(request.password != "new"){
