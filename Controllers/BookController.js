@@ -89,7 +89,7 @@ exports.addBook=async(request,response,next)=>{
 //Update(Put) an Book
 exports.updateBook=(request,response,next)=>{
     BookSchema.updateOne({
-        _id:request.body.id
+        _id:request.params.id
     },{
         $set:{
             title:request.body.title,
@@ -117,7 +117,7 @@ exports.updateBook=(request,response,next)=>{
 //Delete an Book
 exports.deleteBook=(request,response,next)=>{
     BookSchema.deleteOne({
-		_id: request.body.id,
+		_id: request.params.id,
 	}).then(data=> {
         if(data.deletedCount==0){
             next(new Error("This Book is not found!"));

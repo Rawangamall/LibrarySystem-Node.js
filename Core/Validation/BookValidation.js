@@ -16,7 +16,7 @@ exports.validatePost=[
 
 //Put validation
 exports.validatePut=[
-    body("_id").isNumeric().withMessage("Book's id must be number"),
+    param("_id").isNumeric().withMessage("Book's id must be number"),
     body("title").isString().optional().withMessage("Book's title must be string"),
     body("author").isString().optional().withMessage("Book's author must be string"),
     body("publisher").isString().optional().withMessage("Book's publisher must be string"),
@@ -29,12 +29,7 @@ exports.validatePut=[
     body("shelfNo").isNumeric().optional().withMessage("Shelf Number must be number")
 ]
 
-//Delete validation
-exports.validateOnDelete=[
-    body("id").isNumeric().withMessage("ID must be integer")
-] 
-
-//Get validation
-exports.validateOnGet=[
+//Delete&&Get validation
+exports.validateOnIDParams=[
     param("id").isNumeric().withMessage("ID must be integer")
-]
+] 

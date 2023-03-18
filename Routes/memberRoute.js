@@ -18,9 +18,9 @@ router.route("/members")
        
        
 router.route("/member/:_id")
-        .patch(imageValidate,validateData.memberArrayPatch,memberController.updateMember)  ///patch and update not authorized yet
-        .get(checkBaAdminAndMemberAndEmp,validateMW, memberController.getMember)
-        .delete(checkBasicAdminAndEmp,validateData.memberArrayDel,validateMW,memberController.deleteMember,removeimage)
+        .patch(imageValidate,validateData.memberArrayPatch,memberController.updateMember)
+        .get(checkBaAdminAndMemberAndEmp,validateData.memberIDParams,memberController.getMember)
+        .delete(validateData.memberIDParams,removeimage,memberController.deleteMember) //checkBasicAdminAndEmp
 
 router.route("/firstLogin/:_id")
         .patch(imageValidate,memberController.updatefirstLogin)

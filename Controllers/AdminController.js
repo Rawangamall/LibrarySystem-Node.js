@@ -88,7 +88,7 @@ exports.addAdmin=async(request,response,next)=>{
 
 exports.updateAdmin=(request,response,next)=>{
     AdminSchema.updateOne({
-        _id:request.body._id
+        _id:request.params._id
     },{
         $set:{
             firstName:request.body.firstName,

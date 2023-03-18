@@ -108,7 +108,7 @@ exports.addBorrowbook=(request,response,next)=>{
         })
         }
                        
-exports.getAll=(request,response)=>{
+exports.getAll=(request,response,next)=>{
     BookOperationSchema.find({})
                     .then((data)=>{        
                         //member exceeds the return date of borrowed books

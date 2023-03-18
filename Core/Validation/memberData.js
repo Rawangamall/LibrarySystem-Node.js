@@ -19,6 +19,6 @@ exports.memberArrayPatch =[
     body("birthdate").matches(/^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2}$/).withMessage("the date should be months/days/years"),
     body("fullAddress").isString().withMessage("address should be string")
 ]
-exports.memberArrayDel =[
+exports.memberIDParams =[
     param("_id").isInt()
 ]

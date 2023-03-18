@@ -14,7 +14,7 @@ exports.validateAdminPost=[
                          //body("image").optional().isString().withMessage("image should be string")
             ];
 //validate on put
-exports.validateAdminPut=[body("_id").isInt().withMessage("Admin Id should be Integer id"),
+exports.validateAdminPut=[param("_id").isInt().withMessage("Admin Id should be Integer id"),
                           body("firstName").optional().isString().withMessage("Admin first-name should be string"),
                           body("lastName").optional().isString().withMessage("Admin last-name should be string"),
                           body("password").optional().isStrongPassword().withMessage("your password is weak"),
@@ -25,8 +25,6 @@ exports.validateAdminPut=[body("_id").isInt().withMessage("Admin Id should be In
                           body("Role").optional().isIn(['Admin','BasicAdmin']).withMessage("role should be Admin or BasicAdmin"),
                           //body("image").optional().isString().withMessage("image should be string")
 ];
-//validate on delete
-exports.validateAdminDelete=[param("_id").isInt().withMessage("Admin Id should be object id")
-];
-exports.validateAdminGetID=[param("_id").isInt().withMessage("Admin Id should be object id")
+//validate on delete&Get
+exports.validateIDParams=[param("_id").isInt().withMessage("Admin Id should be object id")
 ];

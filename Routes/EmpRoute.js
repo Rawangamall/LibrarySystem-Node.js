@@ -7,8 +7,7 @@ const removeEmpIMG=require("../Core/Validation/imageValidate").removeEmpIMG;
 const router=express.Router();
 const validatePostEmp=require("../Core/Validation/EmpValidation").validatePost;
 const validatePutEmp=require("../Core/Validation/EmpValidation").validatePut;
-const validateOnGetEmp=require("../Core/Validation/EmpValidation").validateOnGet;
-const validateOnDeleteEmp=require("../Core/Validation/EmpValidation").validateOnDelete;
+const validateOnIDParams=require("../Core/Validation/EmpValidation").validateOnIDParams;
 const AuthenticateMW=require("./../Core/auth/AuthenticateMW");
 
 router.route("/Employees")
@@ -17,8 +16,8 @@ router.route("/Employees")
 
 router.route("/Employee/:_id")
     .put(imageValidate,validateMW,validatePutEmp,controller.updateEmp) //checkBaAdminAndAdminAndEmp
-    .delete(validateMW,validateOnDeleteEmp,removeEmpIMG,controller.deleteEmp) //checkBasicAdminAndAdmin
-    .get(validateOnGetEmp,validateMW,controller.getOneEmp) //checkBaAdminAndAdminAndEmp
+    .delete(validateMW,validateOnIDParams,removeEmpIMG,controller.deleteEmp) //checkBasicAdminAndAdmin
+    .get(validateOnIDParams,validateMW,controller.getOneEmp) //AuthenticateMW.checkBaAdminAndAdminAndEmp,
 
 router.route("/searchForEmp")
     .put(controller.searchForEmp)
