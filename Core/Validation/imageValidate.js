@@ -47,20 +47,53 @@ exports.removeIMG=function(req,res,next){
     if(req.role=="Employee"){
         let imageName=EmpSchema.findOne({_id:req.params._id})._conditions._id + ".png";
         fs.unlink(path.join(__dirname,"..","..","images","Employees_images",imageName), function (err) {
-            if (err) throw err;
+            if (err)
+            next(new Error("Employee doesn't have img "));
+        else
             next();
         })
     }else if(req.role=="Member"){
-        let imageName=MemberSchema.findOne({_id:req.params._id})._conditions._id + ".png";
-        fs.unlink(path.join(__dirname,"..","..","images","Members_images",imageName), function (err) {
-            if (err) throw err;
-            next();
+        MemberSchema.findOne({_id:req.params._id}).then((result)=>{
+            console.log(result);
+            if(result != null)
+            {
+                
+                let imageName=result._id + ".png";
+                fs.unlink(path.join(__dirname,"..","..","images","Members_images",imageName), function (err) {
+                if (err)
+                    next(new Error("Member doesn't have img "));
+                else
+                    next();
+                })
+                    }
+            else{
+                next(new Error("Member Not Found"));
+              //  response.status(404).json({result:"Member Not Found"});
+            }
         })
-    }else if(req.role=="Admin"){
+        .catch(error=>{
+            next(error);
+        })}
+        // else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+        // }
+
+        // let imageName=MemberSchema.findOne({_id:req.params._id})._conditions._id + ".png";
+        // fs.unlink(path.join(__dirname,"..","..","images","Members_images",imageName), function (err) {
+        //     if (err)
+        //     next(new Error("Member doesn't have img "));
+        // else
+        //     next();
+        // })
+    else if(req.role=="Admin"){
         let imageName=AdminSchema.findOne({_id:req.params._id})._conditions._id + ".png";
         fs.unlink(path.join(__dirname,"..","..","images","Admin_images",imageName), function (err) {
-            if (err) throw err;
+            if (err)
+            next(new Error("member not found"));
+        else
             next();
         })
+    }
+    else{
+        next();
     }
 }

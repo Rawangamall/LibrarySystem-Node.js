@@ -347,19 +347,24 @@ exports.mostreadingBooks=(request,response,next)=>{
         $project: { 
                         _id:0,       
                         bookID: "$bookID" ,
-                        book_title:"$book.title",
+                        title:"$book.title",
+                        author:"$book.author",
+                        publisher:"$book.publisher",
                         publishyear:{ $year:"$book.publishingDate"}
               }
      },
      {$match:  {publishyear:searchbyYear}},
               
-    { $group: { _id: "$bookID", borrowCount: { $sum: 1 }  ,  book_title: { $push: "$book_title" } } },
+    { $group: { _id: "$bookID", borrowCount: { $sum: 1 }  ,  title: { $push: "$title" },author: { $push: "$author" },publisher: { $push: "$publisher" },publishyear: { $push: "$publishyear" } } },
     { $sort: { borrowCount: -1 } },
      { $limit: 5 },
      {
        $project: { 
-                                     
-                 book_title: { $first: "$book_title" },
+                _id:0,          
+                title: { $first: "$title" },
+                 author: { $first: "$author" },
+                 publisher: { $first: "$publisher" },
+                 publishyear: { $first: "$publishyear" }
                  
                 }},
              
@@ -403,19 +408,24 @@ exports.mostBorrowedBooks=(request,response,next)=>{
         $project: { 
                         _id:0,       
                         bookID: "$bookID" ,
-                        book_title:"$book.title",
+                        title:"$book.title",
+                        author:"$book.author",
+                        publisher:"$book.publisher",
                         publishyear:{ $year:"$book.publishingDate"}
               }
      },
      {$match:  {publishyear:searchbyYear}},
               
-    { $group: { _id: "$bookID", borrowCount: { $sum: 1 }  ,  book_title: { $push: "$book_title" } } },
+    { $group: { _id: "$bookID", borrowCount: { $sum: 1 }  ,  title: { $push: "$title" },author: { $push: "$author" },publisher: { $push: "$publisher" },publishyear: { $push: "$publishyear" } } },
     { $sort: { borrowCount: -1 } },
      { $limit: 5 },
      {
        $project: { 
-                                     
-                 book_title: { $first: "$book_title" },
+                _id:0,          
+                title: { $first: "$title" },
+                 author: { $first: "$author" },
+                 publisher: { $first: "$publisher" },
+                 publishyear: { $first: "$publishyear" }
                  
                 }},
     ])

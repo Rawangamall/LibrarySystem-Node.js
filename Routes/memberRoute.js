@@ -1,21 +1,15 @@
 const express=require("express");
 const router=express.Router();
 const validateMW=require("../Core/Validation/validateMW");
-const AuthenticateMW=require("./../Core/auth/AuthenticateMW");
 const validateData=require("./../Core/Validation/memberData");
 const memberController=require("./../Controllers/memberController");
-const BookController=require("./../Controllers/BookController");
-const Operationcontroller=require("../Controllers/BookOperationController.js");
-
-//const updatefirstLogin=require("../Controllers/memberController").updatefirstLogin;
 const imageValidate=require("../Core/Validation/imageValidate").addIMG;
 const removeimage=require("../Core/Validation/imageValidate").removeIMG;
-const { checkMember,checkBasicAdminAndEmp, checkBaAdminAndAdminAndEmpforMember, checkBaAdminAndMemberAndEmp }=require("./../Core/auth/AuthenticateMW");
+const { checkMember,checkBasicAdminAndEmp, checkBaAdminAndMemberAndEmp }=require("./../Core/auth/AuthenticateMW");
     
 
   
 router.route("/members")
-       .get(  validateMW ,memberController.getAll) //checkBaAdminAndAdminAndEmpforMember
        .post( checkBasicAdminAndEmp,validateMW,memberController.addMember)
        
        

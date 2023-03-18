@@ -273,7 +273,7 @@ exports.currentBorrowedBooks=(request,response,next)=>{
               $project: { 
                         _id:0,
                         book_title: "$book.title" ,
-                        expireDate:1,
+                        // expireDate:1,
                         noBorrowedTimes:1,
                         BorrowedDate:1,
                         // currentDate:1,
