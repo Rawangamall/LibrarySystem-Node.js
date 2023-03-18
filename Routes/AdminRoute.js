@@ -3,12 +3,13 @@ const express=require("express");
 const validateMW=require("./../Core/Validation/validateMW");
 const controller=require("./../Controllers/AdminController");
 const { AdminImag } = require("../Core/Validation/imageValidate");
-const imageValidate=require("./../Core/Validation/imageValidate").AdminImage;
+const imageValidate=require("./../Core/Validation/imageValidate").addIMG;
 const removeAdminIMG=require("./../Core/Validation/imageValidate").removeAdminIMG;
 const AdminValidate=require("./../Core/Validation/AdminValidate");
 const adminFirstLogin=require("./../Core/Validation/AdminValidate").adminFirstLogin;
 const { checkBasicAdminAndAdmin }=require("./../Core/auth/AuthenticateMW");
 const router=express.Router();
+const { checkBasicAdmin, checkBasicAdminAndAdminforAdmin }=require("./../Core/auth/AuthenticateMW");
 
 //Admin
 router.route("/Admin")
@@ -38,8 +39,7 @@ router.get("/owner/:_id",AdminValidate.validateIDParams,validateMW,controller.ge
 //report
 router.get("/report",checkBasicAdminAndAdmin,validateMW,controller.report)
 
-//Search
-router.get("/searchForAdmin",controller.searchForAdmin)
+router.get("/searchForAdmin",checkBasicAdmin,controller.searchForAdmin)
 
 //firstlogin
 router.route("/firstLoginAdmin/:_id")

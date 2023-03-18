@@ -14,8 +14,7 @@ const schema=new mongoose.Schema({
     image:String ,
     phoneNumber:Number ,
     birthdate: Date ,
-    fullAddress:String,
-    blocked:Boolean
+    fullAddress:String
     // borrowOper:[
     //  {
       // _id:Number,

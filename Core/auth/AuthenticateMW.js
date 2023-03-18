@@ -1,19 +1,21 @@
 const mongoose=require("mongoose");
 const jwt=require("jsonwebtoken");
 require("./../../Models/member");
+require("./../../Models/AdminModel");
+
 const MemberSchema=mongoose.model("member");
-require("./../../Models/EmpModel");
 const EmpSchema=mongoose.model("Employees");
+const AdminSchema =mongoose.model("Admin");
 
 module.exports=(request,response,next)=>{
   try{
     let token=request.get("authorization").split(" ")[1];
-    console.log(token,"yyyyyyyyyy");
+    
     let decodedToken=jwt.verify(token,"OStrack");
     request.email=decodedToken.email;
     request.password=decodedToken.password;
     request.role=decodedToken.role;
-    console.log(request.email);
+   
     next();
   }
   catch(error){
@@ -23,7 +25,7 @@ module.exports=(request,response,next)=>{
   }
 }
 module.exports.checkBasicAdmin=(request,response,next)=>{
-  if(request.role =="BasicAdmin"){
+  if(request.role =="BasicAdmin" || request.role =="Owner"){
       next();
   }
   else{
@@ -33,8 +35,50 @@ module.exports.checkBasicAdmin=(request,response,next)=>{
 
   }
 }
+
+module.exports.checkEmp=(request,response,next)=>{
+
+  EmpSchema.findOne({email:`${request.email}`}).then((data)=>{
+  
+    if((request.role =="Employee" || request.role =="Owner")){
+  
+      next();
+   }
+  
+    else{
+      let error =new Error("Not Authorized");
+      error.status=403;
+      next(error);
+      
+  }
+})
+.catch(error=>{
+next(error);
+})
+
+}
+
+module.exports.checkBasicAdminAndAdminforAdmin=(request,response,next)=>{ 
+  AdminSchema.findOne({email:`${request.email}`}).then((data)=>{
+    if(request.role =="BasicAdmin"|| request.role =="Owner" ){
+        next();
+    }
+    else if(request.role =="Admin" &&( request.params._id==data._id) ){
+      next();
+   }
+    else{
+      let error =new Error("Not Authorized");
+      error.status=403;
+      next(error);
+      
+  }
+  })
+  .catch(error=>{
+  next(error);
+  })
+}
 module.exports.checkBasicAdminAndAdmin=(request,response,next)=>{
-  if(request.role =="BasicAdmin"||request.role =="Admin"){
+  if(request.role =="BasicAdmin"||request.role =="Admin"|| request.role =="Owner"){
       next();
   }
   else{
@@ -42,11 +86,32 @@ module.exports.checkBasicAdminAndAdmin=(request,response,next)=>{
       error.status=403;
       next(error);
   }
+}
+module.exports.checkMember=(request,response,next)=>{
+
+  MemberSchema.findOne({email:`${request.email}`}).then((data)=>{
+  
+    if((request.role =="Member" )){
+  
+      next();
+   }
+  
+    else{
+      let error =new Error("Not Authorized");
+      error.status=403;
+      next(error);
+      
+  }
+})
+.catch(error=>{
+next(error);
+})
+
 }
 
 module.exports.checkBasicAdminAndEmp=(request,response,next)=>{
   console.log(request.role);
-    if(request.role =="BasicAdmin" || request.role =="Employee"){
+    if(request.role =="BasicAdmin" || request.role =="Employee" || request.role =="Owner"){
      
         next();
     }
@@ -59,9 +124,29 @@ module.exports.checkBasicAdminAndEmp=(request,response,next)=>{
       next(error);
   }
 }
-module.exports.checkBaAdminAndAdminAndEmp=(request,response,next)=>{
+module.exports.checkBaAdminAndAdminAndEmpforEmp=(request,response,next)=>{
 
-  if(request.role =="BasicAdmin"||request.role =="Admin" ||request.role =="Employee" ){
+  EmpSchema.findOne({email:`${request.email}`}).then((data)=>{
+  if(request.role =="BasicAdmin"||request.role =="Admin"|| request.role =="Owner" ){
+      next();
+  }
+  else if(request.role =="Employee" &&( request.params._id==data._id) ){
+    next();
+ }
+  else{
+    let error =new Error("Not Authorized");
+    error.status=403;
+    next(error);
+    
+}
+})
+.catch(error=>{
+next(error);
+})
+}
+module.exports.checkBaAdminAndAdminAndEmpforMember=(request,response,next)=>{
+
+  if(request.role =="BasicAdmin"||request.role =="Admin" ||request.role =="Employee"|| request.role =="Owner" ){
           next();
       }
       else{
@@ -71,29 +156,13 @@ module.exports.checkBaAdminAndAdminAndEmp=(request,response,next)=>{
             
         }
 
-//   EmpSchema.findOne({email:`${request.email}`}).then((data)=>{
-//   if(request.role =="BasicAdmin"||request.role =="Admin" ){
-//       next();
-//   }
-//   else if(request.role =="Employee" &&( request.params._id==data._id) ){
-//     next();
-//  }
-//   else{
-//     let error =new Error("Not Authorized");
-//     error.status=403;
-//     next(error);
-    
-// }
-// })
-// .catch(error=>{
-// next(error);
-// })
 }
+
 module.exports.checkBaAdminAndMemberAndEmp=(request,response,next)=>{
 
   MemberSchema.findOne({email:`${request.email}`}).then((data)=>{
   
-    if((request.role =="BasicAdmin" || request.role =="Employee")){
+    if((request.role =="BasicAdmin" || request.role =="Employee" || request.role =="Owner")){
   
       next();
    }

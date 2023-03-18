@@ -64,9 +64,7 @@ exports.addMember=(request,response,next)=>{
     password:"new",
     phoneNumber:request.body.phoneNumber,
     birthdate:request.body.birthdate,
-    fullAddress:request.body.fullAddress,
-    blocked:false
-   
+    fullAddress:request.body.fullAddress
    }).save()
     .then((data)=>{
         response.status(201).json({data});
@@ -112,12 +110,33 @@ else{response.status(404).json({result:"Please update your profile data!! and lo
 
 exports.updateMember=(request,response,next)=>{
     if(request.password != "new"){
-    if(request.body.password != null  ){
+        if(request.role=="Employee" || request.role=="BasicAdmin"){
+            MemberSchema.updateOne({
+                _id:request.params._id
+            },{
+                $set:{
+                    fullName:request.body.fullName,
+                    email:request.body.email,
+                    phoneNumber:request.body.phoneNumber,
+                    birthdate:request.body.birthdate,
+                    fullAddress:request.body.fullAddress  
+                }
+            }).then((data)=>{
+                if(data == null)
+                {
+                    next(new Error("member not found"));
+                }
+                else
+        {        console.log(data);
+        
+                response.status(200).json(data);}
+            })
+            .catch(error=>next(error));
+        }else if(request.role=="Member"){
+          if(request.body.password != null  ){
         var hash = bcrypt.hashSync(request.body.password,salt);
       }
-      console.log(request.body.image);
-      console.log(request.body.fullName);
-    console.log(request.params._id);
+     
     MemberSchema.updateOne({
         _id:request.params._id
     },{
@@ -140,13 +159,16 @@ exports.updateMember=(request,response,next)=>{
 
         response.status(200).json(data);}
     })
-    .catch(error=>next(error));}
-    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+    .catch(error=>next(error));
+   }
+}else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+
 }
 
 
 //delete
 exports.deleteMember=(request,response,next)=>{
+    
     if(request.password != "new"){
       var out=[]
       //check if user exist first
@@ -290,7 +312,7 @@ exports.currentBorrowedBooks=(request,response,next)=>{
 }
 
 //g for member => borrowedbooks with employee responsible for borrowing
-exports.borrowInfo=(request,response,next)=>{
+exports.borrowInfoOneMember=(request,response,next)=>{
     strID = request.params._id
     NumID=Number(strID)
 

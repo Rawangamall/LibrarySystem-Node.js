@@ -140,15 +140,6 @@ exports.deleteBook=(request,response,next)=>{
         else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
 
-//most borrowed book
-exports.mostBorrowedBook=(request,response,next)=>{
-    if(request.password != "new"){
-    BookSchema.find().sort({noBorrowed:-1}).limit(1)
-                .then(data=>{
-                    response.status(200).json({data})
-                })}
-    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-}
 
 exports.getNewArrivedBooks=(request,response,next)=>{
     if(request.password != "new"){

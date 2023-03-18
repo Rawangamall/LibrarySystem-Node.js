@@ -46,6 +46,8 @@ exports.getAllKindsAdmins=(request,response,next)=>{
             next(error);
     })
 }
+       
+
 
 //search
 exports.searchForAdmin=(request,response,next)=>{
