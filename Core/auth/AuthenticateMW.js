@@ -43,19 +43,19 @@ module.exports.checkBasicAdminAndAdmin=(request,response,next)=>{
       next(error);
   }
 }
+
 module.exports.checkBasicAdminAndEmp=(request,response,next)=>{
   EmpSchema.findOne({email:`${request.email}`}).then((data)=>{
     if(request.role =="BasicAdmin"){
         next();
     }
-    else if(request.role =="Employee" &&( request.params._id==data._id) ){
+    else if(request.role =="Employee" ){ // &&( request.params._id==data._id)
       next();
    }
     else{
       let error =new Error("Not Authorized");
       error.status=403;
       next(error);
-      
   }
   })
   .catch(error=>{

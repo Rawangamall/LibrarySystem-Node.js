@@ -21,6 +21,32 @@ exports.getAll=(request,response)=>{
                     })
 }
 
+exports.searchForMember=(request,response,next)=>{
+    //Search for Member
+    const searchKey = request.body.searchKey?.toLowerCase();
+    const fullName = request.body.fullName?.toLowerCase();
+    const email = request.body.email?.toLowerCase();
+    AdminSchema.find({
+        $or: [
+          { fullName: searchKey },
+          { email: searchKey },
+          { fullName: fullName },
+          { email: email }
+        ],
+      }
+      )
+      .then(data=>{
+            if(data=="")
+            {
+                next(new Error("This Member is not found, Invalid Input"));
+            }
+            else
+                response.status(200).json({data});
+        })
+        .catch(error=>{next(error);
+        })
+ }
+
 
 exports.addMember=(request,response,next)=>{
     if(request.body.password != null){

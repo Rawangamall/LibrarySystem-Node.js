@@ -8,7 +8,6 @@ const BookSchema=mongoose.model("Book");
 
 //Get
 exports.getEmps=(request,response,next)=>{
-    if (Object.keys(request.body).length==""){
         //Get All Employees
         EmpSchema.find({})
             .then((data)=>{
@@ -18,11 +17,12 @@ exports.getEmps=(request,response,next)=>{
                 next(error);
         })
     }
-    else{
-        //Search for Employee
-            const searchName = request.body.searchName;
-            const firstName = request.body.firstName;
-            const lastName = request.body.lastName;
+
+exports.searchForEmp=(request,response,next)=>{
+            //Search for Employee
+            const searchName = request.body.searchName?.toLowerCase();
+            const firstName = request.body.firstName?.toLowerCase();
+            const lastName = request.body.lastName?.toLowerCase();
             EmpSchema.find({
                 $or: [
                   { firstName: searchName },
@@ -43,7 +43,6 @@ exports.getEmps=(request,response,next)=>{
                 .catch(error=>{next(error);
                 })
          }
-    }
 //Get a Specific Employee
 exports.getOneEmp=(request,response,next)=>{
     EmpSchema.findOne({ _id: request.params._id})

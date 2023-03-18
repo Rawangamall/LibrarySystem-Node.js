@@ -11,16 +11,16 @@ const validateOnGetEmp=require("../Core/Validation/EmpValidation").validateOnGet
 const validateOnDeleteEmp=require("../Core/Validation/EmpValidation").validateOnDelete;
 const AuthenticateMW=require("./../Core/auth/AuthenticateMW");
 
-//const { checkAdmin, checkTeacherAndAdmin }=require("./../Core/auth/authenticationMW");
-
 router.route("/Employees")
     .get(validateMW,controller.getEmps) //checkBaAdminAndAdminAndEmp
     .post(validateMW,validatePostEmp,controller.addEmp) //checkBasicAdminAndAdmin
 
-router.get("/Employees/:_id",AuthenticateMW.checkBaAdminAndAdminAndEmp,validateOnGetEmp,validateMW,controller.getOneEmp)
-
-router.route("/Employees/:_id")
+router.route("/Employee/:_id")
     .put(imageValidate,validateMW,validatePutEmp,controller.updateEmp) //checkBaAdminAndAdminAndEmp
     .delete(validateMW,validateOnDeleteEmp,removeEmpIMG,controller.deleteEmp) //checkBasicAdminAndAdmin
+    .get(validateOnGetEmp,validateMW,controller.getOneEmp) //checkBaAdminAndAdminAndEmp
+
+router.route("/searchForEmp")
+    .put(controller.searchForEmp)
 
 module.exports=router;

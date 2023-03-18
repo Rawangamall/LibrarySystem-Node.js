@@ -9,8 +9,6 @@ const validatePutBook=require("../Core/Validation/BookValidation").validatePut;
 const validateOnGetBook=require("../Core/Validation/BookValidation").validateOnGet;
 const validateOnDeleteBook=require("../Core/Validation/BookValidation").validateOnDelete;
 
-//const { checkAdmin, checkTeacherAndAdmin }=require("./../Core/auth/authenticationMW");
-
 router.route("/Book")
     .get(controller.getBooks)
     .post(validateMW,controller.addBook)              //make it validatePostMember  controller.addMember
@@ -20,10 +18,14 @@ router.route("/Book")
 router.get("/Book/available",controller.getAvailableBooks)
 
 router.get("/Book/:id",validateOnGetBook,validateMW,controller.getOneBook)
+
 router.route("/member/NewArrivedBooks/get")
        .get(controller.getNewArrivedBooks)
 
 router.route("/Book/filterBooks/get")
       .get(controller.filteredbooks)
+
+router.route("/searchForBook")
+      .get(controller.searchForBook)
 
 module.exports=router;
