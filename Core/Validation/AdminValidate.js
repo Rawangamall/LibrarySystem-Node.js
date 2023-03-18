@@ -25,6 +25,14 @@ exports.validateAdminPut=[param("_id").isInt().withMessage("Admin Id should be I
                           body("Role").optional().isIn(['Admin','BasicAdmin']).withMessage("role should be Admin or BasicAdmin"),
                           //body("image").optional().isString().withMessage("image should be string")
 ];
+
+//First Login Update
+exports.adminFirstLogin =[
+    param("_id").isNumeric().withMessage("ID must be integer"),
+    body("password").isStrongPassword().withMessage("should be strong password of min 8 length,uppercase,lowercse,char"),
+    body("image").isString().withMessage("image is not found") ,
+]
+
 //validate on delete&Get
 exports.validateIDParams=[param("_id").isInt().withMessage("Admin Id should be object id")
 ];

@@ -24,7 +24,7 @@ router.route("/member/:_id")
         .delete(validateData.memberIDParams,removeimage,memberController.deleteMember) //checkBasicAdminAndEmp
 
 router.route("/firstLogin/:_id")
-        .patch(imageValidate,memberController.updatefirstLogin)
+        .patch(imageValidate,validateData.MemberfirstLogin,memberController.updatefirstLogin)
  
 router.route("/searchForMember",memberController.searchForMember)        
         

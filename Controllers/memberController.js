@@ -13,16 +13,19 @@ const saltRounds = 10;
 const salt = bcrypt.genSaltSync(saltRounds)
 
 exports.getAll=(request,response)=>{
+    if(request.password != "new"){
     MemberSchema.find({})
                     .then((data)=>{
                             response.status(200).json({data});
                     })
                     .catch(error=>{
                         next(error);
-                    })
+                    })}
+    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
 
 exports.searchForMember=(request,response,next)=>{
+    if(request.password != "new"){
     //Search for Member
     const searchKey = request.body.searchKey?.toLowerCase();
     const fullName = request.body.fullName?.toLowerCase();
@@ -45,12 +48,13 @@ exports.searchForMember=(request,response,next)=>{
                 response.status(200).json({data});
         })
         .catch(error=>{next(error);
-        })
+        })}
+        else{response.status(404).json({result:"Please update your profile data!! and login again"});}
  }
 
 
 exports.addMember=(request,response,next)=>{
-   
+    if(request.password != "new"){
  new MemberSchema({
     _id:request.body._id,
     fullName:request.body.fullName,
@@ -66,10 +70,13 @@ exports.addMember=(request,response,next)=>{
     })
     .catch(error=>{
     next(error);
-    })
+    })}
+    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
 
+
 exports.updatefirstLogin=(request,response,next)=>{
+    if(request.password != "new"){
     strpass=request.body.password
     if((strpass).length > 8 ){
         var hash = bcrypt.hashSync(request.body.password,salt);
@@ -95,11 +102,13 @@ exports.updatefirstLogin=(request,response,next)=>{
     .catch(error=>next(error));
 }else{
     response.status(404).json({data:"Enter the data"});     
-}
+}}
+else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
 
 
 exports.updateMember=(request,response,next)=>{
+    if(request.password != "new"){
     if(request.body.password != null  ){
         var hash = bcrypt.hashSync(request.body.password,salt);
       }
@@ -128,12 +137,14 @@ exports.updateMember=(request,response,next)=>{
 
         response.status(200).json(data);}
     })
-    .catch(error=>next(error));
+    .catch(error=>next(error));}
+    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
 
 
 //delete
 exports.deleteMember=(request,response,next)=>{
+    if(request.password != "new"){
       var out=[]
       //check if user exist first
 MemberSchema.findOne({_id:request.params._id}).then((check)=>{
@@ -186,7 +197,8 @@ MemberSchema.findOne({_id:request.params._id}).then((check)=>{
 
    }else{response.status(404).json({data:"Member Not Found"});}
     
-})
+})}
+else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
 
 exports.getMember=(request,response,next)=>{
@@ -211,6 +223,7 @@ exports.getMember=(request,response,next)=>{
 
 
 exports.currentBorrowedBooks=(request,response,next)=>{
+    if(request.password != "new"){
     strID=request.params._id;
     NumID=Number(strID);
     console.log(NumID);
@@ -269,33 +282,8 @@ exports.currentBorrowedBooks=(request,response,next)=>{
         response.status(200).json({result});
     }).catch(err => {
         console.log(err.message)
-    });
+    });}
+    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
     
-    exports.updatefirstLogin=(request,response,next)=>{
-        if(request.body.password != null ){
-            var hash = bcrypt.hashSync(request.body.password,salt);
-        MemberSchema.updateOne({
-            _id:request.params._id
-        },{
-            $set:{
-                password:hash,
-                image:request.body.image,           
-            }
-        }).then((data)=>{
-            if(data.modifiedCount != 0)
-            {
-                response.status(200).json(data);
-                   console.log(data)
-            }
-            else
-           {
-            next(new Error("member not found"));
-           }
     
-        })
-        .catch(error=>next(error));
-    }else{
-        response.status(404).json({data:"Enter the data"});     
-    }
-    }

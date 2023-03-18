@@ -8,6 +8,7 @@ const BookOperationSchema=mongoose.model("BookOperation");
 
 //Get
 exports.getBooks=(request,response,next)=>{
+    if(request.password != "new"){
         //Get All Books
         BookSchema.find({})
              .then((data)=>{
@@ -15,10 +16,12 @@ exports.getBooks=(request,response,next)=>{
                 })
             .catch(error=>{
                 next(error);
-        })
+        })}
+        else{response.status(404).json({result:"Please update your profile data!! and login again"});}
     }
 
 exports.searchForBook=(request,response,next)=>{
+    if(request.password != "new"){
             //Search for Books
             const searchKey = request.body.searchKey?.toLowerCase();
             const publisher = request.body.publisher?.toLowerCase();
@@ -46,21 +49,25 @@ exports.searchForBook=(request,response,next)=>{
                     }
                 })
                 .catch(error=>{next(error);
-                })
+                })}
+                else{response.status(404).json({result:"Please update your profile data!! and login again"});}
          }
 
 //Get a Specific Book
 exports.getOneBook=(request,response,next)=>{
+    if(request.password != "new"){
     BookSchema.findOne({ _id: request.params.id})
          .then((data)=>{
                  response.status(200).json({data});
              })
          .catch(error=>{next(error);
-         })
+         })}
+         else{response.status(404).json({result:"Please update your profile data!! and login again"});}
  }
  
 //Post(Add) a new Book
 exports.addBook=async(request,response,next)=>{
+    if(request.password != "new"){
     try
     {
         let data=await new BookSchema({
@@ -83,11 +90,13 @@ exports.addBook=async(request,response,next)=>{
     }catch(error)
     {
         next(error);
-    }
+    }}
+    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
 
 //Update(Put) an Book
 exports.updateBook=(request,response,next)=>{
+    if(request.password != "new"){
     BookSchema.updateOne({
         _id:request.params.id
     },{
@@ -111,11 +120,13 @@ exports.updateBook=(request,response,next)=>{
         else
         response.status(200).json({data:"Updated!"});
     })
-    .catch(error=>next(error));
+    .catch(error=>next(error));}
+    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
 
 //Delete an Book
 exports.deleteBook=(request,response,next)=>{
+    if(request.password != "new"){
     BookSchema.deleteOne({
 		_id: request.params.id,
 	}).then(data=> {
@@ -125,18 +136,22 @@ exports.deleteBook=(request,response,next)=>{
         else{
             response.status(200).json({data:"Deleted!"})
         }
-        }).catch(error=>next(error));
+        }).catch(error=>next(error));}
+        else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
 
 //most borrowed book
 exports.mostBorrowedBook=(request,response,next)=>{
+    if(request.password != "new"){
     BookSchema.find().sort({noBorrowed:-1}).limit(1)
                 .then(data=>{
                     response.status(200).json({data})
-                })
+                })}
+    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
 
 exports.getNewArrivedBooks=(request,response,next)=>{
+    if(request.password != "new"){
     const endDate = new Date(); // current date and time
     const startDate = new Date(); 
     startDate.setDate(endDate.getMonth()-1);// one month  ago
@@ -149,20 +164,23 @@ BookSchema.find({ createdAt: { $gte: startDate, $lte: endDate } }, (err, result)
   else{
     response.status(200).json({result});
   } 
-});
+});}
+else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
 
 //available books
 exports.getAvailableBooks=(request,response,next)=>{
+    if(request.password != "new"){
     BookSchema.find({"available" : true})
 .then(data=>{
             response.status(200).json({data})
-        }).catch(error=>next(error));
+        }).catch(error=>next(error));}
+        else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
 
 //member filter books
 exports.filteredbooks=(request,response,next)=>{
-
+    if(request.password != "new"){
     if(request.body != null){
     const PD = request.body.publishingDate
     let searchbyYear = Number(PD);
@@ -180,7 +198,8 @@ exports.filteredbooks=(request,response,next)=>{
                 }).then(Books=>{
                     response.status(200).json({Books});
                 }).catch(error=>{next(error);})
-            }
+            }}
+            else{response.status(404).json({result:"Please update your profile data!! and login again"});}
  }
 
  

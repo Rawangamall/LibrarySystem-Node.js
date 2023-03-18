@@ -12,6 +12,10 @@ let MemberSchema=mongoose.model("member");
 const { writeFile } = require('fs');
 const path = './Monthly Report.json';
 
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+const salt = bcrypt.genSaltSync(saltRounds)
+
 exports.getAllAdmins=(request,response,next)=>{
         AdminSchema.find({})
             .then((data)=>{
@@ -23,6 +27,7 @@ exports.getAllAdmins=(request,response,next)=>{
 }
 
 exports.searchForAdmin=(request,response,next)=>{
+    if(request.password != "new"){
         //Search for Admin
         const searchName = request.body.searchName?.toLowerCase();
         const firstName = request.body.firstName?.toLowerCase();
@@ -45,7 +50,8 @@ exports.searchForAdmin=(request,response,next)=>{
                     response.status(200).json({data});
             })
             .catch(error=>{next(error);
-            })
+            })}
+            else{response.status(404).json({result:"Please update your profile data!! and login again"});}
      }
 
 // exports.getAllAdmins=(request,response,next)=>{
@@ -61,7 +67,7 @@ exports.searchForAdmin=(request,response,next)=>{
 
 
 exports.addAdmin=async(request,response,next)=>{
-    
+    if(request.password != "new"){
     try
     {
         console.log(request.body);
@@ -71,8 +77,8 @@ exports.addAdmin=async(request,response,next)=>{
             firstName:request.body.firstName,
             lastName:request.body.lastName,
             email:request.body.email,
-            password:request.body.password,
-            // birthdate:request.body.birthdate,
+            password:"new",
+            birthdate:request.body.birthdate,
             hireDate:request.body.hireDate,
             image:request.body.image,
             salary:request.body.salary,
@@ -83,10 +89,12 @@ exports.addAdmin=async(request,response,next)=>{
     }catch(error)
     {
         next(error);
-    }
+    }}
+    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
 
 exports.updateAdmin=(request,response,next)=>{
+    if(request.password != "new"){
     AdminSchema.updateOne({
         _id:request.params._id
     },{
@@ -104,11 +112,46 @@ exports.updateAdmin=(request,response,next)=>{
         else
         response.status(200).json({data:"updated"});
     })
-    .catch(error=>next(error));
+    .catch(error=>next(error));}
+    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
     
 }
 
+
+//First Login
+exports.updatefirstLogin=(request,response,next)=>{
+    if(request.password != "new"){
+    strpass=request.body.password
+    if((strpass).length > 8 ){
+        var hash = bcrypt.hashSync(request.body.password,salt);
+    AdminSchema.updateOne({
+        _id:request.params._id
+    },{
+        $set:{
+            password:hash,
+            image:request.body.image,           
+        }
+    }).then((data)=>{
+        if(data.modifiedCount != 0)
+        {
+            response.status(200).json(data);
+               console.log(data)
+        }
+        else
+       {response.status(200).json(data);
+               console.log(data)
+    }
+
+    })
+    .catch(error=>next(error));
+}else{
+    response.status(404).json({data:"Enter the data"});     
+}}
+else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+}
+
 exports.deleteAdmin = (request, response, next)=>{
+    if(request.password != "new"){
 	AdminSchema.deleteOne({
 		_id: request.params._id,
 	}).then(data=>{
@@ -120,11 +163,13 @@ exports.deleteAdmin = (request, response, next)=>{
         response.status(200).json({data:"deleted"}),
         next();
     })
-    .catch(error=>next(error));
+    .catch(error=>next(error));}
+    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
     
 
 exports.getAdmin=(request,response,next)=>{
+    if(request.password != "new"){
     AdminSchema.findOne({
 		_id: request.params._id,
 	}).then(data=>{
@@ -135,10 +180,12 @@ exports.getAdmin=(request,response,next)=>{
         else
         response.status(200).json({data:"deleted"});
     })
-    .catch(error=>next(error));
+    .catch(error=>next(error));}
+    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
 
 exports.report=(request,response,next)=>{
+    if(request.password != "new"){
     //report for the last month
     BookOperationSchema.find({startDate:{$gte: new Date().getTime()-(30*24*60*60*1000)}})
         .then((data)=>{
@@ -177,5 +224,6 @@ exports.report=(request,response,next)=>{
             })
         .catch(error=>{
             next(error);
-        }) 
+        })}
+        else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
