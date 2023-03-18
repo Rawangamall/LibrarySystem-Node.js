@@ -142,7 +142,6 @@ exports.deleteBook=(request,response,next)=>{
 
 //most borrowed book
 exports.mostBorrowedBook=(request,response,next)=>{
-<<<<<<< HEAD
     if(request.password != "new"){
     BookSchema.find().sort({noBorrowed:-1}).limit(1)
                 .then(data=>{
@@ -153,22 +152,6 @@ exports.mostBorrowedBook=(request,response,next)=>{
 
 exports.getNewArrivedBooks=(request,response,next)=>{
     if(request.password != "new"){
-=======
-    if(request.password != "new"){    
-
-    
-    BookSchema.find().sort({noBorrowed:-1}).limit(1)
-                .then(data=>{
-                    response.status(200).json({data})
-                })
-}else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-
-}
-
-exports.getNewArrivedBooks=(request,response,next)=>{
-    if(request.password != "new"){    
-
->>>>>>> bd72c94dbae6562edaf06d1bcbf5bc5033525060
     const endDate = new Date(); // current date and time
     const startDate = new Date(); 
     startDate.setDate(endDate.getMonth()-1);// one month  ago
@@ -181,23 +164,13 @@ BookSchema.find({ createdAt: { $gte: startDate, $lte: endDate } }, (err, result)
   else{
     response.status(200).json({result});
   } 
-<<<<<<< HEAD
 });}
 else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-=======
-});
-}else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-
->>>>>>> bd72c94dbae6562edaf06d1bcbf5bc5033525060
 }
 
 //available books
 exports.getAvailableBooks=(request,response,next)=>{
-<<<<<<< HEAD
     if(request.password != "new"){
-=======
-
->>>>>>> bd72c94dbae6562edaf06d1bcbf5bc5033525060
     BookSchema.find({"available" : true})
 .then(data=>{
             response.status(200).json({data})
@@ -207,12 +180,7 @@ exports.getAvailableBooks=(request,response,next)=>{
 
 //member filter books
 exports.filteredbooks=(request,response,next)=>{
-<<<<<<< HEAD
     if(request.password != "new"){
-=======
-        if(request.password != "new"){    
-
->>>>>>> bd72c94dbae6562edaf06d1bcbf5bc5033525060
     if(request.body != null){
     const PD = request.body.publishingDate
     let searchbyYear = Number(PD);
@@ -230,14 +198,8 @@ exports.filteredbooks=(request,response,next)=>{
                 }).then(Books=>{
                     response.status(200).json({Books});
                 }).catch(error=>{next(error);})
-<<<<<<< HEAD
             }}
             else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-=======
-            }
-        }else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-
->>>>>>> bd72c94dbae6562edaf06d1bcbf5bc5033525060
  }
 
  
