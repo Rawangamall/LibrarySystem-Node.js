@@ -64,9 +64,7 @@ exports.addMember=(request,response,next)=>{
     password:"new",
     phoneNumber:request.body.phoneNumber,
     birthdate:request.body.birthdate,
-    fullAddress:request.body.fullAddress,
-    blocked:false
-   
+    fullAddress:request.body.fullAddress
    }).save()
     .then((data)=>{
         response.status(201).json({data});
