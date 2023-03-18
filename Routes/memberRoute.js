@@ -4,6 +4,7 @@ const router=express.Router();
 
 
 const validateMW=require("../Core/Validation/validateMW");
+const AuthenticateMW=require("./../Core/auth/AuthenticateMW");
 const validateData=require("./../Core/Validation/memberData");
 const memberController=require("./../Controllers/memberController");
 const BookController=require("./../Controllers/BookController");
