@@ -1,11 +1,13 @@
 const mongoose=require("mongoose");
 require("./../Models/member");
 require("../Models/BookModel");
+require("../Models/AdminModel")
 require("../Models/BookOperationModel");
 const validateMW=require("../Core/Validation/validateMW");
 const AuthenticateMW=require("./../Core/auth/AuthenticateMW");
 const MemberSchema=mongoose.model("member");
 const BookSchema=mongoose.model("Book");
+const AdminSchema=mongoose.model("Admin");
 const BookOperationSchema=mongoose.model("BookOperation");
 
 const bcrypt = require('bcrypt');
