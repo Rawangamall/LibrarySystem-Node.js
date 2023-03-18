@@ -18,7 +18,7 @@ router.route("/Admin")
 
 router.route("/Admin/:_id")
     .get(checkBasicAdminAndAdminforAdmin,AdminValidate.validateIDParams,validateMW,controller.getAdmin)
-    .delete(checkBasicAdminAndAdminforAdmin,removeAdminIMG,AdminValidate.validateIDParams,validateMW,controller.deleteAdmin)
+    .delete(checkBasicAdminAndAdminforAdmin,AdminValidate.validateIDParams,validateMW,removeAdminIMG,controller.deleteAdmin)
 
 router.get("/report",checkBasicAdminAndAdmin,validateMW,controller.report)
 
