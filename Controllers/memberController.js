@@ -202,7 +202,6 @@ else{response.status(404).json({result:"Please update your profile data!! and lo
 }
 
 exports.getMember=(request,response,next)=>{
-   console.log("qqqq",request.password);
    if(request.password != "new"){
 
     MemberSchema.findOne({_id:request.params._id})
@@ -282,8 +281,52 @@ exports.currentBorrowedBooks=(request,response,next)=>{
         response.status(200).json({result});
     }).catch(err => {
         console.log(err.message)
-    });}
-    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+    }); 
+   }else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+
 }
-    
-    
+
+//g for member => borrowedbooks with employee responsible for borrowing
+exports.borrowInfo=(request,response,next)=>{
+    strID = request.params._id
+    NumID=Number(strID)
+
+    if(request.password != "new"){    
+
+    BookOperationSchema.aggregate( [
+        {$match: {memberID:NumID, operation:"borrow"}},
+                 {
+          $lookup: {
+                      from: 'books',
+                      localField: 'bookID',
+                      foreignField: '_id',
+                      as: 'book'
+                    }    
+                  }
+                  ,
+                  {
+          $lookup: {
+                    from: 'employees',
+                    localField: 'employeeEmail',
+                    foreignField: 'email',
+                    as: 'emp'
+                 }    
+                }
+                  ,  
+              {
+                $project: { 
+                          _id:0,
+                          EmployeName: "$emp.firstName",
+                          BookTitle: "$book.title"
+                 }
+              }
+      ]).then(borrowedBook=>{
+     if(borrowedBook != "")
+{       
+     response.status(200).json({borrowedBook});
+}else{response.status(404).json({borrowedBook:"Borrowed Books Not Found"});}
+    })
+    .catch(error=>next(error));
+}else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+
+}

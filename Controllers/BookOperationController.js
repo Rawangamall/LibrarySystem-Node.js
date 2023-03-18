@@ -153,8 +153,8 @@ exports.getAll=(request,response,next)=>{
   
    
 exports.borrowBYdate=async(request,response,next)=>{
-    if(request.password != "new"){
         date = new Date();
+        if(request.password != "new"){    
         const Month = request.body.searchbyMonth
         let searchbyMonth = Number(Month)
         const searchbyYear= request.body.searchbyYear
@@ -180,8 +180,8 @@ exports.borrowBYdate=async(request,response,next)=>{
     }
 
     exports.readingBYdate=async(request,response,next)=>{
-        if(request.password != "new"){
         date = new Date();
+        if(request.password != "new"){    
         const Month = request.body.searchbyMonth
         let searchbyMonth = Number(Month);
         const searchbyYear= request.body.searchbyYear
@@ -207,14 +207,15 @@ exports.borrowBYdate=async(request,response,next)=>{
     }
 
 
-//g  borrowedbooks with employee responsible for borrowing
+//g for employee => all member borrowedbooks with employee responsible for borrowing
 exports.borrowInfo=(request,response,next)=>{
-    if(request.password != "new"){
     strID = request.params._id
     NumID=Number(strID)
 
+    if(request.password != "new"){    
+
     BookOperationSchema.aggregate( [
-        {$match: {memberID:NumID, operation:"borrow"}},
+        {$match: {operation:"borrow"}},
                  {
           $lookup: {
                       from: 'books',
