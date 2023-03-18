@@ -68,8 +68,10 @@ exports.addBorrowbook=(request,response,next)=>{
                 BookSchema.findOne({_id:request.params._id})
                 .then((res)=>{            
                     if(res!=null){
+                        BookOperationSchema.find({ memberID:request.body.memberID,bookID:request.params._id,"returned":{$eq:false}}).then((check)=>{
+                            if(check == ""){
                         if(res.noOfCurrentBorrowed + res.noOfCurrentReading < res.noOfCopies){
-                            BookSchema.findOneAndUpdate({_id:request.params._id}, {$inc : {'noOfCurrentReading' : 1,'noReading' : 0}})
+                            BookSchema.findOneAndUpdate({_id:request.params._id}, {$inc : {'noOfCurrentReading' : 1,'noReading' : 1}})
                             .then((res)=>{
                                 new BookOperationSchema({
                                 operation:"read",
@@ -88,14 +90,17 @@ exports.addBorrowbook=(request,response,next)=>{
                     .catch(error=>next(error))
            
                 response.status(200).json({data});
-            })
-            .catch(error=>{
-            next(error);
-            })})}
-            else{response.status(404).json({data:"This Book is not Avilable"});}
-            }   
-            else{response.status(404).json({data:"This Book is not Found"});}      
+            }).catch(error=>{next(error);})
+     
         })
+      
+        }else{response.status(404).json({data:"This Book is not Avilable"});}
+    }else{response.status(404).json({data:"This Book is already borrowed!"});}
+
+ })
+      }else{response.status(404).json({data:"This Book is already borrowed!"});}
+
+    })
         }
         else{
         response.status(404).json({data:"This member is not Found"});
@@ -103,8 +108,9 @@ exports.addBorrowbook=(request,response,next)=>{
         })
         .catch(error=>{
         next(error);
-        })}
-        else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+        })
+
+    }else{response.status(404).json({result:"Please update your profile data!! and login again"});}
         }
                        
 exports.getAll=(request,response,next)=>{
@@ -347,19 +353,24 @@ exports.mostreadingBooks=(request,response,next)=>{
         $project: { 
                         _id:0,       
                         bookID: "$bookID" ,
-                        book_title:"$book.title",
+                        title:"$book.title",
+                        author:"$book.author",
+                        publisher:"$book.publisher",
                         publishyear:{ $year:"$book.publishingDate"}
               }
      },
      {$match:  {publishyear:searchbyYear}},
               
-    { $group: { _id: "$bookID", borrowCount: { $sum: 1 }  ,  book_title: { $push: "$book_title" } } },
+    { $group: { _id: "$bookID", borrowCount: { $sum: 1 }  ,  title: { $push: "$title" },author: { $push: "$author" },publisher: { $push: "$publisher" },publishyear: { $push: "$publishyear" } } },
     { $sort: { borrowCount: -1 } },
      { $limit: 5 },
      {
        $project: { 
-                                     
-                 book_title: { $first: "$book_title" },
+                _id:0,          
+                title: { $first: "$title" },
+                 author: { $first: "$author" },
+                 publisher: { $first: "$publisher" },
+                 publishyear: { $first: "$publishyear" }
                  
                 }},
              
@@ -403,19 +414,24 @@ exports.mostBorrowedBooks=(request,response,next)=>{
         $project: { 
                         _id:0,       
                         bookID: "$bookID" ,
-                        book_title:"$book.title",
+                        title:"$book.title",
+                        author:"$book.author",
+                        publisher:"$book.publisher",
                         publishyear:{ $year:"$book.publishingDate"}
               }
      },
      {$match:  {publishyear:searchbyYear}},
               
-    { $group: { _id: "$bookID", borrowCount: { $sum: 1 }  ,  book_title: { $push: "$book_title" } } },
+    { $group: { _id: "$bookID", borrowCount: { $sum: 1 }  ,  title: { $push: "$title" },author: { $push: "$author" },publisher: { $push: "$publisher" },publishyear: { $push: "$publishyear" } } },
     { $sort: { borrowCount: -1 } },
      { $limit: 5 },
      {
        $project: { 
-                                     
-                 book_title: { $first: "$book_title" },
+                _id:0,          
+                title: { $first: "$title" },
+                 author: { $first: "$author" },
+                 publisher: { $first: "$publisher" },
+                 publishyear: { $first: "$publishyear" }
                  
                 }},
     ])
