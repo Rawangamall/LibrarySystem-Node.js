@@ -216,9 +216,7 @@ exports.borrowBYdate=async(request,response,next)=>{
 
 //g for employee => all member borrowedbooks with employee responsible for borrowing
 exports.borrowInfo=(request,response,next)=>{
-    strID = request.params._id
-    NumID=Number(strID)
-
+   
     if(request.password != "new"){    
 
     BookOperationSchema.aggregate( [
@@ -235,22 +233,34 @@ exports.borrowInfo=(request,response,next)=>{
                   {
           $lookup: {
                     from: 'employees',
-                    localField: 'employeeEmail',
-                    foreignField: 'email',
+                    localField: 'employeeID',
+                    foreignField: '_id',
                     as: 'emp'
+                 }    
+                }
+                  
+                  ,
+                  {
+          $lookup: {
+                    from: 'members',
+                    localField: 'memberID',
+                    foreignField: '_id',
+                    as: 'member'
                  }    
                 }
                   ,  
               {
                 $project: { 
                           _id:0,
+                          MemberName:"$member.fullName",
                           EmployeName: "$emp.firstName",
                           BookTitle: "$book.title"
                  }
               }
       ]).then(borrowedBook=>{
      if(borrowedBook != "")
-{       
+    {       
+   
      response.status(200).json({borrowedBook});
 }else{response.status(404).json({borrowedBook:"Borrowed Books Not Found"});}
     })

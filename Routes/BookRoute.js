@@ -30,7 +30,7 @@ router.route("/member/NewArrivedBooks/get")   //checkBasicAdminAndAdminAndEmpAnd
 router.route("/Book/filterBooks/get")  //checkBasicAdminAndAdminAndEmpAndMember
       .get(controller.filteredbooks)
 
-router.route("/searchForBook")
+router.route("/searchForBook")      //checkBasicAdminAndAdminAndEmpAndMember
       .get(controller.searchForBook)
 
 module.exports=router;

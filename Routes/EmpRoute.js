@@ -3,13 +3,13 @@ const validateMW=require("../Core/Validation/validateMW");
 const controller=require("../Controllers/EmpController");
 const { empImage } = require("../Core/Validation/imageValidate");
 const imageValidate=require("../Core/Validation/imageValidate").addIMG;
-const removeEmpIMG=require("../Core/Validation/imageValidate").removeIMG;
+const removeEmpIMG=require("../Core/Validation/imageValidate").removeEmpIMG;
 const router=express.Router();
 const validatePostEmp=require("../Core/Validation/EmpValidation").validatePost;
 const validatePutEmp=require("../Core/Validation/EmpValidation").validatePut;
 const EmpfirstLogin=require("../Core/Validation/EmpValidation").EmpfirstLogin;
 const validateOnIDParams=require("../Core/Validation/EmpValidation").validateOnIDParams;
-const { checkBaAdminAndAdminAndEmpforEmp, checkBasicAdminAndAdmin }=require("./../Core/auth/AuthenticateMW");
+const {checkEmp, checkBaAdminAndAdminAndEmpforEmp, checkBasicAdminAndAdmin }=require("./../Core/auth/AuthenticateMW");
 
 // checkBasicAdminAndEmp
 
@@ -26,9 +26,9 @@ router.route("/Employee/:_id")
     .get(checkBaAdminAndAdminAndEmpforEmp,validateOnIDParams,validateMW,controller.getOneEmp) //AuthenticateMW.checkBaAdminAndAdminAndEmp,
 
 router.route("/searchForEmp")
-    .get(controller.searchForEmp)
+    .get(checkBasicAdminAndAdmin,controller.searchForEmp)
 
 router.route("/firstLoginEmp/:_id")
-    .put(imageValidate,EmpfirstLogin,controller.updatefirstLogin)
+    .put(checkEmp,imageValidate,EmpfirstLogin,controller.updatefirstLogin)
 
 module.exports=router;
