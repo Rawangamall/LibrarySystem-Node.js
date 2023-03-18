@@ -34,5 +34,5 @@ exports.adminFirstLogin =[
 ]
 
 //validate on delete&Get
-exports.validateIDParams=[param("_id").isInt().withMessage("Admin Id should be object id")
+exports.validateIDParams=[param("_id").isInt().withMessage("Admin Id should be int id")
 ];

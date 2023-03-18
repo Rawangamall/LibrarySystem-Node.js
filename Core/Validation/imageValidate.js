@@ -83,7 +83,7 @@ exports.removeMemberIMG=function(req,res,next){
             },
             filename:(request, file, cb)=>{
                     photoExtension = file.originalname.split(".")[1];
-                    imageName= AdminSchema.findOne({_id:request.body._id})._conditions._id + "." + photoExtension;
+                    imageName= AdminSchema.findOne({_id:request.params._id})._conditions._id + "." + photoExtension;
                     cb(null, imageName);
             }
         })
