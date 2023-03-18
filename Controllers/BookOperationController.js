@@ -144,6 +144,8 @@ exports.getAll=(request,response,next)=>{
    
 exports.borrowBYdate=async(request,response,next)=>{
         date = new Date();
+        if(request.password != "new"){    
+    
         const Month = request.body.searchbyMonth
         let searchbyMonth = Number(Month)
         const searchbyYear= request.body.searchbyYear
@@ -165,10 +167,13 @@ exports.borrowBYdate=async(request,response,next)=>{
         {
             next(error);
         }
+    }else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+
     }
 
     exports.readingBYdate=async(request,response,next)=>{
         date = new Date();
+        if(request.password != "new"){    
         const Month = request.body.searchbyMonth
         let searchbyMonth = Number(Month);
         const searchbyYear= request.body.searchbyYear
@@ -190,16 +195,20 @@ exports.borrowBYdate=async(request,response,next)=>{
         {
             next(error);
         }
+    }else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+
     }
 
 
-//g  borrowedbooks with employee responsible for borrowing
+//g for employee => all member borrowedbooks with employee responsible for borrowing
 exports.borrowInfo=(request,response,next)=>{
     strID = request.params._id
     NumID=Number(strID)
 
+    if(request.password != "new"){    
+
     BookOperationSchema.aggregate( [
-        {$match: {memberID:NumID, operation:"borrow"}},
+        {$match: {operation:"borrow"}},
                  {
           $lookup: {
                       from: 'books',
@@ -232,6 +241,8 @@ exports.borrowInfo=(request,response,next)=>{
 }else{response.status(404).json({borrowedBook:"Borrowed Books Not Found"});}
     })
     .catch(error=>next(error));
+}else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+
 }
 
     

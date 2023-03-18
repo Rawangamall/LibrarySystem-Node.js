@@ -8,6 +8,8 @@ const AuthenticateMW=require("./../Core/auth/AuthenticateMW");
 const validateData=require("./../Core/Validation/memberData");
 const memberController=require("./../Controllers/memberController");
 const BookController=require("./../Controllers/BookController");
+const Operationcontroller=require("../Controllers/BookOperationController.js");
+
 //const updatefirstLogin=require("../Controllers/memberController").updatefirstLogin;
 const imageValidate=require("../Core/Validation/imageValidate").memberImage;
 const removeimage=require("../Core/Validation/imageValidate").removeMemberIMG;
@@ -37,6 +39,8 @@ router.route("/searchForMember",memberController.searchForMember)
 
  router.route("/member/currentBorrowedBooks/:_id")
        .get(checkBaAdminAndMemberAndEmp,validateMW,memberController.currentBorrowedBooks)
- 
+
+router.route("/member/borrowInfo/:_id")
+       .get(memberController.borrowInfo)
       
 module.exports=router;

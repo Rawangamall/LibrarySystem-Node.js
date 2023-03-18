@@ -100,6 +100,8 @@ exports.updatefirstLogin=(request,response,next)=>{
 
 
 exports.updateMember=(request,response,next)=>{
+    if(request.password != "new"){    
+        
     if(request.body.password != null  ){
         var hash = bcrypt.hashSync(request.body.password,salt);
       }
@@ -129,6 +131,8 @@ exports.updateMember=(request,response,next)=>{
         response.status(200).json(data);}
     })
     .catch(error=>next(error));
+        }else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+
 }
 
 
@@ -190,7 +194,6 @@ MemberSchema.findOne({_id:request.params._id}).then((check)=>{
 }
 
 exports.getMember=(request,response,next)=>{
-   console.log("qqqq",request.password);
    if(request.password != "new"){
 
     MemberSchema.findOne({_id:request.params._id})
@@ -211,6 +214,8 @@ exports.getMember=(request,response,next)=>{
 
 
 exports.currentBorrowedBooks=(request,response,next)=>{
+    if(request.password != "new"){    
+
     strID=request.params._id;
     NumID=Number(strID);
     console.log(NumID);
@@ -269,7 +274,9 @@ exports.currentBorrowedBooks=(request,response,next)=>{
         response.status(200).json({result});
     }).catch(err => {
         console.log(err.message)
-    });
+    }); 
+   }else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+
 }
     
     exports.updatefirstLogin=(request,response,next)=>{
@@ -299,3 +306,48 @@ exports.currentBorrowedBooks=(request,response,next)=>{
         response.status(404).json({data:"Enter the data"});     
     }
     }
+
+//g for member => borrowedbooks with employee responsible for borrowing
+exports.borrowInfo=(request,response,next)=>{
+    strID = request.params._id
+    NumID=Number(strID)
+
+    if(request.password != "new"){    
+
+    BookOperationSchema.aggregate( [
+        {$match: {memberID:NumID, operation:"borrow"}},
+                 {
+          $lookup: {
+                      from: 'books',
+                      localField: 'bookID',
+                      foreignField: '_id',
+                      as: 'book'
+                    }    
+                  }
+                  ,
+                  {
+          $lookup: {
+                    from: 'employees',
+                    localField: 'employeeEmail',
+                    foreignField: 'email',
+                    as: 'emp'
+                 }    
+                }
+                  ,  
+              {
+                $project: { 
+                          _id:0,
+                          EmployeName: "$emp.firstName",
+                          BookTitle: "$book.title"
+                 }
+              }
+      ]).then(borrowedBook=>{
+     if(borrowedBook != "")
+{       
+     response.status(200).json({borrowedBook});
+}else{response.status(404).json({borrowedBook:"Borrowed Books Not Found"});}
+    })
+    .catch(error=>next(error));
+}else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+
+}
