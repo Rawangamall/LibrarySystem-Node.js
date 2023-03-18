@@ -1,19 +1,15 @@
 const mongoose=require("mongoose");
+const bcrypt = require('bcrypt');
 require("../Models/EmpModel");
 require("../Models/BookModel");
 require("../Models/member");
 const EmpSchema=mongoose.model("Employees");
-const MemberSchema=mongoose.model("member");
-const BookSchema=mongoose.model("Book");
-
-const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const salt = bcrypt.genSaltSync(saltRounds)
 
-//Get
+//Get all employees
 exports.getEmps=(request,response,next)=>{
     if(request.password != "new"){
-        //Get All Employees
         EmpSchema.find({})
             .then((data)=>{
                     response.status(200).json({data});
@@ -22,37 +18,36 @@ exports.getEmps=(request,response,next)=>{
                 next(error);
         })}
     else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-    }
+}
 
+//Search for Employee
 exports.searchForEmp=(request,response,next)=>{
     if(request.password != "new"){
-            //Search for Employee
-            const searchName = request.body.searchName?.toLowerCase();
-            const firstName = request.body.firstName?.toLowerCase();
-            const lastName = request.body.lastName?.toLowerCase();
-            EmpSchema.find({
-                $or: [
-                  { firstName: searchName },
-                  { lastName: searchName },
-                  { firstName: firstName },
-                  { lastName: lastName }
-                ],
-              }
-              )
-              .then(data=>{
-                    if(data=="")
-                    {
-                        next(new Error("This employee is not found, Invalid Input"));
-                    }
-                    else
-                        response.status(200).json({data});
-                })
-                .catch(error=>{next(error);
-                })}
-                else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-         }
-//Get a Specific Employee
+        const searchName = request.body.searchName?.toLowerCase();
+        const firstName = request.body.firstName?.toLowerCase();
+        const lastName = request.body.lastName?.toLowerCase();
+        EmpSchema.find({
+            $or: [
+              { firstName: searchName },
+              { lastName: searchName },
+              { firstName: firstName },
+              { lastName: lastName }
+            ],
+          })
+          .then(data=>{
+                if(data=="")
+                {
+                    next(new Error("This employee is not found, Invalid Input"));
+                }
+                else
+                    response.status(200).json({data});
+            })
+            .catch(error=>{next(error);
+            })}
+            else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+}
 
+//Get a Specific Employee
 exports.getOneEmp=(request,response,next)=>{
     if(request.password != "new"){
     EmpSchema.findOne({ _id: request.params._id})
@@ -136,6 +131,23 @@ exports.updateEmp=(request,response,next)=>{
     else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
 
+//Delete an Employee
+exports.deleteEmp=(request,response,next)=>{
+    if(request.password != "new"){
+    EmpSchema.deleteOne({
+		_id: request.params._id,
+	}).then(data=> {
+        if(data.deletedCount==0){
+            next(new Error("This Employee is not found!"));
+        }
+        else{
+            response.status(200).json({data:"Deleted!"}),
+            next();
+        }
+        }).catch(error=>next(error));}
+        else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+}
+
 //First Login
 exports.updatefirstLogin=(request,response,next)=>{
     strpass=request.body.password
@@ -163,26 +175,4 @@ exports.updatefirstLogin=(request,response,next)=>{
     .catch(error=>next(error));
 }else{
     response.status(404).json({data:"Enter the data"});     
-}
-}
-
-
-
-
-//Delete an Employee
-exports.deleteEmp=(request,response,next)=>{
-    if(request.password != "new"){
-    EmpSchema.deleteOne({
-		_id: request.params._id,
-	}).then(data=> {
-        if(data.deletedCount==0){
-            next(new Error("This Employee is not found!"));
-        }
-        else{
-            response.status(200).json({data:"Deleted!"}),
-            next();
-        }
-        }).catch(error=>next(error));}
-        else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-}
-
+}}
