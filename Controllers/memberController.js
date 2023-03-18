@@ -64,9 +64,7 @@ exports.addMember=(request,response,next)=>{
     password:"new",
     phoneNumber:request.body.phoneNumber,
     birthdate:request.body.birthdate,
-    fullAddress:request.body.fullAddress,
-    blocked:false
-   
+    fullAddress:request.body.fullAddress
    }).save()
     .then((data)=>{
         response.status(201).json({data});
@@ -313,7 +311,7 @@ exports.currentBorrowedBooks=(request,response,next)=>{
 }
 
 //g for member => borrowedbooks with employee responsible for borrowing
-exports.borrowInfo=(request,response,next)=>{
+exports.borrowInfoOneMember=(request,response,next)=>{
     strID = request.params._id
     NumID=Number(strID)
 
