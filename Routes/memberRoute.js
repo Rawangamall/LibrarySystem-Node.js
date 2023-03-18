@@ -16,7 +16,6 @@ router.route("/members")
        .get(  validateMW ,memberController.getAll) //checkBaAdminAndAdminAndEmpforMember
        .post( checkBasicAdminAndEmp,validateMW,memberController.addMember)
        
-       
 router.route("/member/:_id")
         .patch(imageValidate,validateData.memberArrayPatch,memberController.updateMember)
         .get(checkBaAdminAndMemberAndEmp,validateData.memberIDParams,memberController.getMember)
