@@ -110,7 +110,7 @@ exports.updateMember=(request,response,next)=>{
 exports.deleteMember=(request,response,next)=>{
       var out=[]
       //check if user exist first
-MemberSchema.findOne({_id:request.body._id}).then((check)=>{
+MemberSchema.findOne({_id:request.params._id}).then((check)=>{
    if(check != null){  
 
     //bookids which gonna be returned
@@ -243,8 +243,35 @@ exports.currentBorrowedBooks=(request,response,next)=>{
     }).catch(err => {
         console.log(err.message)
     });
-     
-    
 }
+    
+    exports.updatefirstLogin=(request,response,next)=>{
+        if(request.body.password != null ){
+            var hash = bcrypt.hashSync(request.body.password,salt);
+        MemberSchema.updateOne({
+            _id:request.params._id
+        },{
+            $set:{
+                password:hash,
+                image:request.body.image,           
+            }
+        }).then((data)=>{
+            if(data.modifiedCount != 0)
+            {
+                response.status(200).json(data);
+                   console.log(data)
+            }
+            else
+           {
+            next(new Error("member not found"));
+           }
+    
+        })
+        .catch(error=>next(error));
+    }else{
+        response.status(404).json({data:"Enter the data"});     
+    }
+    }
+    
     
 

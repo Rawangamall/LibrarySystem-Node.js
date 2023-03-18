@@ -293,55 +293,55 @@ exports.returnBorrowBook=(request,response,next)=>{
     }
     
 
-    exports.mostreadingBooks=(request,response,next)=>{
-    
-        const PD = request.body.publishingDate;
-        let searchbyYear;
-        if(PD==null)
-        {
-            searchbyYear=new Date().getFullYear();   
-        }
-        else{ 
-            searchbyYear = Number(PD);
-        }
-       
-        BookOperationSchema.aggregate( [
-          {$match: { operation:"read"}},
-          {
-            $lookup: {
-                         from: 'books',
-                         localField: 'bookID',
-                         foreignField: '_id',
-                         as: 'book'
-                     }
-         }, 
-         { $unwind: "$book" },
-         {
-            $project: { 
-                            _id:0,       
-                            bookID: "$bookID" ,
-                            book_title:"$book.title",
-                            publishyear:{ $year:"$book.publishingDate"}
-                  }
-         },
-         {$match:  {publishyear:searchbyYear}},
-                  
-        { $group: { _id: "$bookID", borrowCount: { $sum: 1 }  ,  book_title: { $push: "$book_title" } } },
-        { $sort: { borrowCount: -1 } },
-         { $limit: 5 },
-         {
-           $project: { 
-                                         
-                     book_title: { $first: "$book_title" },
-                     
-                    }},
-                 
-        ])
-        
-         .then(result => {
-            response.status(200).json({result});
-        }) .catch(error=>next(error));
+exports.mostreadingBooks=(request,response,next)=>{
+
+    const PD = request.body.publishingDate;
+    let searchbyYear;
+    if(PD==null)
+    {
+        searchbyYear=new Date().getFullYear();   
     }
+    else{ 
+        searchbyYear = Number(PD);
+    }
+   
+    BookOperationSchema.aggregate( [
+      {$match: { operation:"read"}},
+      {
+        $lookup: {
+                     from: 'books',
+                     localField: 'bookID',
+                     foreignField: '_id',
+                     as: 'book'
+                 }
+     }, 
+     { $unwind: "$book" },
+     {
+        $project: { 
+                        _id:0,       
+                        bookID: "$bookID" ,
+                        book_title:"$book.title",
+                        publishyear:{ $year:"$book.publishingDate"}
+              }
+     },
+     {$match:  {publishyear:searchbyYear}},
+              
+    { $group: { _id: "$bookID", borrowCount: { $sum: 1 }  ,  book_title: { $push: "$book_title" } } },
+    { $sort: { borrowCount: -1 } },
+     { $limit: 5 },
+     {
+       $project: { 
+                                     
+                 book_title: { $first: "$book_title" },
+                 
+                }},
+             
+    ])
+    
+     .then(result => {
+        response.status(200).json({result});
+    }) .catch(error=>next(error));
+}
          
         
     
@@ -397,16 +397,16 @@ exports.mostBorrowedBooks=(request,response,next)=>{
 }
      
     
-    exports.makeSureOfReturnedRead=(request,response,next)=>{
-        //make sure that book is returned before the end of the day
-        BookOperationSchema.updateMany({
-            expireDate: { $lt: new Date()},operation:"read",returned:false}, 
-            [{ $set: { returned: true}}])
-        .then(data=>{
-            if(data.matchedCount!=0)
-                response.status(200).json({data:"All read books are returned successfully"});
-            else
-                response.status(200).json({data:"All read books are already returned!"});
-            })
-            .catch(error=>next(error));
-    }
+exports.makeSureOfReturnedRead=(request,response,next)=>{
+    //make sure that book is returned before the end of the day
+    BookOperationSchema.updateMany({
+        expireDate: { $lt: new Date()},operation:"read",returned:false}, 
+        [{ $set: { returned: true}}])
+    .then(data=>{
+        if(data.matchedCount!=0)
+            response.status(200).json({data:"All read books are returned successfully"});
+        else
+            response.status(200).json({data:"All read books are already returned!"});
+        })
+        .catch(error=>next(error));
+}

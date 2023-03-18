@@ -80,7 +80,7 @@ exports.addEmp=async(request,response,next)=>{
 //Update(Put) an Employee
 exports.updateEmp=(request,response,next)=>{
     EmpSchema.updateOne({
-        _id:request.body._id
+        _id:request.params._id
     },{
         $set:{
             firstName:request.body.firstName,
@@ -103,7 +103,7 @@ exports.updateEmp=(request,response,next)=>{
 //Delete an Employee
 exports.deleteEmp=(request,response,next)=>{
     EmpSchema.deleteOne({
-		_id: request.body._id,
+		_id: request.params._id,
 	}).then(data=> {
         if(data.deletedCount==0){
             next(new Error("This Employee is not found!"));

@@ -72,7 +72,7 @@ exports.addAdmin=async(request,response,next)=>{
             lastName:request.body.lastName,
             email:request.body.email,
             password:request.body.password,
-            birthdate:request.body.birthdate,
+            // birthdate:request.body.birthdate,
             hireDate:request.body.hireDate,
             image:request.body.image,
             salary:request.body.salary,

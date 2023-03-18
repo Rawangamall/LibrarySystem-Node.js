@@ -13,6 +13,7 @@ const schema=new mongoose.Schema({
     salary:Number,
     Role:{type:String, enum:["Admin","BasicAdmin"]},
 });
-schema.plugin(AutoIncrement ,{id:'Admin_id',inc_field: '_id'});
+
+schema.plugin(AutoIncrement,{id:'Admin_id',inc_field:"_id"});
 //mapping
 mongoose.model("Admin",schema);

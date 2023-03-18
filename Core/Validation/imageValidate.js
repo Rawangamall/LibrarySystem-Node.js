@@ -9,6 +9,7 @@ const EmpSchema=mongoose.model("Employees");
 const MemberSchema=mongoose.model("member");
 const AdminSchema=mongoose.model("Admin");
 
+
 exports.empImage=multer({
     fileFilter: function (req, file, cb) {
         if (file.mimetype != "image/png" && file.mimetype != "image/jpg" && file.mimetype != "image/jpeg" && file.mimetype != "image/avif") {
@@ -23,7 +24,7 @@ exports.empImage=multer({
         },
         filename:(request, file, cb)=>{
                 photoExtension = file.originalname.split(".")[1];
-                imageName= EmpSchema.findOne({_id:request.body._id})._conditions._id + "." + photoExtension;
+                imageName= EmpSchema.findOne({_id:request.params._id})._conditions._id + "." + photoExtension;
                 cb(null, imageName);
         }
     })
