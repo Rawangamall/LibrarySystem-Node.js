@@ -8,6 +8,7 @@ require("../../Models/AdminModel");
 const EmpSchema=mongoose.model("Employees");
 const MemberSchema=mongoose.model("member");
 const AdminSchema=mongoose.model("Admin");
+var imageName 
 
 
 exports.empImage=multer({
@@ -24,7 +25,7 @@ exports.empImage=multer({
         },
         filename:(request, file, cb)=>{
                 photoExtension = file.originalname.split(".")[1];
-                imageName= EmpSchema.findOne({_id:request.params._id})._conditions._id + "." + photoExtension;
+                imageName= EmpSchema.findOne({_id:request.params._id})._conditions._id + "." + "jpg";
                 cb(null, imageName);
         }
     })
@@ -55,17 +56,26 @@ exports.memberImage=multer({
         },
         filename:(request, file, cb)=>{
                 photoExtension = file.originalname.split(".")[1];
-                imageName= MemberSchema.findOne({_id:request.params._id})._conditions._id + "." + photoExtension;
-                cb(null, imageName);
+                console.log(request.email)
 
+                MemberSchema.findOne({email:request.email}).then((data)=>{
+                    imageName = data._id+ "." + "jpg";
+                    cb(null, imageName);
+                    console.log(imageName)
+                })
         }
     })
 }).single("image")
 
+
 exports.removeMemberIMG=function(req,res,next){
-    fs.unlink(path.join(__dirname,"..","..","images","Members_images",imageName), function (err) {
-        if (err) throw err;
-        next();
+    MemberSchema.findOne({_id:request.params._id}).then((data)=>{
+        imageName = data._id+ "." + "jpg";
+        console.log(imageName)
+        fs.unlink(path.join(__dirname,"..","..","images","Members_images",imageName), function (err) {
+            if (err) throw err;
+            next();
+        })
     })
 }
 

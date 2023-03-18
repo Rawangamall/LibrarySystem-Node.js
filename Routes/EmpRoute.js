@@ -16,7 +16,7 @@ router.route("/Employees")
     .post(validateMW,validatePostEmp,controller.addEmp) //checkBasicAdminAndAdmin
 
 router.route("/Employee/:_id")
-    .put(imageValidate,validateMW,validatePutEmp,controller.updateEmp) //checkBaAdminAndAdminAndEmp
+    .put(validateMW,validatePutEmp,controller.updateEmp) //checkBaAdminAndAdminAndEmp
     .delete(validateMW,validateOnIDParams,removeEmpIMG,controller.deleteEmp) //checkBasicAdminAndAdmin
     .get(validateOnIDParams,validateMW,controller.getOneEmp) //AuthenticateMW.checkBaAdminAndAdminAndEmp,
 
