@@ -11,6 +11,7 @@ const BookOperationSchema=mongoose.model("BookOperation");
 
 
 exports.addBorrowbook=(request,response,next)=>{
+    if(request.password != "new"){
     MemberSchema.findOne({_id:request.body.memberID})
     .then((result)=>{
         if(result != null )
@@ -46,11 +47,13 @@ exports.addBorrowbook=(request,response,next)=>{
     })
     }else{response.status(404).json({data:"This member is not Found"});}
   
-   }).catch(error=>{next(error); })
+   }).catch(error=>{next(error); })}
+   else{response.status(404).json({result:"Please update your profile data!! and login again"});}
     
 }
     
     exports.addReadbook=(request,response,next)=>{
+        if(request.password != "new"){
         MemberSchema.findOne({_id:request.body.memberID})
         .then((result)=>{
             if(result != null )
@@ -93,10 +96,12 @@ exports.addBorrowbook=(request,response,next)=>{
         })
         .catch(error=>{
         next(error);
-        })
+        })}
+        else{response.status(404).json({result:"Please update your profile data!! and login again"});}
         }
                        
 exports.getAll=(request,response,next)=>{
+    if(request.password != "new"){
     BookOperationSchema.find({})
                     .then((data)=>{        
                         //member exceeds the return date of borrowed books
@@ -107,11 +112,13 @@ exports.getAll=(request,response,next)=>{
                         })
                     .catch(error=>{
                         next(error);
-                    })
+                    })}
+                    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
 
         
  exports.deleteBookOperation=(request,response)=>{
+    if(request.password != "new"){
             BookOperationSchema.deleteOne({_id:request.params._id})
             .then((result)=>{
                 if(result.deletedCount !=0 ){
@@ -120,10 +127,12 @@ exports.getAll=(request,response,next)=>{
                 else
                 {   response.status(404).json({data:"delete Not Found"});}
             })
-            .catch(error=>next(error));
+            .catch(error=>next(error));}
+            else{response.status(404).json({result:"Please update your profile data!! and login again"});}
         }
         
         exports.getBookOperation=(request,response,next)=>{
+            if(request.password != "new"){
             BookOperationSchema.findOne({_id:request.params._id})
             .then((result)=>{
                 if(result != null)
@@ -136,7 +145,8 @@ exports.getAll=(request,response,next)=>{
             })
             .catch(error=>{
                 next(error);
-            })
+            })}
+            else{response.status(404).json({result:"Please update your profile data!! and login again"});}
             }
 
 
@@ -145,7 +155,6 @@ exports.getAll=(request,response,next)=>{
 exports.borrowBYdate=async(request,response,next)=>{
         date = new Date();
         if(request.password != "new"){    
-    
         const Month = request.body.searchbyMonth
         let searchbyMonth = Number(Month)
         const searchbyYear= request.body.searchbyYear
@@ -166,9 +175,8 @@ exports.borrowBYdate=async(request,response,next)=>{
         }catch(error)
         {
             next(error);
-        }
-    }else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-
+        }}
+        else{response.status(404).json({result:"Please update your profile data!! and login again"});}
     }
 
     exports.readingBYdate=async(request,response,next)=>{
@@ -194,9 +202,8 @@ exports.borrowBYdate=async(request,response,next)=>{
         }catch(error)
         {
             next(error);
-        }
-    }else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-
+        }}
+        else{response.status(404).json({result:"Please update your profile data!! and login again"});}
     }
 
 
@@ -240,13 +247,13 @@ exports.borrowInfo=(request,response,next)=>{
      response.status(200).json({borrowedBook});
 }else{response.status(404).json({borrowedBook:"Borrowed Books Not Found"});}
     })
-    .catch(error=>next(error));
-}else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-
+    .catch(error=>next(error));}
+    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
 
     
 exports.returnBorrowBook=(request,response,next)=>{
+    if(request.password != "new"){
     BookOperationSchema.findOneAndUpdate({ "_id" : request.params._id , "operation":{$eq:"borrow"}} ,{
         $set:{ "returned" : true}
     }).then(data=>{
@@ -266,10 +273,12 @@ exports.returnBorrowBook=(request,response,next)=>{
             response.status(200).json({data:"Updated!"});
         })}
     })
-    .catch(error=>next(error));
+    .catch(error=>next(error));}
+    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
 
  exports.returnReadBook=(request,response,next)=>{
+    if(request.password != "new"){
         BookOperationSchema.findOneAndUpdate({ "_id" : request.params._id , "operation":{$eq:"read"}} ,{
             $set:{ "returned" : true}
         }).then(data=>{
@@ -289,12 +298,13 @@ exports.returnBorrowBook=(request,response,next)=>{
                 response.status(200).json({data:"Updated!"});
             })}
         })
-        .catch(error=>next(error));
+        .catch(error=>next(error));}
+        else{response.status(404).json({result:"Please update your profile data!! and login again"});}
     }
     
 
 exports.mostreadingBooks=(request,response,next)=>{
-
+    if(request.password != "new"){
     const PD = request.body.publishingDate;
     let searchbyYear;
     if(PD==null)
@@ -340,14 +350,15 @@ exports.mostreadingBooks=(request,response,next)=>{
     
      .then(result => {
         response.status(200).json({result});
-    }) .catch(error=>next(error));
+    }) .catch(error=>next(error));}
+    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
          
         
     
     
 exports.mostBorrowedBooks=(request,response,next)=>{
-    
+    if(request.password != "new"){
     const PD = request.body.publishingDate;
     let searchbyYear;
     if(PD==null)
@@ -393,11 +404,13 @@ exports.mostBorrowedBooks=(request,response,next)=>{
     ])
      .then(result => {
         response.status(200).json({result});
-    }) .catch(error=>next(error));
+    }) .catch(error=>next(error));}
+    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
      
     
 exports.makeSureOfReturnedRead=(request,response,next)=>{
+    if(request.password != "new"){
     //make sure that book is returned before the end of the day
     BookOperationSchema.updateMany({
         expireDate: { $lt: new Date()},operation:"read",returned:false}, 
@@ -408,5 +421,6 @@ exports.makeSureOfReturnedRead=(request,response,next)=>{
         else
             response.status(200).json({data:"All read books are already returned!"});
         })
-        .catch(error=>next(error));
+        .catch(error=>next(error));}
+        else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
