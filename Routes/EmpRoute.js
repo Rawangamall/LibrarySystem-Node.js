@@ -3,32 +3,27 @@ const validateMW=require("../Core/Validation/validateMW");
 const controller=require("../Controllers/EmpController");
 const { empImage } = require("../Core/Validation/imageValidate");
 const imageValidate=require("../Core/Validation/imageValidate").addIMG;
-const removeEmpIMG=require("../Core/Validation/imageValidate").removeIMG;
+const removeEmpIMG=require("../Core/Validation/imageValidate").removeEmpIMG;
 const router=express.Router();
 const validatePostEmp=require("../Core/Validation/EmpValidation").validatePost;
 const validatePutEmp=require("../Core/Validation/EmpValidation").validatePut;
 const EmpfirstLogin=require("../Core/Validation/EmpValidation").EmpfirstLogin;
 const validateOnIDParams=require("../Core/Validation/EmpValidation").validateOnIDParams;
-const { checkBaAdminAndAdminAndEmpforEmp, checkBasicAdminAndAdmin }=require("./../Core/auth/AuthenticateMW");
-
-// checkBasicAdminAndEmp
-
+const {checkEmp, checkBaAdminAndAdminAndEmpforEmp, checkBasicAdminAndAdmin }=require("./../Core/auth/AuthenticateMW");
 
 router.route("/Employees")
-    .get(checkBasicAdminAndAdmin,validateMW,controller.getEmps) //checkBaAdminAndAdmin
-    .post(checkBasicAdminAndAdmin,controller.addEmp) //checkBasicAdminAndAdmin ,validateMW,validatePostEmp
-
-// router.get("/Employees/:_id",checkBaAdminAndAdminAndEmpforEmp,validateOnGetEmp,validateMW,controller.getOneEmp)
+    .get(checkBasicAdminAndAdmin,validateMW,controller.getEmps)
+    .post(checkBasicAdminAndAdmin,validatePostEmp,validateMW,controller.addEmp)
 
 router.route("/Employee/:_id")
-    .put(checkBaAdminAndAdminAndEmpforEmp,imageValidate,validateMW,validatePutEmp,controller.updateEmp) //checkBaAdminAndAdminAndEmp
-    .delete(checkBasicAdminAndAdmin,validateMW,validateOnIDParams,removeEmpIMG,controller.deleteEmp) //checkBasicAdminAndAdmin
-    .get(checkBaAdminAndAdminAndEmpforEmp,validateOnIDParams,validateMW,controller.getOneEmp) //AuthenticateMW.checkBaAdminAndAdminAndEmp,
+    .put(checkBaAdminAndAdminAndEmpforEmp,imageValidate,validateMW,validatePutEmp,controller.updateEmp)
+    .delete(checkBasicAdminAndAdmin,validateMW,validateOnIDParams,removeEmpIMG,controller.deleteEmp)
+    .get(checkBaAdminAndAdminAndEmpforEmp,validateOnIDParams,validateMW,controller.getOneEmp)
 
 router.route("/searchForEmp")
-    .get(controller.searchForEmp)
+    .get(checkBasicAdminAndAdmin,validateMW,controller.searchForEmp)
 
 router.route("/firstLoginEmp/:_id")
-    .put(imageValidate,EmpfirstLogin,controller.updatefirstLogin)
+    .put(checkEmp,imageValidate,validateMW,EmpfirstLogin,controller.updatefirstLogin)
 
 module.exports=router;

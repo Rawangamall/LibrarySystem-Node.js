@@ -2,6 +2,7 @@ const multer=require("multer");
 const path=require("path");
 const fs = require('fs');
 const mongoose=require("mongoose");
+const { response } = require("express");
 require("../../Models/EmpModel");
 require("../../Models/member");
 require("../../Models/AdminModel");
@@ -29,37 +30,65 @@ exports.addIMG=multer({
         },
         filename:(request, file, cb)=>{
             if(request.role=="Employee"){
-                let imageName=EmpSchema.findOne({_id:request.params._id})._conditions._id + ".png";
-                cb(null, imageName);
+                EmpSchema.findOne({email:request.email}).then((data)=>{
+                    imageName = data._id+ "." + "jpg";
+                    cb(null, imageName);
+                    console.log(imageName)
+                })
+                
             }else if(request.role=="Member"){
-                let imageName=MemberSchema.findOne({_id:request.params._id})._conditions._id + ".png";
-                cb(null, imageName);
+
+                MemberSchema.findOne({email:request.email}).then((data)=>{
+                    imageName = data._id+ "." + "jpg";
+                    cb(null, imageName);
+                    console.log(imageName)
+                })
+           
             }else if(request.role=="Admin"){
-                let imageName=AdminSchema.findOne({_id:request.params._id})._conditions._id + ".png";
-                cb(null, imageName);
+                AdminSchema.findOne({email:request.email}).then((data)=>{
+                    imageName = data._id+ "." + "jpg";
+                    cb(null, imageName);
+                    console.log(imageName)
+                })
             }
         }
     })
 }).single("image")
 
-exports.removeIMG=function(req,res,next){
-    if(req.role=="Employee"){
-        let imageName=EmpSchema.findOne({_id:req.params._id})._conditions._id + ".png";
+exports.removeEmpIMG=function(req,res,next){
+    EmpSchema.findOne({_id:request.params._id}).then((data)=>{
+        if(data != null){
+        imageName = data._id+ "." + "jpg";
+        console.log(imageName)
         fs.unlink(path.join(__dirname,"..","..","images","Employees_images",imageName), function (err) {
             if (err) throw err;
             next();
         })
-    }else if(req.role=="Member"){
-        let imageName=MemberSchema.findOne({_id:req.params._id})._conditions._id + ".png";
-        fs.unlink(path.join(__dirname,"..","..","images","Members_images",imageName), function (err) {
-            if (err) throw err;
-            next();
+    }
+    })
+}
+
+exports.removeMemberIMG=function(request,res,next){
+    MemberSchema.findOne({_id:request.params._id}).then((data)=>{
+        if(data != null){
+        imageName = data._id+ "." + "jpg";
+        console.log(imageName)
+        fs.unlink(path.join(__dirname,"..","..","images","Members_images",imageName), function (error) {
+            if (error) new Error("erorrrrrrr")
         })
-    }else if(req.role=="Admin"){
-        let imageName=AdminSchema.findOne({_id:req.params._id})._conditions._id + ".png";
-        fs.unlink(path.join(__dirname,"..","..","images","Admin_images",imageName), function (err) {
-            if (err) throw err;
+    }
+    }).catch(error=>next(error))
+}
+
+exports.removeAdminIMG=function(request,res,next){
+    AdminSchema.findOne({_id:request.params._id}).then((data)=>{
+        if(data != null){
+        imageName = data._id+ "." + "jpg";
+        console.log(imageName)
+        fs.unlink(path.join(__dirname,"..","..","images","Admins_images",imageName), function (err) {
+            if (err) {response.status(404).json({data})};
             next();
         })
     }
+    })
 }
