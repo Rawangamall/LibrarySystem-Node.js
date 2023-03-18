@@ -29,7 +29,7 @@ router.route("/member/:_id")
 router.route("/firstLogin/:_id")
         .patch(imageValidate,validateData.MemberfirstLogin,memberController.updatefirstLogin)
  
-router.route("/searchForMember",memberController.searchForMember)        
+router.get("/searchForMember",memberController.searchForMember)        
         
  router.route("/member/currentBorrowedBooks/:_id")
        .get(checkBaAdminAndMemberAndEmp,validateMW,memberController.currentBorrowedBooks)

@@ -26,7 +26,7 @@ router.route("/Employee/:_id")
     .get(checkBaAdminAndAdminAndEmpforEmp,validateOnIDParams,validateMW,controller.getOneEmp) //AuthenticateMW.checkBaAdminAndAdminAndEmp,
 
 router.route("/searchForEmp")
-    .put(controller.searchForEmp)
+    .get(controller.searchForEmp)
 
 router.route("/firstLoginEmp/:_id")
     .put(imageValidate,EmpfirstLogin,controller.updatefirstLogin)
