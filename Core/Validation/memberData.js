@@ -18,14 +18,10 @@ exports.memberArrayPatch =[
     body("birthdate").matches(/^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2}$/).withMessage("the date should be months/days/years"),
     body("fullAddress").isString().withMessage("address should be string")
 ]
-<<<<<<< HEAD
 exports.MemberfirstLogin =[
     body("password").isStrongPassword().withMessage("should be strong password of min 8 length,uppercase,lowercse,char"),
     body("image").isString().withMessage("image should be found") ,
 ]
-exports.memberArrayDel =[
-=======
 exports.memberIDParams =[
->>>>>>> d1591018ed6f9e4ea9aab38dce07aa66edf845f7
     param("_id").isInt()
 ]

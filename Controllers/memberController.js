@@ -147,13 +147,8 @@ MemberSchema.findOne({_id:request.params._id}).then((check)=>{
             out.push(book_id)})   
         })
         
-<<<<<<< HEAD
-    //borrow returned
-    BookOperationSchema.updateMany({memberID:request.body._id ,"returned":{$eq:false},"operation":{$eq:"borrow"}},{
-=======
     //returned
     BookOperationSchema.updateMany({memberID:request.params._id ,"returned":{$eq:false},"operation":{$eq:"borrow"}},{
->>>>>>> d1591018ed6f9e4ea9aab38dce07aa66edf845f7
         $set:{ "returned" : true}
           }).then((borrow)=>{
             if(borrow.modifiedCount != 0)
@@ -195,12 +190,9 @@ MemberSchema.findOne({_id:request.params._id}).then((check)=>{
 }
 
 exports.getMember=(request,response,next)=>{
-<<<<<<< HEAD
    console.log("qqqq",request.password);
    if(request.password != "new"){
-=======
 
->>>>>>> d1591018ed6f9e4ea9aab38dce07aa66edf845f7
     MemberSchema.findOne({_id:request.params._id})
     .then((result)=>{
         if(result != null)
