@@ -16,7 +16,7 @@ router.route("/Admin")
     .get(checkBasicAdminAndAdmin,validateMW,controller.getAllAdmins)
     .post(checkBasicAdmin,validateMW,controller.addAdmins) //imageValidate,//AdminValidate.validateAdminPost,
     
-router.route("/Admin/:id")
+router.route("/Admin/:_id")
       .get(checkBasicAdminAndAdmin,AdminValidate.validateIDParams,validateMW,controller.getAdmin)
       .put(checkBasicAdminAndAdmin,imageValidate,AdminValidate.validateAdminPut,validateMW,controller.updateAdmin) 
       .delete(checkBasicAdmin,AdminValidate.validateIDParams,validateMW,removeAdminIMG,controller.deleteAdmin)
