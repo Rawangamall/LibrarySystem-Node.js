@@ -108,7 +108,7 @@ exports.addAdmins=async(request,response,next)=>{
 //update Owner
 exports.updateOwner=(request,response,next)=>{
     if(request.password != "new"){
-            AdminSchema.updateOne({ _id:request.params._id },{"Role":{$eq:"owner"}}
+            AdminSchema.updateOne({ _id:request.params._id },{"Role":{$eq:"Owner"}}
             ,{
                
                 $set:{
@@ -342,7 +342,7 @@ else{response.status(404).json({result:"Please update your profile data!! and lo
 //Get one Owner
 exports.getOwner=(request,response,next)=>{
     if(request.password != "new"){
-    AdminSchema.findOne({_id: request.params._id,"Role":{$eq:"owner"}}).then(data=>{
+    AdminSchema.findOne({_id: request.params._id,"Role":{$eq:"Owner"}}).then(data=>{
         if(data.matchedCount==0)
        {
            next(new Error("owner not found"));
