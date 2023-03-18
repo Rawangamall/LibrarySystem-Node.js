@@ -9,7 +9,7 @@ body("birthdate").matches(/^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2
 body("fullAddress").isString().withMessage("address should be string")
 ]
 exports.memberArrayPatch =[
-    param("_id").isInt().withMessage("should be object type"),
+    param("_id").isInt().withMessage("should be int type"),
     body("fullName").isString().withMessage("full name should string") ,
     body("email").isEmail().withMessage("should be valid email form") ,
     body("password").isStrongPassword().withMessage("should be strong password of min 8 length"),
@@ -19,9 +19,10 @@ exports.memberArrayPatch =[
     body("fullAddress").isString().withMessage("address should be string")
 ]
 exports.MemberfirstLogin =[
+    param("_id").isInt().withMessage("should be int type"),
     body("password").isStrongPassword().withMessage("should be strong password of min 8 length,uppercase,lowercse,char"),
     body("image").isString().withMessage("image should be found") ,
 ]
 exports.memberIDParams =[
-    param("_id").isInt()
+    param("_id").isInt().withMessage("should be int type"),
 ]

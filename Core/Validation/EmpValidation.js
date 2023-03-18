@@ -35,3 +35,10 @@ exports.validatePut=[
 exports.validateOnIDParams=[
     param("_id").isNumeric().withMessage("ID must be integer")
 ]
+
+//First Login Update
+exports.EmpfirstLogin =[
+    param("_id").isNumeric().withMessage("ID must be integer"),
+    body("password").isStrongPassword().withMessage("should be strong password of min 8 length,uppercase,lowercse,char"),
+    body("image").isString().withMessage("image is not found") ,
+]

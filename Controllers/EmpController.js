@@ -6,8 +6,13 @@ const EmpSchema=mongoose.model("Employees");
 const MemberSchema=mongoose.model("member");
 const BookSchema=mongoose.model("Book");
 
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+const salt = bcrypt.genSaltSync(saltRounds)
+
 //Get
 exports.getEmps=(request,response,next)=>{
+    if(request.password != "new"){
         //Get All Employees
         EmpSchema.find({})
             .then((data)=>{
@@ -15,10 +20,12 @@ exports.getEmps=(request,response,next)=>{
                 })
             .catch(error=>{
                 next(error);
-        })
+        })}
+    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
     }
 
 exports.searchForEmp=(request,response,next)=>{
+    if(request.password != "new"){
             //Search for Employee
             const searchName = request.body.searchName?.toLowerCase();
             const firstName = request.body.firstName?.toLowerCase();
@@ -41,21 +48,25 @@ exports.searchForEmp=(request,response,next)=>{
                         response.status(200).json({data});
                 })
                 .catch(error=>{next(error);
-                })
+                })}
+                else{response.status(404).json({result:"Please update your profile data!! and login again"});}
          }
 //Get a Specific Employee
+
 exports.getOneEmp=(request,response,next)=>{
+    if(request.password != "new"){
     EmpSchema.findOne({ _id: request.params._id})
          .then((data)=>{
                  response.status(200).json({data});
              })
          .catch(error=>{next(error);
-         })
+         })}
+         else{response.status(404).json({result:"Please update your profile data!! and login again"});}
  }
  
-
 //Post(Add) a new Employee
 exports.addEmp=async(request,response,next)=>{
+    if(request.password != "new"){
     try
     {
         let data=await new EmpSchema({
@@ -63,7 +74,7 @@ exports.addEmp=async(request,response,next)=>{
                 firstName:request.body.firstName,
                 lastName:request.body.lastName,
                 email:request.body.email,
-                password:request.body.password,
+                password:"new",
                 birthdate:request.body.birthdate,
                 hireDate:request.body.hireDate,
                 image:request.body.image,
@@ -73,11 +84,13 @@ exports.addEmp=async(request,response,next)=>{
     }catch(error)
     {
         next(error);
-    }
+    }}
+    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
 
 //Update(Put) an Employee
 exports.updateEmp=(request,response,next)=>{
+    if(request.password != "new"){
     if(request.role=="Employee"){
     EmpSchema.updateOne({
         _id:request.params._id
@@ -121,11 +134,46 @@ exports.updateEmp=(request,response,next)=>{
                 response.status(200).json({data:"Updated!"});
         })
        .catch(error=>next(error));
-    }
+    }}
+    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
+
+//First Login
+exports.updatefirstLogin=(request,response,next)=>{
+    strpass=request.body.password
+    if((strpass).length > 8 ){
+        var hash = bcrypt.hashSync(request.body.password,salt);
+    EmpSchema.updateOne({
+        _id:request.params._id
+    },{
+        $set:{
+            password:hash,
+            image:request.body.image,           
+        }
+    }).then((data)=>{
+        if(data.modifiedCount != 0)
+        {
+            response.status(200).json(data);
+               console.log(data)
+        }
+        else
+       {response.status(200).json(data);
+               console.log(data)
+    }
+
+    })
+    .catch(error=>next(error));
+}else{
+    response.status(404).json({data:"Enter the data"});     
+}
+}
+
+
+
 
 //Delete an Employee
 exports.deleteEmp=(request,response,next)=>{
+    if(request.password != "new"){
     EmpSchema.deleteOne({
 		_id: request.params._id,
 	}).then(data=> {
@@ -136,6 +184,7 @@ exports.deleteEmp=(request,response,next)=>{
             response.status(200).json({data:"Deleted!"}),
             next();
         }
-        }).catch(error=>next(error));
+        }).catch(error=>next(error));}
+        else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
 

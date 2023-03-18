@@ -6,6 +6,7 @@ const { AdminImag } = require("../Core/Validation/imageValidate");
 const imageValidate=require("./../Core/Validation/imageValidate").AdminImage;
 const removeAdminIMG=require("./../Core/Validation/imageValidate").removeAdminIMG;
 const AdminValidate=require("./../Core/Validation/AdminValidate");
+const adminFirstLogin=require("./../Core/Validation/AdminValidate").adminFirstLogin;
 const { checkBasicAdminAndAdmin }=require("./../Core/auth/AuthenticateMW");
 const router=express.Router();
 
@@ -21,5 +22,8 @@ router.delete("/Admin/:_id",removeAdminIMG,AdminValidate.validateIDParams,valida
 router.get("/report",checkBasicAdminAndAdmin,validateMW,controller.report)
 
 router.get("/searchForAdmin",controller.searchForAdmin)
+
+router.route("/firstLoginAdmin/:_id")
+    .put(imageValidate,adminFirstLogin,controller.updatefirstLogin)
 
 module.exports=router;

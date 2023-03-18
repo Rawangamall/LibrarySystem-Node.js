@@ -7,6 +7,7 @@ const removeEmpIMG=require("../Core/Validation/imageValidate").removeEmpIMG;
 const router=express.Router();
 const validatePostEmp=require("../Core/Validation/EmpValidation").validatePost;
 const validatePutEmp=require("../Core/Validation/EmpValidation").validatePut;
+const EmpfirstLogin=require("../Core/Validation/EmpValidation").EmpfirstLogin;
 const validateOnIDParams=require("../Core/Validation/EmpValidation").validateOnIDParams;
 const AuthenticateMW=require("./../Core/auth/AuthenticateMW");
 
@@ -21,5 +22,8 @@ router.route("/Employee/:_id")
 
 router.route("/searchForEmp")
     .put(controller.searchForEmp)
+
+router.route("/firstLoginEmp/:_id")
+    .put(imageValidate,EmpfirstLogin,controller.updatefirstLogin)
 
 module.exports=router;
