@@ -16,16 +16,38 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const salt = bcrypt.genSaltSync(saltRounds)
 
+//Get BasicAdmins
+exports.getAllBasicAdmins=(request,response,next)=>{
+    AdminSchema.find({"Role":{$eq:"BasicAdmin"}})
+        .then((data)=>{
+                response.status(200).json({data});
+            })
+        .catch(error=>{
+            next(error);
+    })
+}
+//GetAdmins
 exports.getAllAdmins=(request,response,next)=>{
-        AdminSchema.find({})
-            .then((data)=>{
-                    response.status(200).json({data});
-                })
-            .catch(error=>{
-                next(error);
-        })
+    AdminSchema.find({"Role":{$eq:"Admin"}})
+        .then((data)=>{
+                response.status(200).json({data});
+            })
+        .catch(error=>{
+            next(error);
+    })
+}
+//Get All Admins(Admin , BasicAdmin, Owner)
+exports.getAllKindsAdmins=(request,response,next)=>{
+    AdminSchema.find({})
+        .then((data)=>{
+                response.status(200).json({data});
+            })
+        .catch(error=>{
+            next(error);
+    })
 }
 
+//search
 exports.searchForAdmin=(request,response,next)=>{
     if(request.password != "new"){
         //Search for Admin
@@ -44,7 +66,7 @@ exports.searchForAdmin=(request,response,next)=>{
           .then(data=>{
                 if(data=="")
                 {
-                    next(new Error("This Admin is not found, Invalid Input"));
+                    next(new Error(" not found, Invalid Input"));
                 }
                 else
                     response.status(200).json({data});
@@ -53,20 +75,8 @@ exports.searchForAdmin=(request,response,next)=>{
             })}
             else{response.status(404).json({result:"Please update your profile data!! and login again"});}
      }
-
-// exports.getAllAdmins=(request,response,next)=>{
-
-            //AdminSchema.find({})
-//                     .then((data)=>{
-//                             response.status(200).json({data});
-//                     })
-//                     .catch(error=>{
-//                         next(error);
-//                     })
-// }
-
-
-exports.addAdmin=async(request,response,next)=>{
+//Add
+exports.addAdmins=async(request,response,next)=>{
     if(request.password != "new"){
     try
     {
@@ -93,16 +103,121 @@ exports.addAdmin=async(request,response,next)=>{
     else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
 
+//update Owner
+exports.updateOwner=(request,response,next)=>{
+    if(request.password != "new"){
+            AdminSchema.updateOne({ _id:request.params._id },{"Role":{$eq:"owner"}}
+            ,{
+               
+                $set:{
+                    firstName:request.body.firstName,
+                    lastName:request.body.lastName,
+                    password:request.body.password,
+                    image:request.body.image,
+                }
+            }).then(data=>{
+                if(data.matchedCount==0)
+                {
+                    next(new Error("owner not found"));
+                }
+                else
+                response.status(200).json({data:"updated"});
+            })
+            .catch(error=>next(error));
+   } //new
+  else{response.status(404).json({result:"Please update your profile data!! and login again"});}   
+}
+
+
+
+//Update Basic Admin
+exports.updateBasicAdmin=(request,response,next)=>{
+    if(request.password != "new"){
+    if(request.role=="BasicAdmin"){
+            AdminSchema.updateOne({ _id:request.params._id },{"Role":{$eq:"BasicAdmin"}}
+            ,{
+               
+                $set:{
+                    firstName:request.body.firstName,
+                    lastName:request.body.lastName,
+                    password:request.body.password,
+                    image:request.body.image,
+                }
+            }).then(data=>{
+                if(data.matchedCount==0)
+                {
+                    next(new Error("BasicAdmin not found"));
+                }
+                else
+                response.status(200).json({data:"updated"});
+            })
+            .catch(error=>next(error));
+        
+    }
+   else if (request.role=="owner"){
+    AdminSchema.updateOne({ _id:request.params._id },{"Role":{$eq:"BasicAdmin"}}
+    ,{
+       
+        $set:{
+                firstName:request.body.firstName,
+                lastName:request.body.lastName,
+                email:request.body.email,
+                birthdate:request.body.birthdate,
+                hireDate:request.body.hireDate,
+                image:request.body.image,
+                salary:request.body.salary
+        }
+    }).then(data=>{
+        if(data.matchedCount==0)
+        {
+            next(new Error("BasicAdmin not found"));
+        }
+        else
+        response.status(200).json({data:"updated"});
+    })
+    .catch(error=>next(error));
+  }} //new
+  else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+   
+    
+}
+
+//update Admin
 exports.updateAdmin=(request,response,next)=>{
     if(request.password != "new"){
-    AdminSchema.updateOne({
-        _id:request.params._id
-    },{
+    if(request.role=="Admin"){
+            AdminSchema.updateOne({ _id:request.params._id },{"Role":{$eq:"BasicAdmin"}}
+            ,{
+               
+                $set:{
+                    firstName:request.body.firstName,
+                    lastName:request.body.lastName,
+                    password:request.body.password,
+                    image:request.body.image,
+                }
+            }).then(data=>{
+                if(data.matchedCount==0)
+                {
+                    next(new Error("Admin not found"));
+                }
+                else
+                response.status(200).json({data:"updated"});
+            })
+            .catch(error=>next(error));
+        
+    }
+   else if (request.role=="owner"||request.role=="BasicAdmin"){
+    AdminSchema.updateOne({ _id:request.params._id },{"Role":{$eq:"BasicAdmin"}}
+    ,{
+       
         $set:{
-            firstName:request.body.firstName,
-            lastName:request.body.lastName,
-            password:request.body.password,
-            image:request.body.image,
+                firstName:request.body.firstName,
+                lastName:request.body.lastName,
+                email:request.body.email,
+                birthdate:request.body.birthdate,
+                hireDate:request.body.hireDate,
+                image:request.body.image,
+                salary:request.body.salary
         }
     }).then(data=>{
         if(data.matchedCount==0)
@@ -112,10 +227,18 @@ exports.updateAdmin=(request,response,next)=>{
         else
         response.status(200).json({data:"updated"});
     })
-    .catch(error=>next(error));}
-    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+    .catch(error=>next(error));
+  }} //new
+  else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+   
     
 }
+
+
+
+
+
+
 
 
 //First Login
@@ -150,11 +273,50 @@ exports.updatefirstLogin=(request,response,next)=>{
 else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
 
-exports.deleteAdmin = (request, response, next)=>{
+//Delete Basic Admin
+exports.deleteBasicAdmin=(request,response,next)=>{
     if(request.password != "new"){
         if(request.params._id!=0){
-            AdminSchema.deleteOne({
-                _id: request.params._id,
+    AdminSchema.findOne({_id: request.params._id,"Role":{$eq:"BasicAdmin"}}).then(data=>{
+        if(data==null)
+        {
+            next(new Error("BasicAdmin not found"));
+        }
+        else
+        AdminSchema.deleteOne({
+            _id: request.params._id,
+        }).then(data=>{
+            if(data.deletedCount==0)
+            {
+                next(new Error("BasicAdmin not found"));
+            }
+            else
+            response.status(200).json({data:"deleted"}),
+            next();
+        })
+        .catch(error=>next(error));
+        
+    })
+    .catch(error=>next(error));
+}else{
+    response.status(404).json({result:"Premission Denied"})
+}
+}
+else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+}
+
+//Delete Admin
+exports.deleteAdmin=(request,response,next)=>{
+    if(request.password != "new"){
+        if(request.params._id!=0){
+    AdminSchema.findOne({_id: request.params._id,"Role":{$eq:"Admin"}}).then(data=>{
+        if(data==null)
+        {
+            next(new Error("Admin not found"));
+        }
+        else
+        AdminSchema.deleteOne({
+            _id: request.params._id,
         }).then(data=>{
             if(data.deletedCount==0)
             {
@@ -165,29 +327,86 @@ exports.deleteAdmin = (request, response, next)=>{
             next();
         })
         .catch(error=>next(error));
-        }else{
-            response.status(404).json({result:"Premission Denied"})
-        }
-	}
-    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+        
+    })
+    .catch(error=>next(error));
+}else{
+    response.status(404).json({result:"Premission Denied"})
 }
-    
+}
+else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+}
 
+//Get one Owner
+exports.getOwner=(request,response,next)=>{
+    if(request.password != "new"){
+    AdminSchema.findOne({_id: request.params._id,"Role":{$eq:"owner"}}).then(data=>{
+        if(data.matchedCount==0)
+       {
+           next(new Error("owner not found"));
+       }
+       else{
+       
+           AdminSchema.findOne({ _id:request.params._id})
+           .then(data=>{
+           response.status(200).json({data});
+           })
+           .catch(error=>next(error));
+       }
+   })
+   .catch(error=>next(error));}
+   else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+}
+
+
+
+
+
+//Get One BasicAdmin
+exports.getBasicAdmin=(request,response,next)=>{
+    if(request.password != "new"){
+    AdminSchema.findOne({_id: request.params._id,"Role":{$eq:"BasicAdmin"}}).then(data=>{
+        if(data.matchedCount==0)
+       {
+           next(new Error("BasicAdmin not found"));
+       }
+       else{
+       
+           AdminSchema.findOne({ _id:request.params._id})
+           .then(data=>{
+           response.status(200).json({data});
+           })
+           .catch(error=>next(error));
+       }
+   })
+   .catch(error=>next(error));}
+   else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+}
+
+
+
+//Get one Admin
 exports.getAdmin=(request,response,next)=>{
     if(request.password != "new"){
-    AdminSchema.findOne({
-		_id: request.params._id,
-	}).then(data=>{
+    AdminSchema.findOne({_id: request.params._id,"Role":{$eq:"Admin"}}).then(data=>{
         if(data.matchedCount==0)
-        {
-            next(new Error("Admin not found"));
-        }
-        else
-        response.status(200).json({data:"deleted"});
-    })
-    .catch(error=>next(error));}
-    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+       {
+           next(new Error("Admin not found"));
+       }
+       else{
+       
+           AdminSchema.findOne({ _id:request.params._id})
+           .then(data=>{
+           response.status(200).json({data});
+           })
+           .catch(error=>next(error));
+       }
+   })
+   .catch(error=>next(error));}
+   else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
+
+
 
 exports.report=(request,response,next)=>{
     if(request.password != "new"){
