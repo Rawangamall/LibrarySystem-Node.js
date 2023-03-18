@@ -9,21 +9,22 @@ const validatePutBook=require("../Core/Validation/BookValidation").validatePut;
 const validateOnGetBook=require("../Core/Validation/BookValidation").validateOnGet;
 const validateOnDeleteBook=require("../Core/Validation/BookValidation").validateOnDelete;
 
-//const { checkAdmin, checkTeacherAndAdmin }=require("./../Core/auth/authenticationMW");
+const { checkBasicAdminAndAdmin }=require("./../Core/auth/AuthenticateMW");
 
 router.route("/Book")
-    .get(controller.getBooks)
-    .post(validateMW,controller.addBook)              //make it validatePostMember  controller.addMember
-    .put(validatePutBook,validateMW,controller.updateBook)
-    .delete(validateOnDeleteBook,validateMW,controller.deleteBook)
+    .get(controller.getBooks) //checkBasicAdminAndAdminAndEmpAndMember
+    .post(checkBasicAdminAndAdmin,validateMW,controller.addBook)              //make it validatePostMember  controller.addMember
+    .put(checkBasicAdminAndAdmin,validatePutBook,validateMW,controller.updateBook)
+    .delete(checkBasicAdminAndAdmin,validateOnDeleteBook,validateMW,controller.deleteBook)
 
-router.get("/Book/available",controller.getAvailableBooks)
+router.get("/Book/available",controller.getAvailableBooks)  //checkBasicAdminAndAdminAndEmpAndMember
 
-router.get("/Book/:id",validateOnGetBook,validateMW,controller.getOneBook)
-router.route("/member/NewArrivedBooks/get")
-       .get(controller.getNewArrivedBooks)
+router.get("/Book/:id",validateOnGetBook,validateMW,controller.getOneBook) //checkBasicAdminAndAdminAndEmpAndMember
 
-router.route("/Book/filterBooks/get")
+router.route("/member/NewArrivedBooks/get")   //checkBasicAdminAndAdminAndEmpAndMember
+       .get(controller.getNewArrivedBooks)  
+
+router.route("/Book/filterBooks/get")  //checkBasicAdminAndAdminAndEmpAndMember
       .get(controller.filteredbooks)
 
 module.exports=router;

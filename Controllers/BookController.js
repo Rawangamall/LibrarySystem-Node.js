@@ -128,13 +128,6 @@ exports.deleteBook=(request,response,next)=>{
         }).catch(error=>next(error));
 }
 
-//most borrowed book
-exports.mostBorrowedBook=(request,response,next)=>{
-    BookSchema.find().sort({noBorrowed:-1}).limit(1)
-                .then(data=>{
-                    response.status(200).json({data})
-                })
-}
 
 exports.getNewArrivedBooks=(request,response,next)=>{
     const endDate = new Date(); // current date and time
