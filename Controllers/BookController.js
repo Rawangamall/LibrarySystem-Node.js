@@ -3,13 +3,10 @@ require("../Models/BookModel");
 require("../Models/member");
 require("../Models/BookOperationModel");
 const BookSchema=mongoose.model("Book");
-const MemberSchema=mongoose.model("member");
-const BookOperationSchema=mongoose.model("BookOperation");
 
-//Get
+//Get All Books
 exports.getBooks=(request,response,next)=>{
     if(request.password != "new"){
-        //Get All Books
         BookSchema.find({})
              .then((data)=>{
                     response.status(200).json({data});
@@ -20,6 +17,7 @@ exports.getBooks=(request,response,next)=>{
         else{response.status(404).json({result:"Please update your profile data!! and login again"});}
     }
 
+//Search for a book by publisher, author, title
 exports.searchForBook=(request,response,next)=>{
     if(request.password != "new"){
             //Search for Books
@@ -36,7 +34,7 @@ exports.searchForBook=(request,response,next)=>{
                   { author: author },
                   { title: title }
                 ],
-                'noOfCopies': { $gt: 1 }                ////////////////////
+                'noOfCopies': { $gt: 1 }
               },{title:1,publisher:1,author:1,available:1,noBorrowed:1,noOfCurrentBorrowed:1,noOfCopies:1,availableCopies: { $subtract: ['$noOfCopies', '$noOfCurrentBorrowed'] } }
               )
               .then(data=>{
@@ -53,7 +51,7 @@ exports.searchForBook=(request,response,next)=>{
                 else{response.status(404).json({result:"Please update your profile data!! and login again"});}
          }
 
-//Get a Specific Book
+//Get a Specific Book by ID
 exports.getOneBook=(request,response,next)=>{
     if(request.password != "new"){
     BookSchema.findOne({ _id: request.params.id})
@@ -65,7 +63,7 @@ exports.getOneBook=(request,response,next)=>{
          else{response.status(404).json({result:"Please update your profile data!! and login again"});}
  }
  
-//Post(Add) a new Book
+//Post (Add) a new Book
 exports.addBook=async(request,response,next)=>{
     if(request.password != "new"){
     try
@@ -94,7 +92,7 @@ exports.addBook=async(request,response,next)=>{
     else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
 
-//Update(Put) an Book
+//Update (Put) a Book
 exports.updateBook=(request,response,next)=>{
     if(request.password != "new"){
     BookSchema.updateOne({
@@ -109,7 +107,6 @@ exports.updateBook=(request,response,next)=>{
                 edition:request.body.edition,
                 pages:request.body.pages,
                 noOfCopies:request.body.noOfCopies,
-                //available:request.body.available,
                 shelfNo:request.body.shelfNo
         }
     }).then(data=>{
@@ -124,7 +121,7 @@ exports.updateBook=(request,response,next)=>{
     else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
 
-//Delete an Book
+//Delete a Book
 exports.deleteBook=(request,response,next)=>{
     if(request.password != "new"){
     BookSchema.deleteOne({
