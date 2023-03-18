@@ -17,7 +17,7 @@ exports.validatePost=[
 
 //Put validation
 exports.validatePut=[
-    body("_id").isNumeric().optional().withMessage("Employee's id must be number"),
+    param("_id").isNumeric().optional().withMessage("Employee's id must be number"),
     body("firstName").isAlpha().optional().withMessage("Employee's firstName must be string")
         .isLength({min:2,max:12}).withMessage("Employee's first name can't be > 12 or < 2 Letters"),
     body("lastName").isAlpha().optional().withMessage("Employee's lastName must be string")
@@ -31,12 +31,7 @@ exports.validatePut=[
     body("salary").isEmpty().withMessage("You Can't update salary!"),
 ]
 
-//Delete validation
-exports.validateOnDelete=[
-    body("_id").isNumeric().withMessage("ID must be integer")
-] 
-
-//Get validation
-exports.validateOnGet=[
+//Delete&Get validation
+exports.validateOnIDParams=[
     param("_id").isNumeric().withMessage("ID must be integer")
 ]

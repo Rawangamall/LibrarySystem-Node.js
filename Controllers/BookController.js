@@ -8,7 +8,6 @@ const BookOperationSchema=mongoose.model("BookOperation");
 
 //Get
 exports.getBooks=(request,response,next)=>{
-    if (Object.keys(request.body).length==""){
         //Get All Books
         BookSchema.find({})
              .then((data)=>{
@@ -18,12 +17,13 @@ exports.getBooks=(request,response,next)=>{
                 next(error);
         })
     }
-    else{
-        //Search for Books
-            const searchKey = request.body.searchKey;
-            const publisher = request.body.publisher;
-            const author = request.body.author;
-            const title = request.body.title;
+
+exports.searchForBook=(request,response,next)=>{
+            //Search for Books
+            const searchKey = request.body.searchKey?.toLowerCase();
+            const publisher = request.body.publisher?.toLowerCase();
+            const author = request.body.author?.toLowerCase();
+            const title = request.body.title?.toLowerCase();
             BookSchema.find({
                 $or: [
                   { publisher: searchKey },
@@ -34,7 +34,7 @@ exports.getBooks=(request,response,next)=>{
                   { title: title }
                 ],
                 'noOfCopies': { $gt: 1 }                ////////////////////
-              },{title:1,available:1,noBorrowed:1,noOfCurrentBorrowed:1,noOfCopies:1,availableCopies: { $subtract: ['$noOfCopies', '$noOfCurrentBorrowed'] } }
+              },{title:1,publisher:1,author:1,available:1,noBorrowed:1,noOfCurrentBorrowed:1,noOfCopies:1,availableCopies: { $subtract: ['$noOfCopies', '$noOfCurrentBorrowed'] } }
               )
               .then(data=>{
                     if(data=="")
@@ -48,7 +48,7 @@ exports.getBooks=(request,response,next)=>{
                 .catch(error=>{next(error);
                 })
          }
-    }
+
 //Get a Specific Book
 exports.getOneBook=(request,response,next)=>{
     BookSchema.findOne({ _id: request.params.id})
@@ -89,7 +89,7 @@ exports.addBook=async(request,response,next)=>{
 //Update(Put) an Book
 exports.updateBook=(request,response,next)=>{
     BookSchema.updateOne({
-        _id:request.body.id
+        _id:request.params.id
     },{
         $set:{
             title:request.body.title,
@@ -117,7 +117,7 @@ exports.updateBook=(request,response,next)=>{
 //Delete an Book
 exports.deleteBook=(request,response,next)=>{
     BookSchema.deleteOne({
-		_id: request.body.id,
+		_id: request.params.id,
 	}).then(data=> {
         if(data.deletedCount==0){
             next(new Error("This Book is not found!"));

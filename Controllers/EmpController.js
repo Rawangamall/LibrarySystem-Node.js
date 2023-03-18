@@ -8,7 +8,6 @@ const BookSchema=mongoose.model("Book");
 
 //Get
 exports.getEmps=(request,response,next)=>{
-    if (Object.keys(request.body).length==""){
         //Get All Employees
         EmpSchema.find({})
             .then((data)=>{
@@ -18,11 +17,12 @@ exports.getEmps=(request,response,next)=>{
                 next(error);
         })
     }
-    else{
-        //Search for Employee
-            const searchName = request.body.searchName;
-            const firstName = request.body.firstName;
-            const lastName = request.body.lastName;
+
+exports.searchForEmp=(request,response,next)=>{
+            //Search for Employee
+            const searchName = request.body.searchName?.toLowerCase();
+            const firstName = request.body.firstName?.toLowerCase();
+            const lastName = request.body.lastName?.toLowerCase();
             EmpSchema.find({
                 $or: [
                   { firstName: searchName },
@@ -43,7 +43,6 @@ exports.getEmps=(request,response,next)=>{
                 .catch(error=>{next(error);
                 })
          }
-    }
 //Get a Specific Employee
 exports.getOneEmp=(request,response,next)=>{
     EmpSchema.findOne({ _id: request.params._id})
@@ -79,6 +78,7 @@ exports.addEmp=async(request,response,next)=>{
 
 //Update(Put) an Employee
 exports.updateEmp=(request,response,next)=>{
+    if(request.role=="Employee"){
     EmpSchema.updateOne({
         _id:request.params._id
     },{
@@ -87,7 +87,7 @@ exports.updateEmp=(request,response,next)=>{
             lastName:request.body.lastName,
             password:request.body.password,
             birthdate:request.body.birthdate,
-            image:request.body.image,
+            image:request.body.image
         }
     }).then(data=>{
         if(data.matchedCount==0)
@@ -97,7 +97,31 @@ exports.updateEmp=(request,response,next)=>{
         else
             response.status(200).json({data:"Updated!"});
     })
-    .catch(error=>next(error));
+    .catch(error=>next(error));}
+    else if (request.role=="Admin"||request.role=="BasicAdmin"){
+        EmpSchema.updateOne({
+            _id:request.params._id
+        },{
+            $set:{
+                firstName:request.body.firstName,
+                lastName:request.body.lastName,
+                email:request.body.email,
+                password:request.body.password,
+                birthdate:request.body.birthdate,
+                hireDate:request.body.hireDate,
+                image:request.body.image,
+                salary:request.body.salary
+            }
+        }).then(data=>{
+            if(data.matchedCount==0)
+            {
+                next(new Error("This employee is not found"));
+            }
+            else
+                response.status(200).json({data:"Updated!"});
+        })
+       .catch(error=>next(error));
+    }
 }
 
 //Delete an Employee

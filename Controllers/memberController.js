@@ -22,6 +22,32 @@ exports.getAll=(request,response)=>{
                     })
 }
 
+exports.searchForMember=(request,response,next)=>{
+    //Search for Member
+    const searchKey = request.body.searchKey?.toLowerCase();
+    const fullName = request.body.fullName?.toLowerCase();
+    const email = request.body.email?.toLowerCase();
+    AdminSchema.find({
+        $or: [
+          { fullName: searchKey },
+          { email: searchKey },
+          { fullName: fullName },
+          { email: email }
+        ],
+      }
+      )
+      .then(data=>{
+            if(data=="")
+            {
+                next(new Error("This Member is not found, Invalid Input"));
+            }
+            else
+                response.status(200).json({data});
+        })
+        .catch(error=>{next(error);
+        })
+ }
+
 
 exports.addMember=(request,response,next)=>{
    
@@ -114,15 +140,20 @@ MemberSchema.findOne({_id:request.params._id}).then((check)=>{
    if(check != null){  
 
     //bookids which gonna be returned
-    BookOperationSchema.find({memberID:request.body._id ,"returned":{$eq:false}})
+    BookOperationSchema.find({memberID:request.params._id ,"returned":{$eq:false}})
     .then((ids)=>{
         ids.forEach(function(data){
             book_id=data.bookID
             out.push(book_id)})   
         })
         
+<<<<<<< HEAD
     //borrow returned
     BookOperationSchema.updateMany({memberID:request.body._id ,"returned":{$eq:false},"operation":{$eq:"borrow"}},{
+=======
+    //returned
+    BookOperationSchema.updateMany({memberID:request.params._id ,"returned":{$eq:false},"operation":{$eq:"borrow"}},{
+>>>>>>> d1591018ed6f9e4ea9aab38dce07aa66edf845f7
         $set:{ "returned" : true}
           }).then((borrow)=>{
             if(borrow.modifiedCount != 0)
@@ -151,7 +182,7 @@ MemberSchema.findOne({_id:request.params._id}).then((check)=>{
            }
         }).catch(error=>next(error));
         //delete member
-     MemberSchema.deleteOne({_id:request.body._id})
+     MemberSchema.deleteOne({_id:request.params._id})
         .then((result)=>{
             if(result.deletedCount !=0 ){
                 response.status(200).json({result:"deleted"});
@@ -164,8 +195,12 @@ MemberSchema.findOne({_id:request.params._id}).then((check)=>{
 }
 
 exports.getMember=(request,response,next)=>{
+<<<<<<< HEAD
    console.log("qqqq",request.password);
    if(request.password != "new"){
+=======
+
+>>>>>>> d1591018ed6f9e4ea9aab38dce07aa66edf845f7
     MemberSchema.findOne({_id:request.params._id})
     .then((result)=>{
         if(result != null)
@@ -196,7 +231,7 @@ exports.currentBorrowedBooks=(request,response,next)=>{
                  expireDate: { $push: "$expireDate" },
                  currentDate: { $push:  new Date().toISOString()  },
                  } },
-    {
+      {
         $lookup: {
                     from: 'books',
                     localField: '_id',
@@ -272,6 +307,3 @@ exports.currentBorrowedBooks=(request,response,next)=>{
         response.status(404).json({data:"Enter the data"});     
     }
     }
-    
-    
-

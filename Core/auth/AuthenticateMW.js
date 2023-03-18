@@ -43,43 +43,51 @@ module.exports.checkBasicAdminAndAdmin=(request,response,next)=>{
       next(error);
   }
 }
+
 module.exports.checkBasicAdminAndEmp=(request,response,next)=>{
-  EmpSchema.findOne({email:`${request.email}`}).then((data)=>{
-    if(request.role =="BasicAdmin"){
+  console.log(request.role);
+    if(request.role =="BasicAdmin" || request.role =="Employee"){
+     
         next();
     }
-    else if(request.role =="Employee" &&( request.params._id==data._id) ){
+    else if(request.role =="Employee" ){ // &&( request.params._id==data._id)
       next();
    }
     else{
       let error =new Error("Not Authorized");
       error.status=403;
       next(error);
-      
   }
-  })
-  .catch(error=>{
-  next(error);
-  })
 }
 module.exports.checkBaAdminAndAdminAndEmp=(request,response,next)=>{
-  EmpSchema.findOne({email:`${request.email}`}).then((data)=>{
-  if(request.role =="BasicAdmin"||request.role =="Admin" ){
-      next();
-  }
-  else if(request.role =="Employee" &&( request.params._id==data._id) ){
-    next();
- }
-  else{
-    let error =new Error("Not Authorized");
-    error.status=403;
-    next(error);
+
+  if(request.role =="BasicAdmin"||request.role =="Admin" ||request.role =="Employee" ){
+          next();
+      }
+      else{
+            let error =new Error("Not Authorized");
+            error.status=403;
+            next(error);
+            
+        }
+
+//   EmpSchema.findOne({email:`${request.email}`}).then((data)=>{
+//   if(request.role =="BasicAdmin"||request.role =="Admin" ){
+//       next();
+//   }
+//   else if(request.role =="Employee" &&( request.params._id==data._id) ){
+//     next();
+//  }
+//   else{
+//     let error =new Error("Not Authorized");
+//     error.status=403;
+//     next(error);
     
-}
-})
-.catch(error=>{
-next(error);
-})
+// }
+// })
+// .catch(error=>{
+// next(error);
+// })
 }
 module.exports.checkBaAdminAndMemberAndEmp=(request,response,next)=>{
 
