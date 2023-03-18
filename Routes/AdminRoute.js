@@ -14,7 +14,7 @@ router.route("/Admin")
     .put(imageValidate,AdminValidate.validateAdminPut,validateMW,controller.updateAdmin) 
 
 
-router.get("/Admin/:_id",AdminValidate.validateAdminGetID,validateMW,controller.getAdmin)
-router.delete("/Admin/:_id",removeAdminIMG,AdminValidate.validateAdminDelete,validateMW,controller.deleteAdmin)
+router.get("/Admin/:_id",AdminValidate.validateIDParams,validateMW,controller.getAdmin)
+router.delete("/Admin/:_id",removeAdminIMG,AdminValidate.validateIDParams,validateMW,controller.deleteAdmin)
 
 module.exports=router;

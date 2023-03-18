@@ -15,8 +15,8 @@ router.route("/member")
    
 router.route("/member/:_id")
         .patch(imageValidate,validateData.memberArrayPatch,memberController.updateMember)
-        .get(checkBaAdminAndMemberAndEmp,memberController.getMember)
-        .delete(validateData.memberArrayDel,removeimage,memberController.deleteMember) //checkBasicAdminAndEmp
+        .get(checkBaAdminAndMemberAndEmp,validateData.memberIDParams,memberController.getMember)
+        .delete(validateData.memberIDParams,removeimage,memberController.deleteMember) //checkBasicAdminAndEmp
 
 router.route("/firstLogin/:_id")
         .patch(imageValidate,memberController.updatefirstLogin)

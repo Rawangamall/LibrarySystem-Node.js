@@ -228,6 +228,3 @@ exports.currentBorrowedBooks=(request,response,next)=>{
         response.status(404).json({data:"Enter the data"});     
     }
     }
-    
-    
-
