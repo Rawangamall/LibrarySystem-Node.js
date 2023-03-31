@@ -13,6 +13,7 @@ const schema=new mongoose.Schema({
     noOfCopies:Number,
     available:Boolean,
     shelfNo:Number,
+    image:String,
     noBorrowed:{type:Number,default:0},
     noOfCurrentBorrowed:{type:Number,default:0},
     noOfCurrentReading:{type:Number,default:0},
