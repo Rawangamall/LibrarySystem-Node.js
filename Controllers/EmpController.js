@@ -12,7 +12,7 @@ exports.getEmps=(request,response,next)=>{
     if(request.password != "new"){
         EmpSchema.find({})
             .then((data)=>{
-                    response.status(200).json({data});
+                    response.status(200).json(data);
                 })
             .catch(error=>{
                 next(error);
