@@ -44,5 +44,6 @@ router.route("/makeSureOfReturnedRead")
         
 router.get("/Bookoper/mostBorrowedBooks",checkBaAdminAndMemberAndEmp, validateMW, controller.mostBorrowedBooks)
 router.get("/Bookoper/mostReadingBooks",checkBaAdminAndMemberAndEmp, validateMW, controller.mostreadingBooks)
+router.get("/Bookoper/mostPopularBooks",checkBaAdminAndMemberAndEmp, validateMW,controller.mostPopularBooks)
 
 module.exports=router;

@@ -447,6 +447,64 @@ exports.mostreadingBooks=(request,response,next)=>{
     else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
        
+exports.mostPopularBooks=(request,response,next)=>{
+    if(request.password != "new"){
+    const PD = request.body.publishingDate;
+    let searchbyYear;
+    if(PD==null)
+    {
+        searchbyYear=new Date().getFullYear();   
+    }
+    else{ 
+        searchbyYear = Number(PD);
+    }
+    
+    
+    console.log(PD);
+    BookOperationSchema.aggregate( [
+      {
+        $lookup: {
+                     from: 'books',
+                     localField: 'bookID',
+                     foreignField: '_id',
+                     as: 'book'
+                 }
+     }, 
+     { $unwind: "$book" },
+     {
+        $project: { 
+                        _id:0,       
+                        bookID: "$bookID" ,
+                        title:"$book.title",
+                        author:"$book.author",
+                        publisher:"$book.publisher",
+                        borrowYear:{ $year:"$startDate"},
+                        publishingDate: "$book.publishingDate" 
+                    }
+     },
+     {$match:  {borrowYear:searchbyYear}},
+              
+    { $group: { _id: "$bookID", borrowCount: { $sum: 1 }  ,  title: { $push: "$title" },author: { $push: "$author" },publisher: { $push: "$publisher" },publishingDate: { $push: "$publishingDate" } ,borrowYear: { $push: "$borrowYear" } } },
+    { $sort: { borrowCount: -1 } },
+     { $limit: 5 },
+     {
+       $project: { 
+                _id:0,          
+                 title: { $first: "$title" },
+                 author: { $first: "$author" },
+                 publisher: { $first: "$publisher" },
+                 publishingDate:{$first:"$publishingDate"},
+                 borrowCount:"$borrowCount"
+                 
+                }},
+             
+    ])
+    
+     .then(result => {
+        response.status(200).json({result});
+    }) .catch(error=>next(error));}
+    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+}
     
 exports.makeSureOfReturnedRead=(request,response,next)=>{
     if(request.password != "new"){
