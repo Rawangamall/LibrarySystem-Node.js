@@ -9,7 +9,7 @@ exports.getBooks=(request,response,next)=>{
     if(request.password != "new"){
         BookSchema.find({})
              .then((data)=>{
-                    response.status(200).json({data});
+                    response.status(200).json(data);
                 })
             .catch(error=>{
                 next(error);
@@ -56,7 +56,7 @@ exports.getOneBook=(request,response,next)=>{
     if(request.password != "new"){
     BookSchema.findOne({ _id: request.params.id})
          .then((data)=>{
-                 response.status(200).json({data});
+                 response.status(200).json(data);
              })
          .catch(error=>{next(error);
          })}

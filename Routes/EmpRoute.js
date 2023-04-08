@@ -17,7 +17,7 @@ router.route("/Employees")
 
 router.route("/Employee/:_id")
     .put(checkBaAdminAndAdminAndEmpforEmp,imageValidate,validateMW,validatePutEmp,controller.updateEmp)
-    .delete(checkBasicAdminAndAdmin,validateMW,validateOnIDParams,removeEmpIMG,controller.deleteEmp)
+    .delete(removeEmpIMG,checkBasicAdminAndAdmin,validateMW,validateOnIDParams,controller.deleteEmp)
     .get(checkBaAdminAndAdminAndEmpforEmp,validateOnIDParams,validateMW,controller.getOneEmp)
 
 router.route("/searchForEmp")

@@ -108,7 +108,7 @@ exports.addAdmins=async(request,response,next)=>{
 //update Owner
 exports.updateOwner=(request,response,next)=>{
     if(request.password != "new"){
-            AdminSchema.updateOne({ _id:request.params._id },{"Role":{$eq:"Owner"}}
+            AdminSchema.updateOne({ _id:request.params._id ,"Role":{$eq:"Owner"}}
             ,{
                
                 $set:{
@@ -136,7 +136,7 @@ exports.updateOwner=(request,response,next)=>{
 exports.updateBasicAdmin=(request,response,next)=>{
     if(request.password != "new"){
     if(request.role=="BasicAdmin"){
-            AdminSchema.updateOne({ _id:request.params._id },{"Role":{$eq:"BasicAdmin"}}
+            AdminSchema.updateOne({ _id:request.params._id ,"Role":{$eq:"BasicAdmin"}}
             ,{
                
                 $set:{
@@ -157,7 +157,7 @@ exports.updateBasicAdmin=(request,response,next)=>{
         
     }
    else if (request.role=="owner"){
-    AdminSchema.updateOne({ _id:request.params._id },{"Role":{$eq:"BasicAdmin"}}
+    AdminSchema.updateOne({ _id:request.params._id ,"Role":{$eq:"BasicAdmin"}}
     ,{
        
         $set:{
@@ -188,7 +188,7 @@ exports.updateBasicAdmin=(request,response,next)=>{
 exports.updateAdmin=(request,response,next)=>{
     if(request.password != "new"){
     if(request.role=="Admin"){
-            AdminSchema.updateOne({ _id:request.params._id },{"Role":{$eq:"BasicAdmin"}}
+            AdminSchema.updateOne({ _id:request.params._id ,"Role":{$eq:"BasicAdmin"}}
             ,{
                
                 $set:{
@@ -209,7 +209,7 @@ exports.updateAdmin=(request,response,next)=>{
         
     }
    else if (request.role=="owner"||request.role=="BasicAdmin"){
-    AdminSchema.updateOne({ _id:request.params._id },{"Role":{$eq:"BasicAdmin"}}
+    AdminSchema.updateOne({ _id:request.params._id ,"Role":{$eq:"BasicAdmin"}}
     ,{
        
         $set:{

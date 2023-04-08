@@ -5,12 +5,13 @@ const controller=require("../Controllers/BookController.js");
 const validatePostBook=require("../Core/Validation/BookValidation").validatePost;
 const validatePutBook=require("../Core/Validation/BookValidation").validatePut;
 const validateOnIDParams=require("../Core/Validation/BookValidation").validateOnIDParams;
+const imageValidate=require("../Core/Validation/imageValidate").addIMG;
 
 const { checkBasicAdminAndAdmin }=require("./../Core/auth/AuthenticateMW");
 
 router.route("/Book")
     .get(controller.getBooks)
-    .post(checkBasicAdminAndAdmin,validatePostBook,validateMW,controller.addBook)
+    .post(checkBasicAdminAndAdmin,imageValidate,validatePostBook,validateMW,controller.addBook)
 
 router.get("/Book/:id",validateOnIDParams,validateMW,controller.getOneBook)
 router.delete("/Book/:id",checkBasicAdminAndAdmin,validateOnIDParams,validateMW,controller.deleteBook)

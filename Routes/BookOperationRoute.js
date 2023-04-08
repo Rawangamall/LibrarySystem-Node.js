@@ -8,7 +8,7 @@ const { checkBasicAdminAndEmp, checkBaAdminAndAdminAndEmp, checkBaAdminAndMember
 
 
 router.route("/BookOperation")
-       .get(checkBasicAdminAndEmp,validateMW,controller.getAll)
+       .get(controller.getAll)
        
 router.route("/BookOperation/readingBYdate/get")
       .get(checkBaAdminAndMemberAndEmp,validateMW, controller.readingBYdate)
@@ -44,5 +44,6 @@ router.route("/makeSureOfReturnedRead")
         
 router.get("/Bookoper/mostBorrowedBooks",checkBaAdminAndMemberAndEmp, validateMW, controller.mostBorrowedBooks)
 router.get("/Bookoper/mostReadingBooks",checkBaAdminAndMemberAndEmp, validateMW, controller.mostreadingBooks)
+router.get("/Bookoper/mostPopularBooks",checkBaAdminAndMemberAndEmp, validateMW,controller.mostPopularBooks)
 
 module.exports=router;

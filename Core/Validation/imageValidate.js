@@ -1,3 +1,5 @@
+const MongoClient = require('mongodb').MongoClient;
+
 const multer=require("multer");
 const path=require("path");
 const fs = require('fs');
@@ -9,6 +11,23 @@ require("../../Models/AdminModel");
 const EmpSchema=mongoose.model("Employees");
 const MemberSchema=mongoose.model("member");
 const AdminSchema=mongoose.model("Admin");
+const Bookschema=mongoose.model("Book");
+
+
+// Connection URL
+const url = 'mongodb+srv://rawangamaal21:iti@node.gvt5cis.mongodb.net/?retryWrites=true&w=majority';
+
+// Database Name
+const dbName = 'test';
+
+// Collection Name
+const counterCollection = 'counters';
+
+// Create a new MongoClient
+const client = new MongoClient(url);
+
+
+
 
 exports.addIMG=multer({
     fileFilter: function (req, file, cb) {
@@ -24,8 +43,14 @@ exports.addIMG=multer({
                 cb(null,path.join(__dirname,"..","..","images","Employees_images"));
             }else if(req.role=="Member"){
                 cb(null,path.join(__dirname,"..","..","images","Members_images"));
-            }else if(req.role=="Admin"){
-                cb(null,path.join(__dirname,"..","..","images","Admin_images"));
+            }
+            else if(req.role=="Admin"||req.role=="BasicAdmin"){
+                var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+                if(fullUrl.includes("Book")){
+                    cb(null,path.join(__dirname,"..","..","images","Book_images"));
+                }else{
+                    cb(null,path.join(__dirname,"..","..","images","Admins_images"));
+                }
             }
         },
         filename:(request, file, cb)=>{
@@ -44,12 +69,38 @@ exports.addIMG=multer({
                     console.log(imageName)
                 })
            
-            }else if(request.role=="Admin"){
-                AdminSchema.findOne({email:request.email}).then((data)=>{
-                    imageName = data._id+ "." + "jpg";
-                    cb(null, imageName);
-                    console.log(imageName)
-                })
+            }else if(request.role=="Admin"||request.role=="BasicAdmin"){
+                var fullUrl = request.protocol + '://' + request.get('host') + request.originalUrl;
+                if(fullUrl.includes("Book")){
+
+               // Connect to the MongoDB server
+                    client.connect(function(err) {
+                    if (err) throw err;
+
+                    const db = client.db(dbName);
+                    const counter = db.collection(counterCollection);
+                        counter.findOne({ id: 'Book_id' }, function(err, result) {
+                        if (err) throw err;
+
+                        if(result != null){
+                        console.log(result.seq );
+                        bookid=result.seq + 1;
+                        console.log(bookid);
+                        imageName = bookid + "." + "jpg";
+                        }else{ imageName = 1 + "." + "jpg";    }
+                        cb(null, imageName);
+                        client.close();
+                    });
+                 });
+      
+               
+                    }else{
+                    AdminSchema.findOne({email:request.email}).then((data)=>{
+                        imageName = data._id+ "." + "jpg";
+                        cb(null, imageName);
+                    })
+                }
+
             }
         }
     })

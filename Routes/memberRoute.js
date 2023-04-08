@@ -6,9 +6,12 @@ const memberController=require("./../Controllers/memberController");
 const imageValidate=require("../Core/Validation/imageValidate").addIMG;
 const removeimage=require("../Core/Validation/imageValidate").removeMemberIMG;
 const { checkMember,checkBasicAdminAndEmp, checkBaAdminAndMemberAndEmp }=require("./../Core/auth/AuthenticateMW");
+    
+
+  
   
 router.route("/members")
-       .get(validateMW ,memberController.getAll)
+       .get(checkBasicAdminAndEmp,validateMW ,memberController.getAll)
        .post(checkBasicAdminAndEmp,validateMW,memberController.addMember)
        
 router.route("/member/:_id")
