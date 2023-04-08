@@ -1,3 +1,5 @@
+const MongoClient = require('mongodb').MongoClient;
+
 const multer=require("multer");
 const path=require("path");
 const fs = require('fs');
@@ -9,6 +11,23 @@ require("../../Models/AdminModel");
 const EmpSchema=mongoose.model("Employees");
 const MemberSchema=mongoose.model("member");
 const AdminSchema=mongoose.model("Admin");
+const Bookschema=mongoose.model("Book");
+
+
+// Connection URL
+const url = 'mongodb+srv://rawangamaal21:iti@node.gvt5cis.mongodb.net/?retryWrites=true&w=majority';
+
+// Database Name
+const dbName = 'test';
+
+// Collection Name
+const counterCollection = 'counters';
+
+// Create a new MongoClient
+const client = new MongoClient(url);
+
+
+
 
 exports.addIMG=multer({
     fileFilter: function (req, file, cb) {
@@ -53,15 +72,33 @@ exports.addIMG=multer({
             }else if(request.role=="Admin"||request.role=="BasicAdmin"){
                 var fullUrl = request.protocol + '://' + request.get('host') + request.originalUrl;
                 if(fullUrl.includes("Book")){
-                    const timestamp = Date.now();
-                    imageName = timestamp + "." + "jpg";
-                    cb(null, imageName);
-                }else{
+
+               // Connect to the MongoDB server
+                    client.connect(function(err) {
+                    if (err) throw err;
+
+                    const db = client.db(dbName);
+                    const counter = db.collection(counterCollection);
+                        counter.findOne({ id: 'Book_id' }, function(err, result) {
+                        if (err) throw err;
+
+                        if(result != null){
+                        bookid=result.seq + 1;
+                        imageName = bookid + "." + "jpg";
+
+                        }else{ imageName = 1 + "." + "jpg";    }
+                        cb(null, imageName);
+                        client.close();
+                    });
+                 });
+      
+                    }else{
                     AdminSchema.findOne({email:request.email}).then((data)=>{
                         imageName = data._id+ "." + "jpg";
                         cb(null, imageName);
                     })
                 }
+
             }
         }
     })

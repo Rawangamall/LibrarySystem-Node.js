@@ -65,7 +65,7 @@ exports.getOneBook=(request,response,next)=>{
  
 //Post (Add) a new Book
 exports.addBook=async(request,response,next)=>{
-    if(request.password != "new"){
+    // if(request.password != "new"){
     try
     {
         let data=await new BookSchema({
@@ -88,8 +88,9 @@ exports.addBook=async(request,response,next)=>{
     }catch(error)
     {
         next(error);
-    }}
-    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+    }
+// }
+//     else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
 
 //Update (Put) a Book
@@ -139,7 +140,7 @@ exports.deleteBook=(request,response,next)=>{
 
 
 exports.getNewArrivedBooks=(request,response,next)=>{
-    if(request.password != "new"){
+    // if(request.password != "new"){
     const endDate = new Date(); // current date and time
     const startDate = new Date(); 
     startDate.setDate(endDate.getMonth()-1);// one month  ago
@@ -150,11 +151,12 @@ BookSchema.find({ createdAt: { $gte: startDate, $lte: endDate } }, (err, result)
     response.status(404).json({data:"Not Found"});
   }
   else{
-    response.status(200).json({result});
+    response.status(200).json(result);
   } 
-});}
-else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+})
 }
+// else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+// }
 
 //available books
 exports.getAvailableBooks=(request,response,next)=>{
@@ -189,5 +191,3 @@ exports.filteredbooks=(request,response,next)=>{
             }}
             else{response.status(404).json({result:"Please update your profile data!! and login again"});}
  }
-
- 
