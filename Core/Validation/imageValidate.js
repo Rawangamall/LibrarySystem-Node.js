@@ -83,17 +83,15 @@ exports.addIMG=multer({
                         if (err) throw err;
 
                         if(result != null){
-                        console.log(result.seq );
                         bookid=result.seq + 1;
-                        console.log(bookid);
                         imageName = bookid + "." + "jpg";
+
                         }else{ imageName = 1 + "." + "jpg";    }
                         cb(null, imageName);
                         client.close();
                     });
                  });
       
-               
                     }else{
                     AdminSchema.findOne({email:request.email}).then((data)=>{
                         imageName = data._id+ "." + "jpg";
