@@ -6,7 +6,7 @@ const schema=new mongoose.Schema({
     title:String,
     author:String,
     publisher:String,
-    publishingDate:Date,
+    publishingDate:{type:Date , default:new Date()},
     category:String,
     edition:String,
     pages:Number,

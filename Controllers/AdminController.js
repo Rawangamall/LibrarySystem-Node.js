@@ -272,6 +272,7 @@ exports.updatefirstLogin=(request,response,next)=>{
     response.status(404).json({data:"Enter the data"});     
 }
 }
+
 //Delete Basic Admin
 exports.deleteBasicAdmin=(request,response,next)=>{
     if(request.password != "new"){

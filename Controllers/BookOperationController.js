@@ -95,7 +95,7 @@ exports.addBorrowbook=(request,response,next)=>{
         })
       
         }else{response.status(404).json({data:"This Book is not Avilable"});}
-    }else{response.status(404).json({data:"This Book is already borrowed!"});}
+    }else{response.status(404).json({data:"This Book is already read!"});}
 
  })
       }else{response.status(404).json({data:"This Book is already borrowed!"});}
