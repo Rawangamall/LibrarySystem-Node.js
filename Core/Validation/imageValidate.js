@@ -104,15 +104,18 @@ exports.addIMG=multer({
 }).single("image")
 
 exports.updateIMG=multer({
-    fileFilter: function (req, file, cb) {
+    
+    fileFilter: function (request, file, cb) {
         if (file.mimetype != "image/png" && file.mimetype != "image/jpg" && file.mimetype != "image/jpeg" && file.mimetype != "image/avif") {
             return cb(new Error('Only images are allowed'))
         }
+
         cb(null, true)
     },
-    limits: { fileSize: 10000*10000 },
+    storage:multer.diskStorage({
     destination:(req,file,cb)=>{
         if(req.role=="Admin"||req.role=="BasicAdmin"){
+
             var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
             if(fullUrl.includes("Book")){
                 cb(null,path.join(__dirname,"..","..","images","Book_images"));
@@ -121,6 +124,7 @@ exports.updateIMG=multer({
     },
     filename:(request, file, cb)=>{
         if(request.role=="Admin"||request.role=="BasicAdmin"){
+
             var fullUrl = request.protocol + '://' + request.get('host') + request.originalUrl;
             if(fullUrl.includes("Book")){
                 Bookschema.findOne({_id:request.params.id}).then((data)=>{
@@ -131,6 +135,7 @@ exports.updateIMG=multer({
             }
         }
     }
+  })
 }).single("image")
    
 exports.removeEmpIMG=function(req,res,next){
