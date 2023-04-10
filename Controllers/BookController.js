@@ -68,6 +68,8 @@ exports.addBook=async(request,response,next)=>{
     if(request.password != "new"){
     try
     {
+        console.log(request.file.filename);
+
         let data=await new BookSchema({
                 _id:request.body.id,
                 title:request.body.title,
@@ -80,6 +82,7 @@ exports.addBook=async(request,response,next)=>{
                 noOfCopies:request.body.noOfCopies,
                 noOfCopies:request.body.noOfCopies,
                 available:true,
+                image:request.file.filename,
                 noBorrowed:request.body.noBorrowed,
                 noOfCurrentBorrowed:request.body.noOfCurrentBorrowed,
                 returned:true,
@@ -106,6 +109,7 @@ exports.updateBook=(request,response,next)=>{
                 category:request.body.category,
                 edition:request.body.edition,
                 pages:request.body.pages,
+                image:request.file.filename,
                 noOfCopies:request.body.noOfCopies,
                 shelfNo:request.body.shelfNo
         }
