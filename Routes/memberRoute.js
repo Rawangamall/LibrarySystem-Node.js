@@ -11,8 +11,8 @@ const { checkMember,checkBasicAdminAndEmp, checkBaAdminAndMemberAndEmp }=require
   
   
 router.route("/members")
-       .get(checkBasicAdminAndEmp,validateMW ,memberController.getAll)
-       .post(checkBasicAdminAndEmp,validateMW,memberController.addMember)
+       .get(memberController.getAll)//checkBasicAdminAndEmp,validateMW ,
+       .post(memberController.addMember)//checkBasicAdminAndEmp,validateMW,
        
 router.route("/member/:_id")
         .patch(checkBaAdminAndMemberAndEmp,imageValidate,validateData.memberArrayPatch,memberController.updateMember)
