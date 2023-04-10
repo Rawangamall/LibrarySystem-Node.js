@@ -42,7 +42,7 @@ exports.addBorrowbook=(request,response,next)=>{
 
                         .then((data)=>{
                        
-                            response.status(200).json({data});
+                            response.status(200).json(data);
                         })
                     
                     })  }
@@ -122,7 +122,7 @@ exports.getAll=(request,response,next)=>{
                         BookOperationSchema.updateMany({expireDate: { $lt: new Date()},operation:"borrow",returned:false}, [{ $set: { late: "Late: This book isn't returned yet"}}])
                         .then(data=>{console.log("done")}).catch(error=>next(error));  
 
-                        response.status(200).json({data});
+                        response.status(200).json(data);
                         })
                     .catch(error=>{
                         next(error);
