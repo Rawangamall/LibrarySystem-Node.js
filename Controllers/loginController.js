@@ -15,7 +15,7 @@ exports.login= async (request,response,next)=>{
         let admin = await AdminSchema.findOne({email:request.body.email , password:request.body.password});
         let employee = await EmpSchema.findOne({email:request.body.email , password:request.body.password});
         let member = await MemberSchema.findOne({email:request.body.email , password:request.body.password});
-        console.log(member);
+        console.log(admin);
         if(admin && admin.Role=="Admin"){
             let token = jwt.sign({
                 email:request.body.email,password: request.body.password,role: "Admin"},"OStrack",{expiresIn: "7h"})

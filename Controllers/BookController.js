@@ -68,7 +68,10 @@ exports.addBook=async(request,response,next)=>{
     if(request.password != "new"){
     try
     {
-        console.log(request.file.filename);
+    console.log(request.file.path);
+    path = request.file.path.split("/images")[1];
+    imgpath = "images"+path;
+    console.log(imgpath);
 
         let data=await new BookSchema({
                 _id:request.body.id,
@@ -82,7 +85,7 @@ exports.addBook=async(request,response,next)=>{
                 noOfCopies:request.body.noOfCopies,
                 noOfCopies:request.body.noOfCopies,
                 available:true,
-                image:request.file.filename,
+                image:imgpath,
                 noBorrowed:request.body.noBorrowed,
                 noOfCurrentBorrowed:request.body.noOfCurrentBorrowed,
                 returned:true,
