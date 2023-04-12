@@ -9,13 +9,15 @@ const AdminSchema =mongoose.model("Admin");
 
 module.exports=(request,response,next)=>{
   try{
-    let token=request.get("authorization").split(" ")[1];
-    
+   // let token=request.get("authorization").split(" ")[1];
+   const token = request.header('x-auth-token');
+    //console.log(token);
     let decodedToken=jwt.verify(token,"OStrack");
+   // console.log(decodedToken);
     request.email=decodedToken.email;
     request.password=decodedToken.password;
     request.role=decodedToken.role;
-   
+     console.log(request.role);
     next();
   }
   catch(error){
@@ -90,6 +92,7 @@ module.exports.checkBasicAdminAndAdminforAdmin=(request,response,next)=>{
 }
 module.exports.checkBasicAdminAndAdmin=(request,response,next)=>{
   if(request.role =="BasicAdmin"||request.role =="Admin"|| request.role =="Owner"){
+
       next();
   }
   else{

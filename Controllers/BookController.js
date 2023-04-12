@@ -9,6 +9,7 @@ exports.getBooks=(request,response,next)=>{
     if(request.password != "new"){
         BookSchema.find({})
              .then((data)=>{
+              //  if(data.image) data.image = 'http://localhost:8000/'+data.image
                     response.status(200).json(data);
                 })
             .catch(error=>{
@@ -56,6 +57,7 @@ exports.getOneBook=(request,response,next)=>{
     if(request.password != "new"){
     BookSchema.findOne({ _id: request.params.id})
          .then((data)=>{
+                if(data.image) data.image = 'http://localhost:8000/'+data.image
                  response.status(200).json(data);
              })
          .catch(error=>{next(error);
@@ -68,10 +70,10 @@ exports.addBook=async(request,response,next)=>{
     if(request.password != "new"){
     try
     {
-    console.log(request.file.path);
-    path = request.file.path.split("/images")[1];
-    imgpath = "images"+path;
-    console.log(imgpath);
+    // console.log(request.file.path);
+    // path = request.file.path.split("/images")[1];
+    // imgpath = "images"+path;
+    // console.log(imgpath);
 
         let data=await new BookSchema({
                 _id:request.body.id,
@@ -85,7 +87,7 @@ exports.addBook=async(request,response,next)=>{
                 noOfCopies:request.body.noOfCopies,
                 noOfCopies:request.body.noOfCopies,
                 available:true,
-                image:imgpath,
+                // image:imgpath,
                 noBorrowed:request.body.noBorrowed,
                 noOfCurrentBorrowed:request.body.noOfCurrentBorrowed,
                 returned:true,
@@ -112,7 +114,7 @@ exports.updateBook=(request,response,next)=>{
                 category:request.body.category,
                 edition:request.body.edition,
                 pages:request.body.pages,
-                image:request.file.filename,
+                // image:request.file.filename,
                 noOfCopies:request.body.noOfCopies,
                 shelfNo:request.body.shelfNo
         }

@@ -13,11 +13,12 @@ const { checkBasicAdminAndAdmin }=require("./../Core/auth/AuthenticateMW");
 
 router.route("/Book")
     .get(controller.getBooks)
-    .post(checkBasicAdminAndAdmin,imageValidate,validatePostBook,validateMW,controller.addBook)
+
+router.post("/Book/add",checkBasicAdminAndAdmin,validatePostBook,validateMW,controller.addBook) //image validate
 
 router.get("/Book/:id",validateOnIDParams,validateMW,controller.getOneBook)
-router.delete("/Book/:id",checkBasicAdminAndAdmin,validateOnIDParams,validateMW,removeBookIMG,controller.deleteBook)
-router.put("/Book/:id",checkBasicAdminAndAdmin,imageValidateUP,validatePutBook,validateMW,controller.updateBook)
+router.delete("/Book/:id",checkBasicAdminAndAdmin,validateOnIDParams,validateMW,removeBookIMG,controller.deleteBook) //img
+router.put("/Book/update/:id",checkBasicAdminAndAdmin,validatePutBook,validateMW,controller.updateBook)
 
 router.route("/searchForBook")
       .get(controller.searchForBook)

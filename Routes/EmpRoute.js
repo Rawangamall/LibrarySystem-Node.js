@@ -13,7 +13,7 @@ const {checkEmp, checkBaAdminAndAdminAndEmpforEmp, checkBasicAdminAndAdmin }=req
 
 router.route("/Employees")
     .get(checkBasicAdminAndAdmin,validateMW,controller.getEmps)
-    .post(checkBasicAdminAndAdmin,validatePostEmp,validateMW,controller.addEmp)
+    .post(checkBasicAdminAndAdmin,validateMW,controller.addEmp)
 
 router.route("/Employee/:_id")
     .put(checkBaAdminAndAdminAndEmpforEmp,imageValidate,validateMW,validatePutEmp,controller.updateEmp)
