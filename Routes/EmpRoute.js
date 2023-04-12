@@ -20,7 +20,7 @@ router.route("/Employee/:_id")
     .delete(controller.deleteEmp) //removeEmpIMG,checkBasicAdminAndAdmin,validateMW,validateOnIDParams,
     .get(controller.getOneEmp) //checkBaAdminAndAdminAndEmpforEmp,validateOnIDParams,validateMW,
 
-router.route("/Employee/update/:_id")
+// router.route("/Employee/update/:_id")
 
 router.route("/searchForEmp")
     .get(checkBasicAdminAndAdmin,validateMW,controller.searchForEmp)

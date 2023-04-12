@@ -96,7 +96,7 @@ exports.updateEmp=(request,response,next)=>{
             lastName:request.body.lastName,
             password:request.body.password,
             birthdate:request.body.birthdate,
-            image:request.body.image
+            // image:request.body.image
         }
     }).then(data=>{
         if(data.matchedCount==0)
