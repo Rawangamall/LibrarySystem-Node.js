@@ -9,7 +9,7 @@ exports.getBooks=(request,response,next)=>{
     if(request.password != "new"){
         BookSchema.find({})
              .then((data)=>{
-              //  if(data.image) data.image = 'http://localhost:8000/'+data.image
+                if(data.image){ data.image = 'http://localhost:8080/'+data.image}
                     response.status(200).json(data);
                 })
             .catch(error=>{

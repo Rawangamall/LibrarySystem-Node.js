@@ -13,13 +13,14 @@ const {checkEmp, checkBaAdminAndAdminAndEmpforEmp, checkBasicAdminAndAdmin }=req
 
 router.route("/Employees")
     .get(checkBasicAdminAndAdmin,validateMW,controller.getEmps)
-    .post(checkBasicAdminAndAdmin,validateMW,controller.addEmp)
+    .post(checkBasicAdminAndAdmin,validateMW,validatePostEmp,controller.addEmp)
 
 router.route("/Employee/:_id")
-    .put(checkBaAdminAndAdminAndEmpforEmp,imageValidate,validateMW,validatePutEmp,controller.updateEmp)
     .delete(removeEmpIMG,checkBasicAdminAndAdmin,validateMW,validateOnIDParams,controller.deleteEmp)
-    .get(checkBaAdminAndAdminAndEmpforEmp,validateOnIDParams,validateMW,controller.getOneEmp)
+    .get(controller.getOneEmp)
 
+router.route("/Employee/:_id")
+    .put(controller.updateEmp)
 router.route("/searchForEmp")
     .get(checkBasicAdminAndAdmin,validateMW,controller.searchForEmp)
 

@@ -11,7 +11,7 @@ const { checkMember,checkBasicAdminAndEmp, checkBaAdminAndMemberAndEmp }=require
   
   
 router.route("/members")
-       .get(checkBasicAdminAndEmp,validateMW ,memberController.getAll)
+       .get(checkBasicAdminAndEmp ,memberController.getAll)
        .post(checkBasicAdminAndEmp,validateMW,memberController.addMember)
        
 router.route("/member/:_id")
