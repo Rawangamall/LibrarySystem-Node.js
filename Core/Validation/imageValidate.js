@@ -39,37 +39,37 @@ exports.addIMG=multer({
     limits: { fileSize: 10000*10000 },
     storage:multer.diskStorage({
         destination:(req,file,cb)=>{
-            if(req.role=="Employee"){
-                cb(null,path.join(__dirname,"..","..","images","Employees_images"));
-            }else if(req.role=="Member"){
-                cb(null,path.join(__dirname,"..","..","images","Members_images"));
-            }
-            else if(req.role=="Admin"||req.role=="BasicAdmin"){
+            // if(req.role=="Employee"){
+            //     cb(null,path.join(__dirname,"..","..","images","Employees_images"));
+            // }else if(req.role=="Member"){
+            //     cb(null,path.join(__dirname,"..","..","images","Members_images"));
+            // }
+            // else if(req.role=="Admin"||req.role=="BasicAdmin"){
                 var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
                 if(fullUrl.includes("Book")){
                     cb(null,path.join(__dirname,"..","..","images","Book_images"));
                 }else{
                     cb(null,path.join(__dirname,"..","..","images","Admins_images"));
                 }
-            }
+            // }
         },
         filename:(request, file, cb)=>{
-            if(request.role=="Employee"){
-                EmpSchema.findOne({email:request.email}).then((data)=>{
-                    imageName = data._id+ "." + "jpg";
-                    cb(null, imageName);
-                    console.log(imageName)
-                })
+            // if(request.role=="Employee"){
+            //     EmpSchema.findOne({email:request.email}).then((data)=>{
+            //         imageName = data._id+ "." + "jpg";
+            //         cb(null, imageName);
+            //         console.log(imageName)
+            //     })
                 
-            }else if(request.role=="Member"){
+            // }else if(request.role=="Member"){
 
-                MemberSchema.findOne({email:request.email}).then((data)=>{
-                    imageName = data._id+ "." + "jpg";
-                    cb(null, imageName);
-                    console.log(imageName)
-                })
+            //     MemberSchema.findOne({email:request.email}).then((data)=>{
+            //         imageName = data._id+ "." + "jpg";
+            //         cb(null, imageName);
+            //         console.log(imageName)
+            //     })
            
-            }else if(request.role=="Admin"||request.role=="BasicAdmin"){
+            // }else if(request.role=="Admin"||request.role=="BasicAdmin"){
                 var fullUrl = request.protocol + '://' + request.get('host') + request.originalUrl;
                 if(fullUrl.includes("Book")){
 
@@ -81,7 +81,6 @@ exports.addIMG=multer({
                     const counter = db.collection(counterCollection);
                         counter.findOne({ id: 'Book_id' }, function(err, result) {
                         if (err) throw err;
-
                         if(result != null){
                         bookid=result.seq + 1;
                         imageName = bookid + "." + "jpg";
@@ -92,18 +91,54 @@ exports.addIMG=multer({
                     });
                  });
       
-                    }else{
-                    AdminSchema.findOne({email:request.email}).then((data)=>{
-                        imageName = data._id+ "." + "jpg";
-                        cb(null, imageName);
-                    })
-                }
+                    }
+                //     else{
+                //     AdminSchema.findOne({email:request.email}).then((data)=>{
+                //         imageName = data._id+ "." + "jpg";
+                //         cb(null, imageName);
+                //     })
+                // }
 
-            }
+            // }
         }
     })
 }).single("image")
 
+exports.updateIMG=multer({
+    
+    fileFilter: function (request, file, cb) {
+        if (file.mimetype != "image/png" && file.mimetype != "image/jpg" && file.mimetype != "image/jpeg" && file.mimetype != "image/avif") {
+            return cb(new Error('Only images are allowed'))
+        }
+
+        cb(null, true)
+    },
+    storage:multer.diskStorage({
+    destination:(req,file,cb)=>{
+        if(req.role=="Admin"||req.role=="BasicAdmin"){
+
+            var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+            if(fullUrl.includes("Book")){
+                cb(null,path.join(__dirname,"..","..","images","Book_images"));
+            }
+        }
+    },
+    filename:(request, file, cb)=>{
+        if(request.role=="Admin"||request.role=="BasicAdmin"){
+
+            var fullUrl = request.protocol + '://' + request.get('host') + request.originalUrl;
+            if(fullUrl.includes("Book")){
+                Bookschema.findOne({_id:request.params.id}).then((data)=>{
+                    imageName = data._id+ "." + "jpg";
+                    console.log(imageName);
+                    cb(null, imageName);
+                })
+            }
+        }
+    }
+  })
+}).single("image")
+   
 exports.removeEmpIMG=function(req,res,next){
     EmpSchema.findOne({_id:request.params._id}).then((data)=>{
         if(data != null){
@@ -133,7 +168,20 @@ exports.removeMemberIMG=function(request,res,next){
     }
     }).catch(error=>next(error))
 }
-
+exports.removeBookIMG=function(request,res,next){
+    Bookschema.findOne({_id:request.params.id}).then((data)=>{
+        if(data != null){
+        imageName = data._id+ "." + "jpg";
+        console.log(imageName)
+        fs.unlink(path.join(__dirname,"..","..","images","Book_images",imageName), function (err) {
+            if (err)
+                next(new Error("Book not found"));
+            else
+                next();
+        })
+    }
+    }).catch(error=>next(error))
+}
 exports.removeAdminIMG=function(request,res,next){
     AdminSchema.findOne({_id:request.params._id}).then((data)=>{
         if(data != null){

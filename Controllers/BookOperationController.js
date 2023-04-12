@@ -449,7 +449,7 @@ exports.mostreadingBooks=(request,response,next)=>{
 // }
        
 exports.mostPopularBooks=(request,response,next)=>{
-    if(request.password != "new"){
+    // if(request.password != "new"){
     const PD = request.body.publishingDate;
     let searchbyYear;
     if(PD==null)
@@ -502,10 +502,10 @@ exports.mostPopularBooks=(request,response,next)=>{
     ])
     
      .then(result => {
-        response.status(200).json({result});
+        response.status(200).json(result);
     }) .catch(error=>next(error));}
-    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-}
+//     else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+// }
     
 exports.makeSureOfReturnedRead=(request,response,next)=>{
     if(request.password != "new"){

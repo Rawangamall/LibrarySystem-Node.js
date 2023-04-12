@@ -26,6 +26,6 @@ router.route("/searchForEmp")
     .get(checkBasicAdminAndAdmin,validateMW,controller.searchForEmp)
 
 router.route("/firstLoginEmp/:_id")
-    .put(checkEmp,imageValidate,validateMW,EmpfirstLogin,controller.updatefirstLogin)
+    .put(EmpfirstLogin,controller.updatefirstLogin) //checkEmp,imageValidate,validateMW,
 
 module.exports=router;

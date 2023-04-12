@@ -9,7 +9,7 @@ const salt = bcrypt.genSaltSync(saltRounds)
 
 //Get all employees
 exports.getEmps=(request,response,next)=>{
-    if(request.password != "new"){
+    // if(request.password != "new"){
         EmpSchema.find({})
             .then((data)=>{
                     response.status(200).json(data);
@@ -17,8 +17,8 @@ exports.getEmps=(request,response,next)=>{
             .catch(error=>{
                 next(error);
         })}
-    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-}
+//     else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+// }
 
 //Search for Employee
 exports.searchForEmp=(request,response,next)=>{

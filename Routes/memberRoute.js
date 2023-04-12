@@ -11,12 +11,12 @@ const { checkMember,checkBasicAdminAndEmp, checkBaAdminAndMemberAndEmp }=require
   
   
 router.route("/members")
-       .get(checkBasicAdminAndEmp,validateMW ,memberController.getAll)
-       .post(checkBasicAdminAndEmp,validateMW,memberController.addMember)
+       .get(memberController.getAll) //checkBasicAdminAndEmp,validateMW ,
+       .post(memberController.addMember) //checkBasicAdminAndEmp,validateMW,
        
 router.route("/member/:_id")
         .patch(checkBaAdminAndMemberAndEmp,imageValidate,validateData.memberArrayPatch,memberController.updateMember)
-        .get(checkBaAdminAndMemberAndEmp,validateData.memberIDParams,memberController.getMember)
+        .get(memberController.getMember) //checkBaAdminAndMemberAndEmp,validateData.memberIDParams,
         .delete(checkBasicAdminAndEmp,validateData.memberIDParams,removeimage,memberController.deleteMember)
 
 router.route("/firstLogin/:_id")
