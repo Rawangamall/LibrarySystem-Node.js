@@ -12,16 +12,16 @@ const validateOnIDParams=require("../Core/Validation/EmpValidation").validateOnI
 const {checkEmp, checkBaAdminAndAdminAndEmpforEmp, checkBasicAdminAndAdmin }=require("./../Core/auth/AuthenticateMW");
 
 router.route("/Employees")
-    .get(checkBasicAdminAndAdmin,validateMW,controller.getEmps)
-    .post(checkBasicAdminAndAdmin,validatePostEmp,validateMW,controller.addEmp)
+    .get(controller.getEmps)//checkBasicAdminAndAdmin,validateMW,
+    .post(controller.addEmp)//imageValidate,validateMW,
 
 router.route("/Employee/:_id")
     .put(checkBaAdminAndAdminAndEmpforEmp,imageValidate,validateMW,validatePutEmp,controller.updateEmp)
     .delete(removeEmpIMG,checkBasicAdminAndAdmin,validateMW,validateOnIDParams,controller.deleteEmp)
     .get(checkBaAdminAndAdminAndEmpforEmp,validateOnIDParams,validateMW,controller.getOneEmp)
 
-router.route("/searchForEmp")
-    .get(checkBasicAdminAndAdmin,validateMW,controller.searchForEmp)
+router.route("/Employees/search")
+    .post(controller.searchForEmp)//checkBasicAdminAndAdmin,validateMW,
 
 router.route("/firstLoginEmp/:_id")
     .put(checkEmp,imageValidate,validateMW,EmpfirstLogin,controller.updatefirstLogin)

@@ -2,6 +2,7 @@ const express= require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const mongoose=require("mongoose");
+var bodyParser = require('body-parser')
 
 const AdminRoute=require("./Routes/AdminRoute");
 const loginRoute=require("./Routes/login");
@@ -35,11 +36,11 @@ server.use(morgan('combined'))
 //body parse
 server.use(express.json());
 server.use(express.urlencoded({extended:false}));
-
+server.use(bodyParser.json())
 
 //Routes 
-// server.use(loginRoute);
-// server.use(AuthenticateMW);
+server.use(loginRoute);
+server.use(AuthenticateMW);
 server.use(memberRoute);
 server.use(BookRoute);
 server.use(EmpRoute);

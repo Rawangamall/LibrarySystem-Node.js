@@ -30,8 +30,10 @@ const client = new MongoClient(url);
 
 
 exports.addIMG=multer({
+   
     fileFilter: function (req, file, cb) {
         if (file.mimetype != "image/png" && file.mimetype != "image/jpg" && file.mimetype != "image/jpeg" && file.mimetype != "image/avif") {
+           
             return cb(new Error('Only images are allowed'))
         }
         cb(null, true)
@@ -51,6 +53,10 @@ exports.addIMG=multer({
                 }else{
                     cb(null,path.join(__dirname,"..","..","images","Admins_images"));
                 }
+            }
+            else{
+                console.log("hiii")
+                cb(null,path.join(__dirname,"..","..","images","Members_images"));
             }
         },
         filename:(request, file, cb)=>{

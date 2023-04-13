@@ -21,31 +21,64 @@ exports.getEmps=(request,response,next)=>{
 }
 
 //Search for Employee
-exports.searchForEmp=(request,response,next)=>{
-    if(request.password != "new"){
-        const searchName = request.body.searchName?.toLowerCase();
-        const firstName = request.body.firstName?.toLowerCase();
-        const lastName = request.body.lastName?.toLowerCase();
-        EmpSchema.find({
-            $or: [
-              { firstName: searchName },
-              { lastName: searchName },
-              { firstName: firstName },
-              { lastName: lastName }
-            ],
-          })
-          .then(data=>{
-                if(data=="")
-                {
+// exports.searchForEmp=(request,response,next)=>{
+//     if(request.password != "new"){
+//         const searchName = request.body.searchName?.toLowerCase();
+//         const firstName = request.body.firstName?.toLowerCase();
+//         const lastName = request.body.lastName?.toLowerCase();
+//         EmpSchema.find({
+//             $or: [
+//               { firstName: searchName },
+//               { lastName: searchName },
+//               { firstName: firstName },
+//               { lastName: lastName }
+//             ],
+//           })
+//           .then(data=>{
+//                 if(data=="")
+//                 {
+//                     next(new Error("This employee is not found, Invalid Input"));
+//                 }
+//                 else
+//                     response.status(200).json({data});
+//             })
+//             .catch(error=>{next(error);
+//             })}
+//             else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+// }
+exports.searchForEmp = (request, response, next) => {
+    const searchKey = request.body.searchKey?.toLowerCase();
+    const firstName = request.body.firstName?.toLowerCase();
+    const lastName = request.body.lastName?.toLowerCase();
+  
+    let searchCriteria = {};
+  
+    if (searchKey && searchKey !== "") {
+      searchCriteria = {
+        $or: [
+           
+          { firstName: { $regex: searchKey, $options: "i" } },
+          { lastName: { $regex: searchKey, $options: "i" } },
+        ],
+      };
+    } else if (firstName && firstName !== "" ) {
+      searchCriteria = { firstName: { $regex: firstName, $options: "i" } };
+    } else if (lastName && lastName !== "") {
+      searchCriteria = { lastName: { $regex: lastName, $options: "i" } };
+    }
+  
+    EmpSchema.find(searchCriteria)
+      .then((data) => {
+        if (data.length === 0) {
                     next(new Error("This employee is not found, Invalid Input"));
-                }
-                else
-                    response.status(200).json({data});
-            })
-            .catch(error=>{next(error);
-            })}
-            else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-}
+        } else {
+          response.status(200).json({ data });
+        }
+      })
+      .catch((error) => {
+        next(error);
+      });
+  };
 
 //Get a Specific Employee
 exports.getOneEmp=(request,response,next)=>{

@@ -135,6 +135,19 @@ module.exports.checkBasicAdminAndEmp=(request,response,next)=>{
       next(error);
   }
 }
+
+module.exports.checkAdmin=(request,response,next)=>{
+  console.log(request.role);
+    if(request.role =="Admin" ){
+     
+        next();
+    }
+    else{
+      let error =new Error("Not Authorized");
+      error.status=403;
+      next(error);
+  }
+}
 module.exports.checkBaAdminAndAdminAndEmpforEmp=(request,response,next)=>{
 
   EmpSchema.findOne({email:`${request.email}`}).then((data)=>{
