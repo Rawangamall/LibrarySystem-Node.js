@@ -15,7 +15,7 @@ const saltRounds = 10;
 const salt = bcrypt.genSaltSync(saltRounds)
 
 exports.getAll=(request,response)=>{
-    if(request.password != "new"){
+    // if(request.password != "new"){
     MemberSchema.find({})
                     .then((data)=>{
                             response.status(200).json(data);
@@ -23,8 +23,8 @@ exports.getAll=(request,response)=>{
                     .catch(error=>{
                         next(error);
                     })}
-    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-}
+//     else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+// }
 
 // exports.searchForMember=(request,response,next)=>{
 //     // if(request.password != "new"){
@@ -88,9 +88,10 @@ exports.searchForMember = (request, response, next) => {
       });
   };
 
- // if(request.password != "new"){
+ 
 exports.addMember=(request,response,next)=>{
    
+    // if(request.password != "new"){
  new MemberSchema({
     _id:request.body._id,
     fullName:request.body.fullName,

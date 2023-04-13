@@ -30,10 +30,8 @@ const client = new MongoClient(url);
 
 
 exports.addIMG=multer({
-   
     fileFilter: function (req, file, cb) {
         if (file.mimetype != "image/png" && file.mimetype != "image/jpg" && file.mimetype != "image/jpeg" && file.mimetype != "image/avif") {
-           
             return cb(new Error('Only images are allowed'))
         }
         cb(null, true)
@@ -41,41 +39,37 @@ exports.addIMG=multer({
     limits: { fileSize: 10000*10000 },
     storage:multer.diskStorage({
         destination:(req,file,cb)=>{
-            if(req.role=="Employee"){
-                cb(null,path.join(__dirname,"..","..","images","Employees_images"));
-            }else if(req.role=="Member"){
-                cb(null,path.join(__dirname,"..","..","images","Members_images"));
-            }
-            else if(req.role=="Admin"||req.role=="BasicAdmin"){
+            // if(req.role=="Employee"){
+            //     cb(null,path.join(__dirname,"..","..","images","Employees_images"));
+            // }else if(req.role=="Member"){
+            //     cb(null,path.join(__dirname,"..","..","images","Members_images"));
+            // }
+            // else if(req.role=="Admin"||req.role=="BasicAdmin"){
                 var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
                 if(fullUrl.includes("Book")){
                     cb(null,path.join(__dirname,"..","..","images","Book_images"));
                 }else{
                     cb(null,path.join(__dirname,"..","..","images","Admins_images"));
                 }
-            }
-            else{
-                console.log("hiii")
-                cb(null,path.join(__dirname,"..","..","images","Members_images"));
-            }
+            // }
         },
         filename:(request, file, cb)=>{
-            if(request.role=="Employee"){
-                EmpSchema.findOne({email:request.email}).then((data)=>{
-                    imageName = data._id+ "." + "jpg";
-                    cb(null, imageName);
-                    console.log(imageName)
-                })
+            // if(request.role=="Employee"){
+            //     EmpSchema.findOne({email:request.email}).then((data)=>{
+            //         imageName = data._id+ "." + "jpg";
+            //         cb(null, imageName);
+            //         console.log(imageName)
+            //     })
                 
-            }else if(request.role=="Member"){
+            // }else if(request.role=="Member"){
 
-                MemberSchema.findOne({email:request.email}).then((data)=>{
-                    imageName = data._id+ "." + "jpg";
-                    cb(null, imageName);
-                    console.log(imageName)
-                })
+            //     MemberSchema.findOne({email:request.email}).then((data)=>{
+            //         imageName = data._id+ "." + "jpg";
+            //         cb(null, imageName);
+            //         console.log(imageName)
+            //     })
            
-            }else if(request.role=="Admin"||request.role=="BasicAdmin"){
+            // }else if(request.role=="Admin"||request.role=="BasicAdmin"){
                 var fullUrl = request.protocol + '://' + request.get('host') + request.originalUrl;
                 if(fullUrl.includes("Book")){
 
@@ -97,14 +91,15 @@ exports.addIMG=multer({
                     });
                  });
       
-                    }else{
-                    AdminSchema.findOne({email:request.email}).then((data)=>{
-                        imageName = data._id+ "." + "jpg";
-                        cb(null, imageName);
-                    })
-                }
+                    }
+                //     else{
+                //     AdminSchema.findOne({email:request.email}).then((data)=>{
+                //         imageName = data._id+ "." + "jpg";
+                //         cb(null, imageName);
+                //     })
+                // }
 
-            }
+            // }
         }
     })
 }).single("image")

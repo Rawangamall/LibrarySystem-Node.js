@@ -10,7 +10,6 @@ let MemberSchema=mongoose.model("member");
 
 exports.login= async (request,response,next)=>{
     console.log(request.body.email);
-    console.log(request.body.password);
         let owner = await AdminSchema.findOne({email:request.body.email , password:request.body.password,_id:0});
         let admin = await AdminSchema.findOne({email:request.body.email , password:request.body.password});
         let employee = await EmpSchema.findOne({email:request.body.email , password:request.body.password});

@@ -13,15 +13,12 @@ const {checkAdmin, checkMember,checkBasicAdminAndEmp, checkBaAdminAndMemberAndEm
 router.route("/members")
        .get(memberController.getAll)//checkBasicAdminAndEmp,validateMW ,
        .post(memberController.addMember)//checkBasicAdminAndEmp,validateMW,imageValidate,validateMW,
-      
-// router.route("/members" )
-//        //.get(memberController.getAll)//checkBasicAdminAndEmp,validateMW ,
-//        .post(upload.none(),memberController.addMember)//checkBasicAdminAndEmp,validateMW,
-       
+           
 router.route("/member/:_id")
         .put(memberController.updateMember)//checkBaAdminAndMemberAndEmp,imageValidate,validateData.memberArrayPatch,
         .get(memberController.getMember)//checkBaAdminAndMemberAndEmp,validateData.memberIDParams,
         .delete(memberController.deleteMember)//checkBasicAdminAndEmp,validateData.memberIDParams,removeimage,
+      
 
 router.route("/firstLogin/:_id")
         .patch(checkMember,imageValidate,validateData.MemberfirstLogin,memberController.updatefirstLogin)

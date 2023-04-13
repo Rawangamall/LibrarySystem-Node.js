@@ -9,7 +9,7 @@ const salt = bcrypt.genSaltSync(saltRounds)
 
 //Get all employees
 exports.getEmps=(request,response,next)=>{
-    if(request.password != "new"){
+    // if(request.password != "new"){
         EmpSchema.find({})
             .then((data)=>{
                     response.status(200).json(data);
@@ -17,8 +17,8 @@ exports.getEmps=(request,response,next)=>{
             .catch(error=>{
                 next(error);
         })}
-    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-}
+//     else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+// }
 
 //Search for Employee
 // exports.searchForEmp=(request,response,next)=>{
@@ -85,7 +85,7 @@ exports.getOneEmp=(request,response,next)=>{
     if(request.password != "new"){
     EmpSchema.findOne({ _id: request.params._id})
          .then((data)=>{
-                 response.status(200).json({data});
+                 response.status(200).json(data);
              })
          .catch(error=>{next(error);
          })}
@@ -94,7 +94,7 @@ exports.getOneEmp=(request,response,next)=>{
  
 //Post(Add) a new Employee
 exports.addEmp=async(request,response,next)=>{
-    if(request.password != "new"){
+    // if(request.password != "new"){
     try
     {
         let data=await new EmpSchema({
@@ -112,14 +112,15 @@ exports.addEmp=async(request,response,next)=>{
     }catch(error)
     {
         next(error);
-    }}
-    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+    }
+// }
+    // else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
 
 //Update(Put) an Employee
 exports.updateEmp=(request,response,next)=>{
-    if(request.password != "new"){
-    if(request.role=="Employee"){
+    // if(request.password != "new"){
+    // if(request.role=="Employee"){
     EmpSchema.updateOne({
         _id:request.params._id
     },{
@@ -128,7 +129,7 @@ exports.updateEmp=(request,response,next)=>{
             lastName:request.body.lastName,
             password:request.body.password,
             birthdate:request.body.birthdate,
-            image:request.body.image
+            // image:request.body.image
         }
     }).then(data=>{
         if(data.matchedCount==0)
@@ -136,33 +137,33 @@ exports.updateEmp=(request,response,next)=>{
             next(new Error("This employee is not found"));
         }
         else
-            response.status(200).json({data:"Updated!"});
+            response.status(200).json(data);
     })
     .catch(error=>next(error));}
-    else if (request.role=="Admin"||request.role=="BasicAdmin"){
-        EmpSchema.updateOne({
-            _id:request.params._id
-        },{
-            $set:{
-                firstName:request.body.firstName,
-                lastName:request.body.lastName,
-                email:request.body.email,
-                birthdate:request.body.birthdate,
-                hireDate:request.body.hireDate,
-                salary:request.body.salary
-            }
-        }).then(data=>{
-            if(data.matchedCount==0)
-            {
-                next(new Error("This employee is not found"));
-            }
-            else
-                response.status(200).json({data:"Updated!"});
-        })
-       .catch(error=>next(error));
-    }}
-    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-}
+    // else if (request.role=="Admin"||request.role=="BasicAdmin"){
+    //     EmpSchema.updateOne({
+    //         _id:request.params._id
+    //     },{
+    //         $set:{
+    //             firstName:request.body.firstName,
+    //             lastName:request.body.lastName,
+    //             email:request.body.email,
+    //             birthdate:request.body.birthdate,
+    //             hireDate:request.body.hireDate,
+    //             salary:request.body.salary
+    //         }
+    //     }).then(data=>{
+    //         if(data.matchedCount==0)
+    //         {
+    //             next(new Error("This employee is not found"));
+    //         }
+    //         else
+    //             response.status(200).json({data:"Updated!"});
+    //     })
+    //    .catch(error=>next(error));
+    // }}
+    // else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+// }
 
 //Delete an Employee
 exports.deleteEmp=(request,response,next)=>{
