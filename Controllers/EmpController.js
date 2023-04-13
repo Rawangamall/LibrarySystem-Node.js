@@ -8,15 +8,20 @@ const saltRounds = 10;
 const salt = bcrypt.genSaltSync(saltRounds)
 
 //Get all employees
+ // if(request.password != "new"){
 exports.getEmps=(request,response,next)=>{
-    // if(request.password != "new"){
+   
         EmpSchema.find({})
-            .then((data)=>{
-                    response.status(200).json(data);
-                })
-            .catch(error=>{
-                next(error);
-        })}
+        .then(data => {
+            data.forEach(item => {
+            console.log("image path:", item.image);
+            });
+            response.status(200).json(data);
+        })
+        .catch(error => {
+            next(error);
+        });
+}
 //     else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 // }
 

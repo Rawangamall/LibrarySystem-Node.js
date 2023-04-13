@@ -18,6 +18,8 @@ exports.getAll=(request,response)=>{
     // if(request.password != "new"){
     MemberSchema.find({})
                     .then((data)=>{
+                       console.log(data.image)
+                        // localhost:port\data.image
                             response.status(200).json(data);
                     })
                     .catch(error=>{
