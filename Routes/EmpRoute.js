@@ -24,8 +24,9 @@ router.route("/Employee/:_id")
 
 router.route("/Employee/:_id")
     .put(controller.updateEmp)
-router.route("/searchForEmp")
-    .get(checkBasicAdminAndAdmin,validateMW,controller.searchForEmp)
+
+    router.route("/Employees/search")
+    .post(checkBasicAdminAndAdmin,controller.searchForEmp)//checkBasicAdminAndAdmin,validateMW,
 
 router.route("/firstLoginEmp/:_id")
     .put(EmpfirstLogin,controller.updatefirstLogin) //checkEmp,imageValidate,validateMW,
