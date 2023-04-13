@@ -41,7 +41,7 @@ server.use(bodyParser.json())
 
 //Routes 
 server.use(loginRoute);
-server.use(lol);
+// server.use(lol);
 server.use(AuthenticateMW);
 server.use(memberRoute);
 server.use(BookRoute);
