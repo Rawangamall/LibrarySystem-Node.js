@@ -10,17 +10,15 @@ const salt = bcrypt.genSaltSync(saltRounds)
 //Get all employees
 exports.getEmps=(request,response,next)=>{
     // if(request.password != "new"){
-        console.log("in");
         EmpSchema.find({})
             .then((data)=>{
                     response.status(200).json(data);
                 })
             .catch(error=>{
                 next(error);
-        })
-    //}
-    // else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-}
+        })}
+//     else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+// }
 
 //Search for Employee
 exports.searchForEmp=(request,response,next)=>{
@@ -54,7 +52,7 @@ exports.getOneEmp=(request,response,next)=>{
     if(request.password != "new"){
     EmpSchema.findOne({ _id: request.params._id})
          .then((data)=>{
-                 response.status(200).json({data});
+                 response.status(200).json(data);
              })
          .catch(error=>{next(error);
          })}
@@ -63,7 +61,7 @@ exports.getOneEmp=(request,response,next)=>{
  
 //Post(Add) a new Employee
 exports.addEmp=async(request,response,next)=>{
-    if(request.password != "new"){
+    // if(request.password != "new"){
     try
     {
         let data=await new EmpSchema({
@@ -81,8 +79,9 @@ exports.addEmp=async(request,response,next)=>{
     }catch(error)
     {
         next(error);
-    }}
-    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+    }
+// }
+    // else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
 
 //Update(Put) an Employee

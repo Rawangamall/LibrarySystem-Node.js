@@ -54,7 +54,7 @@ exports.searchForBook=(request,response,next)=>{
 
 //Get a Specific Book by ID
 exports.getOneBook=(request,response,next)=>{
-    if(request.password != "new"){
+    // if(request.password != "new"){
     BookSchema.findOne({ _id: request.params.id})
          .then((data)=>{
                 if(data.image) data.image = 'http://localhost:8000/'+data.image
@@ -62,14 +62,15 @@ exports.getOneBook=(request,response,next)=>{
              })
          .catch(error=>{next(error);
          })}
-         else{response.status(404).json({result:"Please update your profile data!! and login again"});}
- }
+//          else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+//  }
  
 //Post (Add) a new Book
 exports.addBook=async(request,response,next)=>{
-    if(request.password != "new"){
+    // if(request.password != "new"){
     try
     {
+        // console.log(request.file.filename);
     // console.log(request.file.path);
     // path = request.file.path.split("/images")[1];
     // imgpath = "images"+path;
@@ -92,12 +93,13 @@ exports.addBook=async(request,response,next)=>{
                 noOfCurrentBorrowed:request.body.noOfCurrentBorrowed,
                 returned:true,
                }).save(); 
-        response.status(201).json({data});
+        response.status(201).json(data);
     }catch(error)
     {
         next(error);
-    }}
-    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+    }
+// }
+//     else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
 
 //Update (Put) a Book
@@ -148,10 +150,10 @@ exports.deleteBook=(request,response,next)=>{
 
 
 exports.getNewArrivedBooks=(request,response,next)=>{
-    if(request.password != "new"){
+    // if(request.password != "new"){
     const endDate = new Date(); // current date and time
     const startDate = new Date(); 
-    startDate.setDate(endDate.getMonth()-1);// one month  ago
+    startDate.setDate(endDate.getDate()-14);// 2 weeks ago
       
 BookSchema.find({ createdAt: { $gte: startDate, $lte: endDate } }, (err, result) => {
 
@@ -159,11 +161,12 @@ BookSchema.find({ createdAt: { $gte: startDate, $lte: endDate } }, (err, result)
     response.status(404).json({data:"Not Found"});
   }
   else{
-    response.status(200).json({result});
+    response.status(200).json(result);
   } 
-});}
-else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+})
 }
+// else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+// }
 
 //available books
 exports.getAvailableBooks=(request,response,next)=>{
@@ -198,5 +201,3 @@ exports.filteredbooks=(request,response,next)=>{
             }}
             else{response.status(404).json({result:"Please update your profile data!! and login again"});}
  }
-
- 

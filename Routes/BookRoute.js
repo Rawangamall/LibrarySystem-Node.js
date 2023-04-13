@@ -12,20 +12,21 @@ const removeBookIMG=require("../Core/Validation/imageValidate").removeBookIMG
 const { checkBasicAdminAndAdmin }=require("./../Core/auth/AuthenticateMW");
 
 router.route("/Book")
-    .get(controller.getBooks)
+    .get(controller.getBooks);
 
-router.post("/Book/add",checkBasicAdminAndAdmin,validatePostBook,validateMW,controller.addBook) //image validate
+router.route("/Book/newArrivedBooks")
+    .get(controller.getNewArrivedBooks)  
 
-router.get("/Book/:id",validateOnIDParams,validateMW,controller.getOneBook)
-router.delete("/Book/:id",checkBasicAdminAndAdmin,validateOnIDParams,validateMW,removeBookIMG,controller.deleteBook) //img
-router.put("/Book/update/:id",checkBasicAdminAndAdmin,validatePutBook,validateMW,controller.updateBook)
+router.route("/Book/add")
+      .post(imageValidate,controller.addBook) //checkBasicAdminAndAdmin,imageValidate,validatePostBook,validateMW,controller.addBook
+router.get("/Book/:id",controller.getOneBook) //validateOnIDParams,validateMW,
+router.delete("/Book/:id",controller.deleteBook) //checkBasicAdminAndAdmin,validateOnIDParams,validateMW,removeBookIMG,
+router.put("/Book/update/:id",checkBasicAdminAndAdmin,imageValidateUP,validatePutBook,validateMW,controller.updateBook)
 
 router.route("/searchForBook")
       .get(controller.searchForBook)
 
 router.get("/Book/available",controller.getAvailableBooks)
-router.route("/member/NewArrivedBooks/get")
-       .get(controller.getNewArrivedBooks)  
 
 router.route("/Book/filterBooks/get")
       .get(controller.filteredbooks)

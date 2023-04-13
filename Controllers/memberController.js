@@ -15,16 +15,16 @@ const saltRounds = 10;
 const salt = bcrypt.genSaltSync(saltRounds)
 
 exports.getAll=(request,response)=>{
-    if(request.password != "new"){
+    // if(request.password != "new"){
     MemberSchema.find({})
                     .then((data)=>{
-                            response.status(200).json({data});
+                            response.status(200).json(data);
                     })
                     .catch(error=>{
                         next(error);
                     })}
-    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-}
+//     else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+// }
 
 exports.searchForMember=(request,response,next)=>{
     if(request.password != "new"){
@@ -56,7 +56,7 @@ exports.searchForMember=(request,response,next)=>{
 
 
 exports.addMember=(request,response,next)=>{
-    if(request.password != "new"){
+    // if(request.password != "new"){
  new MemberSchema({
     _id:request.body._id,
     fullName:request.body.fullName,
@@ -72,8 +72,8 @@ exports.addMember=(request,response,next)=>{
     .catch(error=>{
     next(error);
     })}
-    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-}
+//     else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+// }
 
 
 exports.updatefirstLogin=(request,response,next)=>{
@@ -107,7 +107,7 @@ exports.updatefirstLogin=(request,response,next)=>{
 
 exports.updateMember=(request,response,next)=>{
     if(request.password != "new"){
-        if(request.role=="Employee" || request.role=="BasicAdmin"){
+        // if(request.role=="Admin" || request.role=="BasicAdmin"){
             MemberSchema.updateOne({
                 _id:request.params._id
             },{
@@ -124,40 +124,39 @@ exports.updateMember=(request,response,next)=>{
                     next(new Error("member not found"));
                 }
                 else
-        {        console.log(data);
-        
+                { console.log(data);
                 response.status(200).json(data);}
             })
             .catch(error=>next(error));
-        }else if(request.role=="Member"){
-          if(request.body.password != null  ){
-        var hash = bcrypt.hashSync(request.body.password,salt);
-      }
+//         }else if(request.role=="Member"){
+//           if(request.body.password != null  ){
+//         var hash = bcrypt.hashSync(request.body.password,salt);
+//       }
      
-    MemberSchema.updateOne({
-        _id:request.params._id
-    },{
-        $set:{
-            fullName:request.body.fullName,
-            password:hash,
-            image:request.body.image,
-            phoneNumber:request.body.phoneNumber,
-            birthdate:request.body.birthdate,
-            fullAddress:request.body.fullAddress
+//     MemberSchema.updateOne({
+//         _id:request.params._id
+//     },{
+//         $set:{
+//             fullName:request.body.fullName,
+//             password:hash,
+//             image:request.body.image,
+//             phoneNumber:request.body.phoneNumber,
+//             birthdate:request.body.birthdate,
+//             fullAddress:request.body.fullAddress
            
-        }
-    }).then((data)=>{
-        if(data == null)
-        {
-            next(new Error("member not found"));
-        }
-        else
-{        console.log(data);
+//         }
+//     }).then((data)=>{
+//         if(data == null)
+//         {
+//             next(new Error("member not found"));
+//         }
+//         else
+// {        console.log(data);
 
-        response.status(200).json(data);}
-    })
-    .catch(error=>next(error));
-   }
+//         response.status(200).json(data);}
+//     })
+//     .catch(error=>next(error));
+//    }
 }else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 
 }
@@ -229,7 +228,7 @@ exports.getMember=(request,response,next)=>{
     .then((result)=>{
         if(result != null)
         {
-            response.status(200).json({result});
+            response.status(200).json(result);
         }
         else{
             response.status(404).json({result:"Not Found"});
