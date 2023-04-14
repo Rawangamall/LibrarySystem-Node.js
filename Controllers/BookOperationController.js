@@ -10,7 +10,7 @@ const BookSchema=mongoose.model("Book");
 const BookOperationSchema=mongoose.model("BookOperation");
 
 exports.addBorrowbook=(request,response,next)=>{
-    if(request.password != "new"){
+    // if(request.password != "new"){
     MemberSchema.findOne({_id:request.body.memberID})
     .then((result)=>{
         if(result != null )
@@ -42,7 +42,7 @@ exports.addBorrowbook=(request,response,next)=>{
 
                         .then((data)=>{
                        
-                            response.status(200).json({data});
+                            response.status(200).json(data);
                         })
                     
                     })  }
@@ -55,12 +55,12 @@ exports.addBorrowbook=(request,response,next)=>{
     }else{response.status(404).json({data:"This member is not Found"});}
   
    }).catch(error=>{next(error); })}
-   else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+//    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
     
-}
+// }
     
     exports.addReadbook=(request,response,next)=>{
-        if(request.password != "new"){
+        // if(request.password != "new"){
         MemberSchema.findOne({_id:request.body.memberID})
         .then((result)=>{
             if(result != null )
@@ -95,7 +95,7 @@ exports.addBorrowbook=(request,response,next)=>{
         })
       
         }else{response.status(404).json({data:"This Book is not Avilable"});}
-    }else{response.status(404).json({data:"This Book is already borrowed!"});}
+    }else{response.status(404).json({data:"This Book is already read!"});}
 
  })
       }else{response.status(404).json({data:"This Book is already borrowed!"});}
@@ -110,8 +110,9 @@ exports.addBorrowbook=(request,response,next)=>{
         next(error);
         })
 
-    }else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-        }
+     }
+    //else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+    //     }
                        
 exports.getAll=(request,response,next)=>{
     if(request.password != "new"){
@@ -121,7 +122,7 @@ exports.getAll=(request,response,next)=>{
                         BookOperationSchema.updateMany({expireDate: { $lt: new Date()},operation:"borrow",returned:false}, [{ $set: { late: "Late: This book isn't returned yet"}}])
                         .then(data=>{console.log("done")}).catch(error=>next(error));  
 
-                        response.status(200).json({data});
+                        response.status(200).json(data);
                         })
                     .catch(error=>{
                         next(error);
@@ -150,7 +151,7 @@ exports.getAll=(request,response,next)=>{
             .then((result)=>{
                 if(result != null)
                 {
-                    response.status(200).json({result});
+                    response.status(200).json(result);
                 }
                 else{
                     response.status(404).json({result:"Not Found"});
@@ -325,10 +326,10 @@ exports.returnBorrowBook=(request,response,next)=>{
         else{response.status(404).json({result:"Please update your profile data!! and login again"});}
     }
     
-
-exports.mostreadingBooks=(request,response,next)=>{
-    if(request.password != "new"){
-    const PD = request.body.publishingDate;
+    
+exports.mostBorrowedBooks=(request,response,next)=>{
+    // if(request.password != "new"){
+    const PD = request.body.SearchYear;
     let searchbyYear;
     if(PD==null)
     {
@@ -338,62 +339,6 @@ exports.mostreadingBooks=(request,response,next)=>{
         searchbyYear = Number(PD);
     }
    
-    BookOperationSchema.aggregate( [
-      {$match: { operation:"read"}},
-      {
-        $lookup: {
-                     from: 'books',
-                     localField: 'bookID',
-                     foreignField: '_id',
-                     as: 'book'
-                 }
-     }, 
-     { $unwind: "$book" },
-     {
-        $project: { 
-                        _id:0,       
-                        bookID: "$bookID" ,
-                        book_title:"$book.title",
-                        publishyear:{ $year:"$book.publishingDate"}
-              }
-     },
-     {$match:  {publishyear:searchbyYear}},
-              
-    { $group: { _id: "$bookID", borrowCount: { $sum: 1 }  ,  book_title: { $push: "$book_title" } } },
-    { $sort: { borrowCount: -1 } },
-     { $limit: 5 },
-     {
-       $project: { 
-                                     
-                 book_title: { $first: "$book_title" },
-                 
-                }},
-             
-    ])
-    
-     .then(result => {
-        response.status(200).json({result});
-    }) .catch(error=>next(error));}
-    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-}
-         
-        
-    
-    
-exports.mostBorrowedBooks=(request,response,next)=>{
-    if(request.password != "new"){
-    const PD = request.body.publishingDate;
-    let searchbyYear;
-    if(PD==null)
-    {
-        searchbyYear=new Date().getFullYear();   
-    }
-    else{ 
-        searchbyYear = Number(PD);
-    }
-    
-    
-    console.log(PD);
     BookOperationSchema.aggregate( [
       {$match: { operation:"borrow"}},
       {
@@ -409,28 +354,158 @@ exports.mostBorrowedBooks=(request,response,next)=>{
         $project: { 
                         _id:0,       
                         bookID: "$bookID" ,
-                        book_title:"$book.title",
-                        publishyear:{ $year:"$book.publishingDate"}
-              }
+                        title:"$book.title",
+                        author:"$book.author",
+                        publisher:"$book.publisher",
+                        borrowYear:{ $year:"$startDate"},
+                        publishingDate: "$book.publishingDate" 
+                    }
      },
-     {$match:  {publishyear:searchbyYear}},
+     {$match:  {borrowYear:searchbyYear}},
               
-    { $group: { _id: "$bookID", borrowCount: { $sum: 1 }  ,  book_title: { $push: "$book_title" } } },
+    { $group: { _id: "$bookID", borrowCount: { $sum: 1 }  ,  title: { $push: "$title" },author: { $push: "$author" },publisher: { $push: "$publisher" },publishingDate: { $push: "$publishingDate" } ,borrowYear: { $push: "$borrowYear" } } },
     { $sort: { borrowCount: -1 } },
      { $limit: 5 },
      {
        $project: { 
-                                     
-                 book_title: { $first: "$book_title" },
+                _id:0,          
+                 title: { $first: "$title" },
+                 author: { $first: "$author" },
+                 publisher: { $first: "$publisher" },
+                 publishingDate:{$first:"$publishingDate"},
+                 borrowCount:"$borrowCount"
                  
                 }},
+             
     ])
+    
      .then(result => {
-        response.status(200).json({result});
+        response.status(200).json(result);
     }) .catch(error=>next(error));}
-    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-}
-     
+//     else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+// }
+         
+        
+    
+    
+exports.mostreadingBooks=(request,response,next)=>{
+    // if(request.password != "new"){
+    const PD = request.body.publishingDate;
+    let searchbyYear;
+    if(PD==null)
+    {
+        searchbyYear=new Date().getFullYear();   
+    }
+    else{ 
+        searchbyYear = Number(PD);
+    }
+    
+    
+    console.log(PD);
+    BookOperationSchema.aggregate( [
+      {$match: { operation:"read"}},
+      {
+        $lookup: {
+                     from: 'books',
+                     localField: 'bookID',
+                     foreignField: '_id',
+                     as: 'book'
+                 }
+     }, 
+     { $unwind: "$book" },
+     {
+        $project: { 
+                        _id:0,       
+                        bookID: "$bookID" ,
+                        title:"$book.title",
+                        author:"$book.author",
+                        publisher:"$book.publisher",
+                        borrowYear:{ $year:"$startDate"},
+                        publishingDate: "$book.publishingDate" 
+                    }
+     },
+     {$match:  {borrowYear:searchbyYear}},
+              
+    { $group: { _id: "$bookID", borrowCount: { $sum: 1 }  ,  title: { $push: "$title" },author: { $push: "$author" },publisher: { $push: "$publisher" },publishingDate: { $push: "$publishingDate" } ,borrowYear: { $push: "$borrowYear" } } },
+    { $sort: { borrowCount: -1 } },
+     { $limit: 5 },
+     {
+       $project: { 
+                _id:0,          
+                 title: { $first: "$title" },
+                 author: { $first: "$author" },
+                 publisher: { $first: "$publisher" },
+                 publishingDate:{$first:"$publishingDate"},
+                 borrowCount:"$borrowCount"
+                 
+                }},
+             
+    ])
+    
+     .then(result => {
+        response.status(200).json(result);
+    }) .catch(error=>next(error));}
+//     else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+// }
+       
+exports.mostPopularBooks=(request,response,next)=>{
+    // if(request.password != "new"){
+    const PD = request.body.publishingDate;
+    let searchbyYear;
+    if(PD==null)
+    {
+        searchbyYear=new Date().getFullYear();   
+    }
+    else{ 
+        searchbyYear = Number(PD);
+    }
+    
+    
+    console.log(PD);
+    BookOperationSchema.aggregate( [
+      {
+        $lookup: {
+                     from: 'books',
+                     localField: 'bookID',
+                     foreignField: '_id',
+                     as: 'book'
+                 }
+     }, 
+     { $unwind: "$book" },
+     {
+        $project: { 
+                        _id:0,       
+                        bookID: "$bookID" ,
+                        title:"$book.title",
+                        author:"$book.author",
+                        publisher:"$book.publisher",
+                        borrowYear:{ $year:"$startDate"},
+                        publishingDate: "$book.publishingDate" 
+                    }
+     },
+     {$match:  {borrowYear:searchbyYear}},
+              
+    { $group: { _id: "$bookID", borrowCount: { $sum: 1 }  ,  title: { $push: "$title" },author: { $push: "$author" },publisher: { $push: "$publisher" },publishingDate: { $push: "$publishingDate" } ,borrowYear: { $push: "$borrowYear" } } },
+    { $sort: { borrowCount: -1 } },
+     { $limit: 5 },
+     {
+       $project: { 
+                _id:0,          
+                 title: { $first: "$title" },
+                 author: { $first: "$author" },
+                 publisher: { $first: "$publisher" },
+                 publishingDate:{$first:"$publishingDate"},
+                 borrowCount:"$borrowCount"
+                 
+                }},
+             
+    ])
+    
+     .then(result => {
+        response.status(200).json(result);
+    }) .catch(error=>next(error));}
+//     else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+// }
     
 exports.makeSureOfReturnedRead=(request,response,next)=>{
     if(request.password != "new"){

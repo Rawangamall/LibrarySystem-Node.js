@@ -12,18 +12,23 @@ const validateOnIDParams=require("../Core/Validation/EmpValidation").validateOnI
 const {checkEmp, checkBaAdminAndAdminAndEmpforEmp, checkBasicAdminAndAdmin }=require("./../Core/auth/AuthenticateMW");
 
 router.route("/Employees")
-    .get(checkBasicAdminAndAdmin,validateMW,controller.getEmps)
-    .post(checkBasicAdminAndAdmin,validatePostEmp,validateMW,controller.addEmp)
+    .get(controller.getEmps) //checkBasicAdminAndAdmin,validateMW,
+    .post(controller.addEmp) //checkBasicAdminAndAdmin,validatePostEmp,validateMW,
 
 router.route("/Employee/:_id")
-    .put(checkBaAdminAndAdminAndEmpforEmp,imageValidate,validateMW,validatePutEmp,controller.updateEmp)
-    .delete(checkBasicAdminAndAdmin,validateMW,validateOnIDParams,removeEmpIMG,controller.deleteEmp)
-    .get(checkBaAdminAndAdminAndEmpforEmp,validateOnIDParams,validateMW,controller.getOneEmp)
+    .put(controller.updateEmp) //checkBaAdminAndAdminAndEmpforEmp,imageValidate,validateMW,validatePutEmp,
+    .delete(controller.deleteEmp) //removeEmpIMG,checkBasicAdminAndAdmin,validateMW,validateOnIDParams,
+    .get(controller.getOneEmp) //checkBaAdminAndAdminAndEmpforEmp,validateOnIDParams,validateMW,
 
-router.route("/searchForEmp")
-    .get(checkBasicAdminAndAdmin,validateMW,controller.searchForEmp)
+// router.route("/Employee/update/:_id")
+
+router.route("/Employee/:_id")
+    .put(controller.updateEmp)
+
+    router.route("/Employees/search")
+    .post(checkBasicAdminAndAdmin,controller.searchForEmp)//checkBasicAdminAndAdmin,validateMW,
 
 router.route("/firstLoginEmp/:_id")
-    .put(checkEmp,imageValidate,validateMW,EmpfirstLogin,controller.updatefirstLogin)
+    .put(EmpfirstLogin,controller.updatefirstLogin) //checkEmp,imageValidate,validateMW,
 
 module.exports=router;

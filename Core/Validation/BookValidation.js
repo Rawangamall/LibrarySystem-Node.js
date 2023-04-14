@@ -5,7 +5,7 @@ exports.validatePost=[
     body("title").isString().withMessage("Book's title must be string"),
     body("author").isString().withMessage("Book's author must be string"),
     body("publisher").isString().withMessage("Book's publisher must be string"),
-    body("publishingDate").isDate().withMessage("Publishing date must be date"),
+  //  body("publishingDate").isDate().withMessage("Publishing date must be date"),
     body("category").isString().withMessage("Book's category must be string"),
     body("edition").isString().withMessage("Book's edition must be string"),
     body("pages").isNumeric().withMessage("Book's pages must be number"),

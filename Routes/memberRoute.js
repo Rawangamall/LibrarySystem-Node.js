@@ -5,21 +5,25 @@ const validateData=require("./../Core/Validation/memberData");
 const memberController=require("./../Controllers/memberController");
 const imageValidate=require("../Core/Validation/imageValidate").addIMG;
 const removeimage=require("../Core/Validation/imageValidate").removeMemberIMG;
-const { checkMember,checkBasicAdminAndEmp, checkBaAdminAndMemberAndEmp }=require("./../Core/auth/AuthenticateMW");
+const {checkAdmin, checkMember,checkBasicAdminAndEmp, checkBaAdminAndMemberAndEmp }=require("./../Core/auth/AuthenticateMW");
+    
+// const upload = multer();
+  
   
 router.route("/members")
-       .get(validateMW ,memberController.getAll)
-       .post(checkBasicAdminAndEmp,validateMW,memberController.addMember)
-       
+       .get(memberController.getAll)//checkBasicAdminAndEmp,validateMW ,
+       .post(memberController.addMember)//checkBasicAdminAndEmp,validateMW,imageValidate,validateMW,
+           
 router.route("/member/:_id")
-        .patch(checkBaAdminAndMemberAndEmp,imageValidate,validateData.memberArrayPatch,memberController.updateMember)
-        .get(checkBaAdminAndMemberAndEmp,validateData.memberIDParams,memberController.getMember)
-        .delete(checkBasicAdminAndEmp,validateData.memberIDParams,removeimage,memberController.deleteMember)
+        .put(memberController.updateMember)
+        .get(memberController.getMember) //checkBaAdminAndMemberAndEmp,validateData.memberIDParams,
+        .delete(checkBasicAdminAndEmp,validateData.memberIDParams,memberController.deleteMember) //remove img
+
 
 router.route("/firstLogin/:_id")
         .patch(checkMember,imageValidate,validateData.MemberfirstLogin,memberController.updatefirstLogin)
  
-router.get("/searchForMember",checkBasicAdminAndEmp,memberController.searchForMember)        
+router.post("/members/search",memberController.searchForMember)    //checkBasicAdminAndEmp    
         
  router.route("/member/currentBorrowedBooks/:_id")
        .get(checkBaAdminAndMemberAndEmp,validateMW,memberController.currentBorrowedBooks)

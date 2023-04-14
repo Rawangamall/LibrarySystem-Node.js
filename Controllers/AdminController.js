@@ -221,7 +221,6 @@ exports.updateAdmin=(request,response,next)=>{
 
 //First Login
 exports.updatefirstLogin=(request,response,next)=>{
-    if(request.password != "new"){
     strpass=request.body.password
     if((strpass).length > 8 ){
         var hash = bcrypt.hashSync(request.body.password,salt);
@@ -247,8 +246,7 @@ exports.updatefirstLogin=(request,response,next)=>{
     .catch(error=>next(error));
 }else{
     response.status(404).json({data:"Enter the data"});     
-}}
-else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+}
 }
 
 //Delete Basic Admin
