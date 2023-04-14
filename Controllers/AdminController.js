@@ -20,7 +20,7 @@ const salt = bcrypt.genSaltSync(saltRounds)
 exports.getAllBasicAdmins=(request,response,next)=>{
     AdminSchema.find({"Role":{$eq:"BasicAdmin"}})
         .then((data)=>{
-                response.status(200).json({data});
+                response.status(200).json(data);
             })
         .catch(error=>{
             next(error);
@@ -30,7 +30,7 @@ exports.getAllBasicAdmins=(request,response,next)=>{
 exports.getAllAdmins=(request,response,next)=>{
     AdminSchema.find({"Role":{$eq:"Admin"}})
         .then((data)=>{
-                response.status(200).json({data});
+                response.status(200).json(data);
             })
         .catch(error=>{
             next(error);
@@ -40,7 +40,7 @@ exports.getAllAdmins=(request,response,next)=>{
 exports.getAllKindsAdmins=(request,response,next)=>{
     AdminSchema.find({})
         .then((data)=>{
-                response.status(200).json({data});
+                response.status(200).json(data);
             })
         .catch(error=>{
             next(error);
@@ -79,11 +79,11 @@ exports.searchForAdmin=(request,response,next)=>{
      }
 //Add
 exports.addAdmins=async(request,response,next)=>{
-    if(request.password != "new"){
+   if(request.password != "new"){
     try
     {
         console.log(request.body);
-        console.log(request.file);
+        //console.log(request.file);
         let data=await new AdminSchema({
             _id:request.body._id,
             firstName:request.body.firstName,
@@ -134,8 +134,8 @@ exports.updateOwner=(request,response,next)=>{
 
 //Update Basic Admin
 exports.updateBasicAdmin=(request,response,next)=>{
-    if(request.password != "new"){
-    if(request.role=="BasicAdmin"){
+   if(request.password != "new"){
+   if(request.role=="BasicAdmin"){
             AdminSchema.updateOne({ _id:request.params._id ,"Role":{$eq:"BasicAdmin"}}
             ,{
                
@@ -178,7 +178,7 @@ exports.updateBasicAdmin=(request,response,next)=>{
         response.status(200).json({data:"updated"});
     })
     .catch(error=>next(error));
-  }} //new
+ }} //new
   else{response.status(404).json({result:"Please update your profile data!! and login again"});}
    
     
@@ -188,7 +188,7 @@ exports.updateBasicAdmin=(request,response,next)=>{
 exports.updateAdmin=(request,response,next)=>{
     if(request.password != "new"){
     if(request.role=="Admin"){
-            AdminSchema.updateOne({ _id:request.params._id ,"Role":{$eq:"BasicAdmin"}}
+            AdminSchema.updateOne({ _id:request.params._id ,"Role":{$eq:"Admin"}}
             ,{
                
                 $set:{
@@ -207,32 +207,8 @@ exports.updateAdmin=(request,response,next)=>{
             })
             .catch(error=>next(error));
         
-    }
-   else if (request.role=="owner"||request.role=="BasicAdmin"){
-    AdminSchema.updateOne({ _id:request.params._id ,"Role":{$eq:"BasicAdmin"}}
-    ,{
-       
-        $set:{
-                firstName:request.body.firstName,
-                lastName:request.body.lastName,
-                email:request.body.email,
-                birthdate:request.body.birthdate,
-                hireDate:request.body.hireDate,
-                image:request.body.image,
-                salary:request.body.salary
-        }
-    }).then(data=>{
-        if(data.matchedCount==0)
-        {
-            next(new Error("Admin not found"));
-        }
-        else
-        response.status(200).json({data:"updated"});
-    })
-    .catch(error=>next(error));
-  }} //new
-  else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-   
+        //
+        }}
     
 }
 
@@ -278,7 +254,7 @@ else{response.status(404).json({result:"Please update your profile data!! and lo
 //Delete Basic Admin
 exports.deleteBasicAdmin=(request,response,next)=>{
     if(request.password != "new"){
-        if(request.params._id!=0){
+       if(request.params._id!=0){
     AdminSchema.findOne({_id: request.params._id,"Role":{$eq:"BasicAdmin"}}).then(data=>{
         if(data==null)
         {
@@ -301,7 +277,7 @@ exports.deleteBasicAdmin=(request,response,next)=>{
     })
     .catch(error=>next(error));
 }else{
-    response.status(404).json({result:"Premission Denied"})
+   response.status(404).json({result:"Premission Denied"})
 }
 }
 else{response.status(404).json({result:"Please update your profile data!! and login again"});}
@@ -309,7 +285,7 @@ else{response.status(404).json({result:"Please update your profile data!! and lo
 
 //Delete Admin
 exports.deleteAdmin=(request,response,next)=>{
-    if(request.password != "new"){
+   if(request.password != "new"){
         if(request.params._id!=0){
     AdminSchema.findOne({_id: request.params._id,"Role":{$eq:"Admin"}}).then(data=>{
         if(data==null)
@@ -351,13 +327,13 @@ exports.getOwner=(request,response,next)=>{
        
            AdminSchema.findOne({ _id:request.params._id})
            .then(data=>{
-           response.status(200).json({data});
+           response.status(200).json(data);
            })
            .catch(error=>next(error));
        }
    })
    .catch(error=>next(error));}
-   else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+  else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
 
 
@@ -376,7 +352,7 @@ exports.getBasicAdmin=(request,response,next)=>{
        
            AdminSchema.findOne({ _id:request.params._id})
            .then(data=>{
-           response.status(200).json({data});
+           response.status(200).json(data);
            })
            .catch(error=>next(error));
        }
@@ -389,7 +365,7 @@ exports.getBasicAdmin=(request,response,next)=>{
 
 //Get one Admin
 exports.getAdmin=(request,response,next)=>{
-    if(request.password != "new"){
+   if(request.password != "new"){
     AdminSchema.findOne({_id: request.params._id,"Role":{$eq:"Admin"}}).then(data=>{
         if(data.matchedCount==0)
        {
@@ -399,7 +375,7 @@ exports.getAdmin=(request,response,next)=>{
        
            AdminSchema.findOne({ _id:request.params._id})
            .then(data=>{
-           response.status(200).json({data});
+           response.status(200).json(data);
            })
            .catch(error=>next(error));
        }

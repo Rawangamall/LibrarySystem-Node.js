@@ -12,27 +12,27 @@ const router=express.Router();
 const { checkBasicAdmin, checkBasicAdminAndAdminforAdmin }=require("./../Core/auth/AuthenticateMW");
 
 //Admin
-router.route("/Admin")
-    .get(checkBasicAdminAndAdmin,validateMW,controller.getAllAdmins)
-    .post(checkBasicAdmin,validateMW,controller.addAdmins) //imageValidate,//AdminValidate.validateAdminPost,
+router.route("/Admins")
+    .get(validateMW,controller.getAllAdmins)
+    .post(validateMW,controller.addAdmins) //imageValidate,//AdminValidate.validateAdminPost,
     
 router.route("/Admin/:_id")
-      .get(checkBasicAdminAndAdmin,AdminValidate.validateIDParams,validateMW,controller.getAdmin)
-      .put(checkBasicAdminAndAdmin,imageValidate,AdminValidate.validateAdminPut,validateMW,controller.updateAdmin) 
-      .delete(checkBasicAdmin,AdminValidate.validateIDParams,validateMW,removeAdminIMG,controller.deleteAdmin)
+      .get(validateMW,controller.getAdmin)
+      .put(validateMW,controller.updateAdmin) //checkBasicAdminAndAdmin,imageValidate,AdminValidate.validateAdminPut,
+      .delete(validateMW,controller.deleteAdmin)//checkBasicAdmin,removeAdminIMG,AdminValidate.validateIDParams,
 
 //BasicAdmin
-router.route("/Basic")
-    .get(checkBasicAdmin,validateMW,controller.getAllBasicAdmins)
-    .post(checkOwn,validateMW,controller.addAdmins) //imageValidate,//AdminValidate.validateAdminPost,
+router.route("/Basics")
+    .get(validateMW,controller.getAllBasicAdmins)//checkBasicAdmin
+    .post(validateMW,controller.addAdmins)//checkOwn, //imageValidate,//AdminValidate.validateAdminPost,
     
-router.route("/Basic/:_id")
-       .put(checkBasicAdmin,imageValidate,AdminValidate.validateAdminPut,validateMW,controller.updateBasicAdmin) 
-       .get(checkBasicAdmin,AdminValidate.validateIDParams,validateMW,controller.getBasicAdmin)
-       .delete(checkOwn,AdminValidate.validateIDParams,validateMW,removeAdminIMG,controller.deleteBasicAdmin)
+router.route("/BasicAdmin/:_id")
+       .put(validateMW,controller.updateBasicAdmin) //checkBasicAdmin,imageValidate,AdminValidate.validateAdminPut,
+       .get(validateMW,controller.getBasicAdmin)//checkBasicAdmin,AdminValidate.validateIDParams,
+       .delete(controller.deleteBasicAdmin)//checkOwn,AdminValidate.validateIDParams,validateMW,removeAdminIMG,
 
 //owner
-router.route("/ownerGetsAll").get(checkOwn,validateMW,controller.getAllKindsAdmins)
+router.route("/ownerGetsAll").get(validateMW,controller.getAllKindsAdmins)
 router.put("/owner/:_id",checkOwn,imageValidate,AdminValidate.validateAdminPut,validateMW,controller.updateOwner)
 router.get("/owner/:_id",checkOwn,AdminValidate.validateIDParams,validateMW,controller.getOwner)
 

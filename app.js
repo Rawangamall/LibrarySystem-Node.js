@@ -4,8 +4,8 @@ const morgan = require("morgan");
 const mongoose=require("mongoose");
 
 const AdminRoute=require("./Routes/AdminRoute");
-const loginRoute=require("./Routes/login");
-const AuthenticateMW=require("./Core/auth/AuthenticateMW");
+//const loginRoute=require("./Routes/login");
+//const AuthenticateMW=require("./Core/auth/AuthenticateMW");
 const memberRoute=require("./Routes/memberRoute");
 const BookRoute=require("./Routes/BookRoute");
 const EmpRoute=require("./Routes/EmpRoute");
@@ -38,8 +38,8 @@ server.use(express.urlencoded({extended:false}));
 
 
 //Routes 
-server.use(loginRoute);
-server.use(AuthenticateMW);
+//server.use(loginRoute);
+//server.use(AuthenticateMW);
 server.use(memberRoute);
 server.use(BookRoute);
 server.use(EmpRoute);
