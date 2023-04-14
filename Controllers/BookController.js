@@ -9,7 +9,7 @@ exports.getBooks=(request,response,next)=>{
     if(request.password != "new"){
         BookSchema.find({})
              .then((data)=>{
-              //  if(data.image) data.image = 'http://localhost:8000/'+data.image
+                if(data.image){ data.image = 'http://localhost:8080/'+data.image}
                     response.status(200).json(data);
                 })
             .catch(error=>{
@@ -18,39 +18,80 @@ exports.getBooks=(request,response,next)=>{
         else{response.status(404).json({result:"Please update your profile data!! and login again"});}
     }
 
-//Search for a book by publisher, author, title
-exports.searchForBook=(request,response,next)=>{
-    if(request.password != "new"){
+
+
+
+    exports.searchForBook = (request, response, next) => {
+        if(request.password != "new"){
             //Search for Books
             const searchKey = request.body.searchKey?.toLowerCase();
             const publisher = request.body.publisher?.toLowerCase();
             const author = request.body.author?.toLowerCase();
             const title = request.body.title?.toLowerCase();
-            BookSchema.find({
-                $or: [
-                  { publisher: searchKey },
-                  { author: searchKey },
-                  { title: searchKey },
-                  { publisher: publisher },
-                  { author: author },
-                  { title: title }
-                ],
-                'noOfCopies': { $gt: 1 }
-              },{title:1,publisher:1,author:1,available:1,noBorrowed:1,noOfCurrentBorrowed:1,noOfCopies:1,availableCopies: { $subtract: ['$noOfCopies', '$noOfCurrentBorrowed'] } }
-              )
-              .then(data=>{
-                    if(data=="")
-                    {
-                        next(new Error("This Book is not found, Invalid Input"));
-                    }
-                    else{
-                        response.status(200).json({data})
-                    }
-                })
-                .catch(error=>{next(error);
-                })}
-                else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-         }
+
+
+        let searchCriteria = {};
+      
+        if (searchKey && searchKey !== "") {
+          searchCriteria = {
+            $or: [
+              { title: { $regex: searchKey, $options: "i" } },
+            //   { email: { $regex: searchKey, $options: "i" } },
+            ],
+          };
+        } else if (title && title !== "") {
+          searchCriteria = { title: { $regex: title, $options: "i" } };
+        } else if (publisher && publisher !== "") {
+          searchCriteria = { publisher: { $regex: publisher, $options: "i" } };
+        }else if (author && author !== "") {
+            searchCriteria = { author: { $regex: author, $options: "i" } };
+          }
+      
+          BookSchema.find(searchCriteria,{title:1,publisher:1,author:1,available:1,noBorrowed:1,noOfCurrentBorrowed:1,noOfCopies:1,availableCopies: { $subtract: ['$noOfCopies', '$noOfCurrentBorrowed'] } })
+          .then((data) => {
+            if (data.length === 0) {
+              next(new Error("This Book is not found, Invalid Input"));
+            } else {
+              response.status(200).json({ data });
+            }
+          })
+          .catch(error=>{next(error);
+          })}
+          else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+   }
+//Search for a book by publisher, author, title
+// exports.searchForBook=(request,response,next)=>{
+//     if(request.password != "new"){
+//             //Search for Books
+//             const searchKey = request.body.searchKey?.toLowerCase();
+//             const publisher = request.body.publisher?.toLowerCase();
+//             const author = request.body.author?.toLowerCase();
+//             const title = request.body.title?.toLowerCase();
+//             BookSchema.find({
+//                 $or: [
+//                   { publisher: searchKey },
+//                   { author: searchKey },
+//                   { title: searchKey },
+//                   { publisher: publisher },
+//                   { author: author },
+//                   { title: title }
+//                 ],
+//                 'noOfCopies': { $gt: 1 }
+//               },{title:1,publisher:1,author:1,available:1,noBorrowed:1,noOfCurrentBorrowed:1,noOfCopies:1,availableCopies: { $subtract: ['$noOfCopies', '$noOfCurrentBorrowed'] } }
+//               )
+//               .then(data=>{
+//                     if(data=="")
+//                     {
+//                         next(new Error("This Book is not found, Invalid Input"));
+//                     }
+//                     else{
+//                         response.status(200).json({data})
+//                     }
+//                 })
+//                 .catch(error=>{next(error);
+//                 })}
+//                 else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+//          }
 
 //Get a Specific Book by ID
 exports.getOneBook=(request,response,next)=>{

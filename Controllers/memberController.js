@@ -170,14 +170,14 @@ exports.updateMember=(request,response,next)=>{
           if(request.body.password != null  ){
         var hash = bcrypt.hashSync(request.body.password,salt);
       }
-     const fileName =request.body.image;
+   //  const fileName =request.body.image;
     MemberSchema.updateOne({
         _id:request.params._id
     },{
         $set:{
             fullName:request.body.fullName,
             password:hash,
-            image:request.body.image,
+         //   image:request.body.image,
             phoneNumber:request.body.phoneNumber,
             birthdate:request.body.birthdate,
             fullAddress:request.body.fullAddress

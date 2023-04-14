@@ -18,13 +18,13 @@ router.route("/Book/newArrivedBooks")
     .get(controller.getNewArrivedBooks)  
 
 router.route("/Book/add")
-      .post(imageValidate,controller.addBook) //checkBasicAdminAndAdmin,imageValidate,validatePostBook,validateMW,controller.addBook
+      .post(controller.addBook) //checkBasicAdminAndAdmin,imageValidate,validatePostBook,validateMW,controller.addBook
 router.get("/Book/:id",controller.getOneBook) //validateOnIDParams,validateMW,
 router.delete("/Book/:id",controller.deleteBook) //checkBasicAdminAndAdmin,validateOnIDParams,validateMW,removeBookIMG,
-router.put("/Book/update/:id",checkBasicAdminAndAdmin,imageValidateUP,validatePutBook,validateMW,controller.updateBook)
+router.put("/Book/update/:id",checkBasicAdminAndAdmin,validateMW,controller.updateBook) //imageValidateUP,validatePutBook
 
-router.route("/searchForBook")
-      .get(controller.searchForBook)
+router.route("/Book/search")
+      .post(controller.searchForBook)
 
 router.get("/Book/available",controller.getAvailableBooks)
 

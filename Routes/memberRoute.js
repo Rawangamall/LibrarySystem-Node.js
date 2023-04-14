@@ -15,10 +15,10 @@ router.route("/members")
        .post(memberController.addMember)//checkBasicAdminAndEmp,validateMW,imageValidate,validateMW,
            
 router.route("/member/:_id")
-        .put(memberController.updateMember)//checkBaAdminAndMemberAndEmp,imageValidate,validateData.memberArrayPatch,
-        .get(memberController.getMember)//checkBaAdminAndMemberAndEmp,validateData.memberIDParams,
-        .delete(memberController.deleteMember)//checkBasicAdminAndEmp,validateData.memberIDParams,removeimage,
-      
+        .put(memberController.updateMember)
+        .get(memberController.getMember) //checkBaAdminAndMemberAndEmp,validateData.memberIDParams,
+        .delete(checkBasicAdminAndEmp,validateData.memberIDParams,memberController.deleteMember) //remove img
+
 
 router.route("/firstLogin/:_id")
         .patch(checkMember,imageValidate,validateData.MemberfirstLogin,memberController.updatefirstLogin)

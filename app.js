@@ -2,8 +2,8 @@ const express= require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const mongoose=require("mongoose");
-var bodyParser = require('body-parser')
 const lol = require('./lol');
+var bodyParser = require('body-parser')
 const AdminRoute=require("./Routes/AdminRoute");
 const loginRoute=require("./Routes/login");
 const AuthenticateMW=require("./Core/auth/AuthenticateMW");
@@ -40,6 +40,7 @@ server.use(bodyParser.json())
 
 //Routes 
 server.use(loginRoute);
+// server.use(lol);
 server.use(AuthenticateMW);
 server.use(lol);
 server.use(memberRoute);
