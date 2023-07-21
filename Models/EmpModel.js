@@ -1,4 +1,5 @@
 const mongoose=require("mongoose");
+const bcrypt = require("bcrypt");
 const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const schema=new mongoose.Schema({
@@ -15,12 +16,20 @@ const schema=new mongoose.Schema({
 			}
 		}
     },
-    password:String,
+    password:{ type: String, select: false },
     birthdate:Date,
     hireDate:{type:Date, default: Date.now()},
     image:String,
     salary:Number  
 });
+
+schema.methods.correctPassword = async function (
+    candidatePassword,
+    userPassword
+  ) {
+    return await bcrypt.compare(candidatePassword, userPassword);
+  };
+
 schema.plugin(AutoIncrement,{id:'Emp_id',inc_field:"_id"});
 //mapping
 mongoose.model("Employees",schema);

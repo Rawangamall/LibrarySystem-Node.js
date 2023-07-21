@@ -29,6 +29,6 @@ router.route("/Employee/:_id")
     .post(checkBasicAdminAndAdmin,controller.searchForEmp)//checkBasicAdminAndAdmin,validateMW,
 
 router.route("/firstLoginEmp/:_id")
-    .put(EmpfirstLogin,controller.updatefirstLogin) //checkEmp,imageValidate,validateMW,
+    .patch(EmpfirstLogin,controller.updatefirstLogin) //checkEmp,imageValidate,validateMW,
 
 module.exports=router;

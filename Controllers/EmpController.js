@@ -7,8 +7,7 @@ const EmpSchema=mongoose.model("Employees");
 const saltRounds = 10;
 const salt = bcrypt.genSaltSync(saltRounds)
 
-//Get all employees
- // if(request.password != "new"){
+
 exports.getEmps=(request,response,next)=>{
    
         EmpSchema.find({})
@@ -22,35 +21,7 @@ exports.getEmps=(request,response,next)=>{
             next(error);
         });
 }
-//     else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-// }
 
-//Search for Employee
-// exports.searchForEmp=(request,response,next)=>{
-//     if(request.password != "new"){
-//         const searchName = request.body.searchName?.toLowerCase();
-//         const firstName = request.body.firstName?.toLowerCase();
-//         const lastName = request.body.lastName?.toLowerCase();
-//         EmpSchema.find({
-//             $or: [
-//               { firstName: searchName },
-//               { lastName: searchName },
-//               { firstName: firstName },
-//               { lastName: lastName }
-//             ],
-//           })
-//           .then(data=>{
-//                 if(data=="")
-//                 {
-//                     next(new Error("This employee is not found, Invalid Input"));
-//                 }
-//                 else
-//                     response.status(200).json({data});
-//             })
-//             .catch(error=>{next(error);
-//             })}
-//             else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-// }
 exports.searchForEmp = (request, response, next) => {
     const searchKey = request.body.searchKey?.toLowerCase();
     const firstName = request.body.firstName?.toLowerCase();
@@ -87,19 +58,16 @@ exports.searchForEmp = (request, response, next) => {
 
 //Get a Specific Employee
 exports.getOneEmp=(request,response,next)=>{
-    if(request.password != "new"){
     EmpSchema.findOne({ _id: request.params._id})
          .then((data)=>{
                  response.status(200).json(data);
              })
          .catch(error=>{next(error);
-         })}
-         else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+         })
  }
  
-//Post(Add) a new Employee
 exports.addEmp=async(request,response,next)=>{
-    // if(request.password != "new"){
+    var hash = bcrypt.hashSync("new",salt);
     try
     {
         let data=await new EmpSchema({
@@ -107,7 +75,7 @@ exports.addEmp=async(request,response,next)=>{
                 firstName:request.body.firstName,
                 lastName:request.body.lastName,
                 email:request.body.email,
-                password:"new",
+                password:hash,
                 birthdate:request.body.birthdate,
                 hireDate:request.body.hireDate,
                 image:request.body.image,
@@ -118,14 +86,10 @@ exports.addEmp=async(request,response,next)=>{
     {
         next(error);
     }
-// }
-    // else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
 
-//Update(Put) an Employee
 exports.updateEmp=(request,response,next)=>{
-    // if(request.password != "new"){
-    // if(request.role=="Employee"){
+
     EmpSchema.updateOne({
         _id:request.params._id
     },{
@@ -134,7 +98,6 @@ exports.updateEmp=(request,response,next)=>{
             lastName:request.body.lastName,
             password:request.body.password,
             birthdate:request.body.birthdate,
-            // image:request.body.image
         }
     }).then(data=>{
         if(data.matchedCount==0)
@@ -145,31 +108,7 @@ exports.updateEmp=(request,response,next)=>{
             response.status(200).json(data);
     })
     .catch(error=>next(error));}
-    // else if (request.role=="Admin"||request.role=="BasicAdmin"){
-    //     EmpSchema.updateOne({
-    //         _id:request.params._id
-    //     },{
-    //         $set:{
-    //             firstName:request.body.firstName,
-    //             lastName:request.body.lastName,
-    //             email:request.body.email,
-    //             birthdate:request.body.birthdate,
-    //             hireDate:request.body.hireDate,
-    //             salary:request.body.salary
-    //         }
-    //     }).then(data=>{
-    //         if(data.matchedCount==0)
-    //         {
-    //             next(new Error("This employee is not found"));
-    //         }
-    //         else
-    //             response.status(200).json({data:"Updated!"});
-    //     })
-    //    .catch(error=>next(error));
-    // }}
-    // else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-// }
-
+ 
 //Delete an Employee
 exports.deleteEmp=(request,response,next)=>{
     if(request.password != "new"){
@@ -197,7 +136,6 @@ exports.updatefirstLogin=(request,response,next)=>{
     },{
         $set:{
             password:hash,
-            image:request.body.image,           
         }
     }).then((data)=>{
         if(data.modifiedCount != 0)
@@ -206,7 +144,7 @@ exports.updatefirstLogin=(request,response,next)=>{
                console.log(data)
         }
         else
-       {response.status(200).json(data);
+       {response.status(400).json(data);
                console.log(data)
     }
 

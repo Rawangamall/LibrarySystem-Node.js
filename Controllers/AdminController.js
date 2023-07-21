@@ -79,7 +79,8 @@ exports.searchForAdmin=(request,response,next)=>{
      }
 //Add
 exports.addAdmins=async(request,response,next)=>{
-   if(request.password != "new"){
+    var hash = bcrypt.hashSync("new",salt);
+
     try
     {
         console.log(request.body);
@@ -89,7 +90,7 @@ exports.addAdmins=async(request,response,next)=>{
             firstName:request.body.firstName,
             lastName:request.body.lastName,
             email:request.body.email,
-            password:"new",
+            password:hash,
             birthdate:request.body.birthdate,
             hireDate:request.body.hireDate,
             image:request.body.image,
@@ -101,8 +102,7 @@ exports.addAdmins=async(request,response,next)=>{
     }catch(error)
     {
         next(error);
-    }}
-    else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+    }
 }
 
 //update Owner

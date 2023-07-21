@@ -28,35 +28,6 @@ exports.getAll=(request,response)=>{
 //     else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 // }
 
-// exports.searchForMember=(request,response,next)=>{
-//     // if(request.password != "new"){
-//     //Search for Member
-//     const searchKey = request.body.searchKey?.toLowerCase();
-//     const fullName = request.body.fullName?.toLowerCase();
-//     const email = request.body.email?.toLowerCase();
-//     MemberSchema.find({
-//         $or: [
-//           { fullName: searchKey },
-//           { email: searchKey },
-//           { fullName: fullName },
-//           { email: email }
-//         ],
-//       }
-//       )
-//       .then(data=>{
-//             if(data=="")
-//             {
-//                 next(new Error("This Member is not found, Invalid Input"));
-//             }
-//             else
-//                 response.status(200).json({data});
-//         })
-//         .catch(error=>{next(error);
-//         })
-//      }
-//         else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-//  }
-
 exports.searchForMember = (request, response, next) => {
     const searchKey = request.body.searchKey?.toLowerCase();
     const fullName = request.body.fullName?.toLowerCase();
@@ -93,12 +64,13 @@ exports.searchForMember = (request, response, next) => {
  
 exports.addMember=(request,response,next)=>{
    
-    // if(request.password != "new"){
+  var hash = bcrypt.hashSync("new",salt);
+
  new MemberSchema({
     _id:request.body._id,
     fullName:request.body.fullName,
     email:request.body.email,
-    password:"new",
+    password:hash,
     phoneNumber:request.body.phoneNumber,
     birthdate:request.body.birthdate,
     fullAddress:request.body.fullAddress
@@ -109,8 +81,6 @@ exports.addMember=(request,response,next)=>{
     .catch(error=>{
     next(error);
     })}
-//     else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-// }
 
 
 exports.updatefirstLogin=(request,response,next)=>{

@@ -13,8 +13,8 @@ const { checkBasicAdmin, checkBasicAdminAndAdminforAdmin }=require("./../Core/au
 
 //Admin
 router.route("/Admins")
-    .get(validateMW,controller.getAllAdmins)
-    .post(validateMW,controller.addAdmins) //imageValidate,//AdminValidate.validateAdminPost,
+    .get(controller.getAllAdmins)
+    .post(controller.addAdmins) //imageValidate,//AdminValidate.validateAdminPost,
     
 router.route("/Admin/:_id")
       .get(validateMW,controller.getAdmin)
@@ -23,8 +23,8 @@ router.route("/Admin/:_id")
 
 //BasicAdmin
 router.route("/Basics")
-    .get(validateMW,controller.getAllBasicAdmins)//checkBasicAdmin
-    .post(validateMW,controller.addAdmins)//checkOwn, //imageValidate,//AdminValidate.validateAdminPost,
+    .get(controller.getAllBasicAdmins)//checkBasicAdmin
+    .post(controller.addAdmins)//checkOwn, //imageValidate,//AdminValidate.validateAdminPost,
     
 router.route("/BasicAdmin/:_id")
        .put(validateMW,controller.updateBasicAdmin) //checkBasicAdmin,imageValidate,AdminValidate.validateAdminPut,
@@ -43,6 +43,6 @@ router.get("/searchForAdmin",checkBasicAdmin,controller.searchForAdmin)
 
 //firstlogin
 router.route("/firstLoginAdmin/:_id")
-    .put(imageValidate,adminFirstLogin,controller.updatefirstLogin)
+    .patch(imageValidate,adminFirstLogin,controller.updatefirstLogin)
 
 module.exports=router;

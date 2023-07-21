@@ -9,11 +9,11 @@ const AdminSchema =mongoose.model("Admin");
 
 module.exports=(request,response,next)=>{
   try{
-   // let token=request.get("authorization").split(" ")[1];
-   const token = request.header('x-auth-token');
+
+    const token = request.header('x-auth-token');
    // console.log(token);
     let decodedToken=jwt.verify(token,"OStrack");
-    console.log(decodedToken);
+    console.log(decodedToken , "decodedtoken");
     request.email=decodedToken.email;
     request.password=decodedToken.password;
     request.role=decodedToken.role;
