@@ -21,7 +21,6 @@ exports.getBooks=(request,response,next)=>{
 
 
     exports.searchForBook = (request, response, next) => {
-        if(request.password != "new"){
             //Search for Books
             const searchKey = request.body.searchKey?.toLowerCase();
             const publisher = request.body.publisher?.toLowerCase();
@@ -54,8 +53,7 @@ exports.getBooks=(request,response,next)=>{
             }
           })
           .catch(error=>{next(error);
-          })}
-          else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+          })
    }
 
 //Get a Specific Book by ID

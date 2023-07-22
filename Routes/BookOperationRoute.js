@@ -8,7 +8,7 @@ const { checkBasicAdminAndEmp, checkBaAdminAndAdminAndEmp, checkBaAdminAndMember
 
 
 router.route("/BookOperation")
-       .get(controller.getAll) //checkBasicAdminAndEmp,validateMW,
+       .get(checkBasicAdminAndEmp,validateMW,controller.getAll) 
        
 router.route("/BookOperation/readingBYdate/get")
       .get(checkBaAdminAndMemberAndEmp,validateMW, controller.readingBYdate)
@@ -17,23 +17,20 @@ router.route("/BookOperation/borrowBYdate/get")
      .get(checkBaAdminAndMemberAndEmp,validateMW, controller.borrowBYdate)
    
 router.route("/BookOperation/:_id")
-    .delete(checkBasicAdminAndEmp, validateMW, controller.deleteBookOperation) //question delete it or only emp can delete
-    .get(controller.getBookOperation) //checkBasicAdminAndEmp, validateMW, 
+    .delete(checkBasicAdminAndEmp, validateMW, controller.deleteBookOperation)
+    .get(checkBasicAdminAndEmp, validateMW, controller.getBookOperation) 
 
 router.route("/Book/borrow/:_id")
-       .post(controller.addBorrowbook) //checkBasicAdminAndEmp,validateMW, ,,,,,  BookOperationValidation.validatePost
+       .post(checkBasicAdminAndEmp,validateMW,BookOperationValidation.validatePost,controller.addBorrowbook) 
 
 router.route("/Employees/returnBorrowBook/:_id")
-       .put(checkBasicAdminAndEmp, validateMW, controller.returnBorrowBook , BookOperationValidation.validatePut)
+       .put(checkBasicAdminAndEmp, validateMW, BookOperationValidation.validatePut, controller.returnBorrowBook )
 
 router.route("/Employees/returnReadBook/:_id")
-       .put(checkBasicAdminAndEmp,validateMW,controller.returnReadBook , BookOperationValidation.validatePut)
+       .put(checkBasicAdminAndEmp,validateMW, BookOperationValidation.validatePut,controller.returnReadBook)
 
 router.route("/Book/read/:_id")
-        .post(controller.addReadbook ) //checkBasicAdminAndEmp,validateMW,  ,,,,,,, ,BookOperationValidation.validatePost
-
-// router.route("/member/borrowInfo/:_id") // basicadminand employee andmember
-//        .get(checkBaAdminAndMemberAndEmp,controller.borrowInfo)
+        .post(checkBasicAdminAndEmp,validateMW,BookOperationValidation.validatePost,controller.addReadbook ) 
 
 router.route("/Employees/borrowInfo")
        .get(controller.borrowInfo)
@@ -42,8 +39,8 @@ router.route("/Employees/borrowInfo")
 router.route("/makeSureOfReturnedRead")
        .put(checkBasicAdminAndEmp, validateMW,controller.makeSureOfReturnedRead)
         
-router.get("/Bookoper/mostBorrowedBooks", controller.mostBorrowedBooks) //,checkBaAdminAndMemberAndEmp, validateMW
-router.get("/Bookoper/mostReadingBooks", controller.mostreadingBooks) //,checkBaAdminAndMemberAndEmp, validateMW,
-router.get("/Bookoper/mostPopularBooks",controller.mostPopularBooks) //checkBaAdminAndMemberAndEmp, validateMW,
+router.get("/Bookoper/mostBorrowedBooks",checkBaAdminAndMemberAndEmp, validateMW,controller.mostBorrowedBooks) 
+router.get("/Bookoper/mostReadingBooks",checkBaAdminAndMemberAndEmp, validateMW, controller.mostreadingBooks) 
+router.get("/Bookoper/mostPopularBooks",checkBaAdminAndMemberAndEmp, validateMW,controller.mostPopularBooks)
 
 module.exports=router;
