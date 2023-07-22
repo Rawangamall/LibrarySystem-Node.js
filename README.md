@@ -15,7 +15,7 @@ The Library System is a web-based application designed to monitor and manage var
 2. Administrator:
    - Can add and manage employee user accounts.
    - Has the authority to add, remove, or update books' data.
-   - Can search for employees by First Name and Last Name (bonus: auto-complete search).
+   - Can search for employees by First Name and Last Name.
 
 3. Employee:
    - Responsible for adding and managing member (library user) data.
@@ -37,15 +37,14 @@ The Library System is a web-based application designed to monitor and manage var
 2. Install the required dependencies by running `npm install` in the project directory.
 3. Configure the database and ensure all necessary tables and relationships are set up correctly.
 4. Start the server by running `npm start`.
-5. Access the Library System through your web browser by visiting `http://localhost:3000`.
-
+   
 ## Usage
 
 ### Basic Administrator
 
 1. Log in as the Basic Admin with your credentials.
-2. Add admin and basic admins users by providing their information such as first name, last name, email, password, birth date, hire date, image, and salary.
-3. Ensure that each Admin user changes their password and completes their full data, including uploading their own photo, except for hire date and salary.
+2. Add admin by providing their information such as first name, last name, email, password, birth date, hire date, image, and salary.
+3. Ensure that each Admin user changes their password and completes their full data as changing his password , except for hire date and salary.
 4. Perform CRUD operations on admins, employees, books, and members.
 5. Access suitable reports routes that appear on the system.
 
@@ -56,27 +55,26 @@ The Library System is a web-based application designed to monitor and manage var
 3. Ensure each Employee user changes their password and completes their full data, except for hire date and salary.
 4. View and update your profile, excluding hire date, salary, and email.
 5. Add, remove, and update Employee data.
-6. Search for employees by First Name and Last Name (bonus: auto-complete search).
+6. Search for employees by First Name and Last Name.
 7. Manage books, including adding, removing, and updating their data.
 
 ### Employee
 
 1. Log in as an Employee with your credentials.
 2. Add member (Library user) data, including full name, email, password, image, phone number, birth date, full address, and creation date.
-3. Ensure each Member changes their password at first login.
-4. View all system data, including books, publishers, and authors.
-5. Update your profile, except for salary, hire date, and email.
-6. List all members' data.
-7. Add, remove, and update Members' data.
-8. Search for members by Name or E-mail (AutoComplete Capability).
-9. List all books' data.
-10. Search for books by Publisher, Author, or Title, and view their availability, number of borrowed copies, and available copies.
-11. Search for available books, borrowed books with the respective members, and employees responsible for borrowing.
-12. View new arrived books, most borrowed books, and most reading books filtered by year.
-13. Borrow books for Members with their full data, ensuring the book is available and the number of borrowed copies doesn't exceed the available copies.
-14. Prevent borrowing the same book for the same Member if they still have a copy of it. Allow borrowing if the book is returned.
-15. Prevent borrowing if there's only one copy of the book (Library must have a spare book for reading).
-16. **BONUS:** If a Member exceeds the return date, prevent them from borrowing any book in the library for a week.
+3. View all system data, including books, publishers, and authors.
+4. Update your profile, except for salary, hire date, and email.
+5. List all members' data.
+6. Add, remove, and update Members' data.
+7. Search for members by Name or E-mail (AutoComplete Capability).
+8. List all books' data.
+9. Search for books by Publisher, Author, or Title, and view their availability, number of borrowed copies, and available copies.
+10. Search for available books, borrowed books with the respective members, and employees responsible for borrowing.
+11. View new arrived books, most borrowed books, and most reading books filtered by year.
+12. Borrow books for Members with their full data, ensuring the book is available and the number of borrowed copies doesn't exceed the available copies.
+13. Prevent borrowing the same book for the same Member if they still have a copy of it. Allow borrowing if the book is returned.
+14. Prevent borrowing if there's only one copy of the book (Library must have a spare book for reading).
+15. **BONUS:** If a Member exceeds the return date, prevent them from borrowing any book in the library.
 
 ### Member
 
