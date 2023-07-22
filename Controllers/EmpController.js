@@ -111,7 +111,6 @@ exports.updateEmp=(request,response,next)=>{
  
 //Delete an Employee
 exports.deleteEmp=(request,response,next)=>{
-    if(request.password != "new"){
     EmpSchema.deleteOne({
 		_id: request.params._id,
 	}).then(data=> {
@@ -122,8 +121,7 @@ exports.deleteEmp=(request,response,next)=>{
             response.status(200).json({data:"Deleted!"}),
             next();
         }
-        }).catch(error=>next(error));}
-        else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+        }).catch(error=>next(error));
 }
 
 //First Login
