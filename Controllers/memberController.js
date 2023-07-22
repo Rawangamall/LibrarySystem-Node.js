@@ -3,11 +3,8 @@ require("./../Models/member");
 require("../Models/BookModel");
 require("../Models/AdminModel")
 require("../Models/BookOperationModel");
-const validateMW=require("../Core/Validation/validateMW");
-const AuthenticateMW=require("./../Core/auth/AuthenticateMW");
 const MemberSchema=mongoose.model("member");
 const BookSchema=mongoose.model("Book");
-const AdminSchema=mongoose.model("Admin");
 const BookOperationSchema=mongoose.model("BookOperation");
 
 const bcrypt = require('bcrypt');
@@ -15,18 +12,14 @@ const saltRounds = 10;
 const salt = bcrypt.genSaltSync(saltRounds)
 
 exports.getAll=(request,response)=>{
-    // if(request.password != "new"){
     MemberSchema.find({})
                     .then((data)=>{
-                       console.log(data.image)
-                        // localhost:port\data.image
-                            response.status(200).json(data);
+                       response.status(200).json(data);
                     })
                     .catch(error=>{
                         next(error);
                     })}
-//     else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-// }
+
 
 exports.searchForMember = (request, response, next) => {
     const searchKey = request.body.searchKey?.toLowerCase();
@@ -39,7 +32,7 @@ exports.searchForMember = (request, response, next) => {
       searchCriteria = {
         $or: [
           { fullName: { $regex: searchKey, $options: "i" } },
-        //   { email: { $regex: searchKey, $options: "i" } },
+          { email: { $regex: searchKey, $options: "i" } },
         ],
       };
     } else if (fullName && fullName !== "") {
@@ -86,7 +79,9 @@ exports.addMember=(request,response,next)=>{
 exports.updatefirstLogin=(request,response,next)=>{
     strpass=request.body.password
     if((strpass).length > 8 ){
-        var hash = bcrypt.hashSync(request.body.password,salt);
+
+  const hash = bcrypt.hashSync(request.body.password,salt);
+
     MemberSchema.updateOne({
         _id:request.params._id
     },{
@@ -113,41 +108,42 @@ exports.updatefirstLogin=(request,response,next)=>{
 }
 
 exports.updateMember=(request,response,next)=>{
-    // if(request.password != "new"){
-        // if(request.role=="Employee" || request.role=="BasicAdmin"){
-        //     MemberSchema.updateOne({
-        //         _id:request.params._id
-        //     },{
-        //         $set:{
-        //             fullName:request.body.fullName,
-        //             email:request.body.email,
-        //             phoneNumber:request.body.phoneNumber,
-        //             birthdate:request.body.birthdate,
-        //             fullAddress:request.body.fullAddress  
-        //         }
-        //     }).then((data)=>{
-        //         if(data == null)
-        //         {
-        //             next(new Error("member not found"));
-        //         }
-        //         else
-        // {        console.log(data);
+
+  if(request.role=="Employee" || request.role=="BasicAdmin"){
+
+            MemberSchema.updateOne({
+                _id:request.params._id
+            },{
+                $set:{
+                    fullName:request.body.fullName,
+                    email:request.body.email,
+                    phoneNumber:request.body.phoneNumber,
+                    birthdate:request.body.birthdate,
+                    fullAddress:request.body.fullAddress  
+                }
+            }).then((data)=>{
+                if(data == null)
+                {
+                    next(new Error("member not found"));
+                }
+                else
+        {        console.log(data);
         
-        //         response.status(200).json(data);}
-        //     })
-        //     .catch(error=>next(error));
-        // }else if(request.role=="Member"){
+                response.status(200).json(data);}
+            })
+            .catch(error=>next(error));
+        }else if(request.role=="Member"){
+
           if(request.body.password != null  ){
         var hash = bcrypt.hashSync(request.body.password,salt);
       }
-   //  const fileName =request.body.image;
-    MemberSchema.updateOne({
+
+      MemberSchema.updateOne({
         _id:request.params._id
     },{
         $set:{
             fullName:request.body.fullName,
             password:hash,
-         //   image:request.body.image,
             phoneNumber:request.body.phoneNumber,
             birthdate:request.body.birthdate,
             fullAddress:request.body.fullAddress
@@ -158,35 +154,17 @@ exports.updateMember=(request,response,next)=>{
         {
             next(new Error("member not found"));
         }
-        else
-{        console.log(data);
-    // console.log(fileName);
-    // const fileName2="p2.jpg";
-    
-            // const filePath = ' C:/xampp/htdocs/images/' + fileName2; // Assuming the directory for saving images is /var/www/html/images
-            // console.log(filePath);
-            // fs.writeFile(filePath, fileData, (err) => {
-            // if (err) {
-            // console.error("err");
-            // } else {
-            // console.log('Image file saved to server');
-            // }
-            // });
-
+        else{
         response.status(200).json(data);}
     })
     .catch(error=>next(error));
    }
-// }else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-
-// }
-
+}
 
 //delete
 exports.deleteMember=(request,response,next)=>{
-    // if(request.password != "new"){
+
       var out=[]
-      //check if user exist first
 MemberSchema.findOne({_id:request.params._id}).then((check)=>{
    if(check != null){  
 
@@ -227,6 +205,7 @@ MemberSchema.findOne({_id:request.params._id}).then((check)=>{
             }).catch(error=>next(error));
            }
         }).catch(error=>next(error));
+
         //delete member
      MemberSchema.deleteOne({_id:request.params._id})
         .then((result)=>{
@@ -237,12 +216,11 @@ MemberSchema.findOne({_id:request.params._id}).then((check)=>{
 
    }else{response.status(404).json({data:"Member Not Found"});}
     
-})}
-// else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-// }
+});
+}
+
 
 exports.getMember=(request,response,next)=>{
-   if(request.password != "new"){
 
     MemberSchema.findOne({_id:request.params._id})
     .then((result)=>{
@@ -257,16 +235,15 @@ exports.getMember=(request,response,next)=>{
     .catch(error=>{
         next(error);
     })
-}else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 }
 
 
 exports.currentBorrowedBooks=(request,response,next)=>{
-    if(request.password != "new"){
-    strID=request.params._id;
-    NumID=Number(strID);
-    console.log(NumID);
-    BookOperationSchema.aggregate( [
+
+   strID=request.params._id;
+   NumID=Number(strID);
+
+   BookOperationSchema.aggregate( [
       {$match: {memberID:NumID , returned:false , operation:"borrow"}},
 
       { $group: { _id: "$bookID", 
@@ -322,7 +299,6 @@ exports.currentBorrowedBooks=(request,response,next)=>{
     }).catch(err => {
         console.log(err.message)
     }); 
-   }else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 
 }
 
@@ -331,7 +307,6 @@ exports.borrowInfoOneMember=(request,response,next)=>{
     strID = request.params._id
     NumID=Number(strID)
 
-    if(request.password != "new"){    
 
     BookOperationSchema.aggregate( [
         {$match: {memberID:NumID, operation:"borrow"}},
@@ -364,9 +339,9 @@ exports.borrowInfoOneMember=(request,response,next)=>{
      if(borrowedBook != "")
 {       
      response.status(200).json({borrowedBook});
+
 }else{response.status(404).json({borrowedBook:"Borrowed Books Not Found"});}
     })
     .catch(error=>next(error));
-}else{response.status(404).json({result:"Please update your profile data!! and login again"});}
 
 }

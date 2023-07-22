@@ -11,13 +11,12 @@ module.exports=(request,response,next)=>{
   try{
 
     const token = request.header('x-auth-token');
-   // console.log(token);
     let decodedToken=jwt.verify(token,"OStrack");
-    console.log(decodedToken , "decodedtoken");
+
     request.email=decodedToken.email;
     request.password=decodedToken.password;
     request.role=decodedToken.role;
-     console.log(request.role);
+
     next();
   }
   catch(error){
@@ -26,6 +25,7 @@ module.exports=(request,response,next)=>{
         next(error);
   }
 }
+
 module.exports.checkOwn=(request,response,next)=>{
   if(request.role =="Owner"){
       next();
@@ -37,6 +37,7 @@ module.exports.checkOwn=(request,response,next)=>{
 
   }
 }
+
 module.exports.checkBasicAdmin=(request,response,next)=>{
   if(request.role =="BasicAdmin" || request.role =="Owner"){
       next();
@@ -90,6 +91,7 @@ module.exports.checkBasicAdminAndAdminforAdmin=(request,response,next)=>{
   next(error);
   })
 }
+
 module.exports.checkBasicAdminAndAdmin=(request,response,next)=>{
   if(request.role =="BasicAdmin"||request.role =="Admin"|| request.role =="Owner"){
 
