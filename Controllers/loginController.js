@@ -7,11 +7,10 @@ const MemberSchema = mongoose.model("member");
 exports.login = async (request, response, next) => {
   const { email, password } = request.body;
 
-
-  const owner = await AdminSchema.findOne({ email}).select("+password");
   const admin = await AdminSchema.findOne({ email}).select("+password");
   const employee = await EmpSchema.findOne({ email }).select("+password");
   const member = await MemberSchema.findOne({ email}).select("+password");
+
 
   // Constants for role names and token expiration
   const roles = {
@@ -37,40 +36,52 @@ exports.login = async (request, response, next) => {
     response.status(200).json({ message: "Authenticated", token });
   };
 
+
   // Role-based authentication
   if (admin && admin.Role === roles.admin) {
+
     if(!(await admin.correctPassword(password, admin.password))){
       response.status(401).json({ message: "Incorrect email or password"});
      }else{
     sendAuthToken(roles.admin , admin._id);
      }
-  } else if (owner) {
-    if(!(await owner.correctPassword(password, owner.password))){
+
+  } else if (admin && admin.Role === roles.owner) {
+
+    if(!(await admin.correctPassword(password, admin.password))){
       response.status(401).json({ message: "Incorrect email or password"});
      }else{
     sendAuthToken(roles.owner , owner._id);
      }
-  } else if (admin && admin.Role === roles.basicAdmin) {
+ 
+    } else if (admin && admin.Role === roles.basicAdmin) {
+
     if(!(await admin.correctPassword(password, admin.password))){
       response.status(401).json({ message: "Incorrect email or password"});
      }else{
     sendAuthToken(roles.basicAdmin , admin._id);
      }
-  } else if (employee) {
+ 
+    } else if (employee) {
+
     if(!(await employee.correctPassword(password, employee.password))){
       response.status(401).json({ message: "Incorrect email or password"});
      }else{
        sendAuthToken(roles.employee , employee._id);
      }
-  } else if (member) {
+  
+    } else if (member) {
+
     if(!(await member.correctPassword(password, member.password))){
       response.status(401).json({ message: "Incorrect email or password"});
      }else{
     sendAuthToken(roles.member , member._id);
      }
-  } else {
+  
+    } else {
     response.status(401).json({ message: "Not Authenticated" });
-  }
+   }
+   
 };
 
 //}

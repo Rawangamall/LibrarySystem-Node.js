@@ -107,7 +107,7 @@ exports.addAdmins=async(request,response,next)=>{
 
 //update Owner
 exports.updateOwner=(request,response,next)=>{
-    if(request.password != "new"){
+
             AdminSchema.updateOne({ _id:request.params._id ,"Role":{$eq:"Owner"}}
             ,{
                
@@ -126,15 +126,12 @@ exports.updateOwner=(request,response,next)=>{
                 response.status(200).json({data:"updated"});
             })
             .catch(error=>next(error));
-   } //new
-  else{response.status(404).json({result:"Please update your profile data!! and login again"});}   
+
 }
-
-
 
 //Update Basic Admin
 exports.updateBasicAdmin=(request,response,next)=>{
-   if(request.password != "new"){
+
    if(request.role=="BasicAdmin"){
             AdminSchema.updateOne({ _id:request.params._id ,"Role":{$eq:"BasicAdmin"}}
             ,{
@@ -156,7 +153,8 @@ exports.updateBasicAdmin=(request,response,next)=>{
             .catch(error=>next(error));
         
     }
-   else if (request.role=="owner"){
+   else if (request.role=="Owner"){
+
     AdminSchema.updateOne({ _id:request.params._id ,"Role":{$eq:"BasicAdmin"}}
     ,{
        
@@ -178,16 +176,12 @@ exports.updateBasicAdmin=(request,response,next)=>{
         response.status(200).json({data:"updated"});
     })
     .catch(error=>next(error));
- }} //new
-  else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-   
-    
+}
 }
 
 //update Admin
 exports.updateAdmin=(request,response,next)=>{
-    if(request.password != "new"){
-    if(request.role=="Admin"){
+
             AdminSchema.updateOne({ _id:request.params._id ,"Role":{$eq:"Admin"}}
             ,{
                
@@ -207,16 +201,7 @@ exports.updateAdmin=(request,response,next)=>{
             })
             .catch(error=>next(error));
         
-        //
-        }}
-    
 }
-
-
-
-
-
-
 
 
 //First Login
@@ -251,7 +236,6 @@ exports.updatefirstLogin=(request,response,next)=>{
 
 //Delete Basic Admin
 exports.deleteBasicAdmin=(request,response,next)=>{
-    if(request.password != "new"){
        if(request.params._id!=0){
     AdminSchema.findOne({_id: request.params._id,"Role":{$eq:"BasicAdmin"}}).then(data=>{
         if(data==null)
@@ -278,13 +262,11 @@ exports.deleteBasicAdmin=(request,response,next)=>{
    response.status(404).json({result:"Premission Denied"})
 }
 }
-else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-}
 
 //Delete Admin
 exports.deleteAdmin=(request,response,next)=>{
-   if(request.password != "new"){
-        if(request.params._id!=0){
+    
+        if(request.role=="Owner" || request.role=="BasicAdmin"){
     AdminSchema.findOne({_id: request.params._id,"Role":{$eq:"Admin"}}).then(data=>{
         if(data==null)
         {
@@ -309,13 +291,11 @@ exports.deleteAdmin=(request,response,next)=>{
 }else{
     response.status(404).json({result:"Premission Denied"})
 }
-}
-else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+
 }
 
 //Get one Owner
 exports.getOwner=(request,response,next)=>{
-    if(request.password != "new"){
     AdminSchema.findOne({_id: request.params._id,"Role":{$eq:"Owner"}}).then(data=>{
         if(data.matchedCount==0)
        {
@@ -330,8 +310,7 @@ exports.getOwner=(request,response,next)=>{
            .catch(error=>next(error));
        }
    })
-   .catch(error=>next(error));}
-  else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+   .catch(error=>next(error));
 }
 
 
@@ -340,7 +319,7 @@ exports.getOwner=(request,response,next)=>{
 
 //Get One BasicAdmin
 exports.getBasicAdmin=(request,response,next)=>{
-    if(request.password != "new"){
+
     AdminSchema.findOne({_id: request.params._id,"Role":{$eq:"BasicAdmin"}}).then(data=>{
         if(data.matchedCount==0)
        {
@@ -355,15 +334,12 @@ exports.getBasicAdmin=(request,response,next)=>{
            .catch(error=>next(error));
        }
    })
-   .catch(error=>next(error));}
-   else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+   .catch(error=>next(error));
 }
-
-
 
 //Get one Admin
 exports.getAdmin=(request,response,next)=>{
-   if(request.password != "new"){
+
     AdminSchema.findOne({_id: request.params._id,"Role":{$eq:"Admin"}}).then(data=>{
         if(data.matchedCount==0)
        {
@@ -378,15 +354,13 @@ exports.getAdmin=(request,response,next)=>{
            .catch(error=>next(error));
        }
    })
-   .catch(error=>next(error));}
-   else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+   .catch(error=>next(error));
 }
 
 
 
 exports.report=(request,response,next)=>{
-    if(request.password != "new"){
-    //report for the last month
+
     BookOperationSchema.find({startDate:{$gte: new Date().getTime()-(30*24*60*60*1000)}})
         .then((data)=>{
             EmpSchema.find({hireDate:{$gte: new Date().getTime()-(30*24*60*60*1000)}})
@@ -424,6 +398,6 @@ exports.report=(request,response,next)=>{
             })
         .catch(error=>{
             next(error);
-        })}
-        else{response.status(404).json({result:"Please update your profile data!! and login again"});}
-}
+        })
+
+    }
