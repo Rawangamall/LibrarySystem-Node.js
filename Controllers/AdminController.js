@@ -36,6 +36,7 @@ exports.getAllAdmins=(request,response,next)=>{
             next(error);
     })
 }
+
 //Get All Admins(Admin , BasicAdmin, Owner)
 exports.getAllKindsAdmins=(request,response,next)=>{
     AdminSchema.find({})
@@ -47,11 +48,8 @@ exports.getAllKindsAdmins=(request,response,next)=>{
     })
 }
        
-
-
 //search
 exports.searchForAdmin=(request,response,next)=>{
-    if(request.password != "new"){
         //Search for Admin
         const searchName = request.body.searchName?.toLowerCase();
         const firstName = request.body.firstName?.toLowerCase();
@@ -74,9 +72,10 @@ exports.searchForAdmin=(request,response,next)=>{
                     response.status(200).json({data});
             })
             .catch(error=>{next(error);
-            })}
-            else{response.status(404).json({result:"Please update your profile data!! and login again"});}
+            })
      }
+
+
 //Add
 exports.addAdmins=async(request,response,next)=>{
     var hash = bcrypt.hashSync("new",salt);

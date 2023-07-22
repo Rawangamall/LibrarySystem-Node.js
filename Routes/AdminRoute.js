@@ -13,18 +13,18 @@ const { checkBasicAdmin, checkBasicAdminAndAdminforAdmin }=require("./../Core/au
 
 //Admin
 router.route("/Admins")
-    .get(controller.getAllAdmins)
-    .post(controller.addAdmins) //imageValidate,//AdminValidate.validateAdminPost,
+    .get(validateMW,controller.getAllAdmins)
+    .post(checkBasicAdmin,validateMW,imageValidate,AdminValidate.validateAdminPost,controller.addAdmins) 
     
 router.route("/Admin/:_id")
       .get(validateMW,controller.getAdmin)
       .put(validateMW,controller.updateAdmin) //checkBasicAdminAndAdmin,imageValidate,AdminValidate.validateAdminPut,
-      .delete(validateMW,controller.deleteAdmin)//checkBasicAdmin,removeAdminIMG,AdminValidate.validateIDParams,
+      .delete(validateMW,controller.deleteAdmin,removeAdminIMG)//checkBasicAdmin,removeAdminIMG,AdminValidate.validateIDParams,
 
 //BasicAdmin
 router.route("/Basics")
-    .get(controller.getAllBasicAdmins)//checkBasicAdmin
-    .post(controller.addAdmins)//checkOwn, //imageValidate,//AdminValidate.validateAdminPost,
+    .get(checkOwn,controller.getAllBasicAdmins)
+    .post(checkOwn,imageValidate,AdminValidate.validateAdminPost,controller.addAdmins)
     
 router.route("/BasicAdmin/:_id")
        .put(validateMW,controller.updateBasicAdmin) //checkBasicAdmin,imageValidate,AdminValidate.validateAdminPut,
