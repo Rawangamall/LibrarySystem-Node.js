@@ -12,23 +12,23 @@ const removeBookIMG=require("../Core/Validation/imageValidate").removeBookIMG
 const { checkBasicAdminAndAdmin }=require("./../Core/auth/AuthenticateMW");
 
 router.route("/Book")
-    .get(controller.getBooks);
+    .get(validateMW,controller.getBooks);
 
 router.route("/Book/newArrivedBooks")
-    .get(controller.getNewArrivedBooks)  
+    .get(validateMW,controller.getNewArrivedBooks)  
 
 router.route("/Book/add")
-      .post(controller.addBook) //checkBasicAdminAndAdmin,imageValidate,validatePostBook,validateMW,controller.addBook
-router.get("/Book/:id",controller.getOneBook) //validateOnIDParams,validateMW,
-router.delete("/Book/:id",controller.deleteBook) //checkBasicAdminAndAdmin,validateOnIDParams,validateMW,removeBookIMG,
-router.put("/Book/update/:id",checkBasicAdminAndAdmin,validateMW,controller.updateBook) //imageValidateUP,validatePutBook
+      .post(checkBasicAdminAndAdmin,imageValidate,validatePostBook,validateMW,controller.addBook) 
+router.get("/Book/:id",validateOnIDParams,validateMW,controller.getOneBook) 
+router.delete("/Book/:id",checkBasicAdminAndAdmin,validateOnIDParams,validateMW,controller.deleteBook,removeBookIMG) 
+router.put("/Book/update/:id",checkBasicAdminAndAdmin,validateMW,imageValidateUP,validatePutBook,controller.updateBook) 
 
 router.route("/Book/search")
-      .post(controller.searchForBook)
+      .post(validateMW,controller.searchForBook)
 
-router.get("/Book/available",controller.getAvailableBooks)
+router.get("/Book/available",validateMW,controller.getAvailableBooks)
 
 router.route("/Book/filterBooks/get")
-      .get(controller.filteredbooks)
+      .get(validateMW,controller.filteredbooks)
 
 module.exports=router;
