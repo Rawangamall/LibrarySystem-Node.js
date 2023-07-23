@@ -87,3 +87,12 @@ The Library System is a web-based application designed to monitor and manage var
 7. Search for books in the library based on various criteria like year, category, publisher, author, and availability.
 8. Search for available books, borrowed books with the respective members, and employees responsible for borrowing.
 9. View new arrived books, most borrowed books, and most reading books filtered by year.
+
+## Technologies Used:
+
+- Node.js
+- Express
+- MongoDB
+- Mongoose
+- JsonWebToken
+- Bcrypt
